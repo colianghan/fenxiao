@@ -1,0 +1,233 @@
+/* 公用margin */
+.mt10{
+	margin-top: 10px;
+}
+.mt15{
+	margin-top: 15px;
+}
+.mt30{
+	margin-top: 30px;
+}
+
+.mb10{
+	margin-bottom: 10px;
+}
+.mb15{
+	margin-bottom: 15px;
+}
+.mb30{
+	margin-bottom: 30px;
+}
+
+.f15{
+	font-size: 15px !important;
+}
+.f16{
+	font-size: 16px !important;
+}
+.f20{
+	font-size:20px !important;
+}
+.f13{
+	font-size: 13px !important;
+}
+
+.hr:after{
+	border: 1px solid #dadada;
+	display: block;
+	content: ' ';
+	margin: 10px 0
+}
+
+
+/* 结构布局 */
+html,body{
+	margin: 0;
+	overflow: hidden;
+}
+/* leftBar height:100%; */
+html,body,.content,.content .row-fluid,.content .leftBar{
+	height: 100%;
+}
+/* 显示内容区域 */
+.content .contentMain{
+	overflow-y:scroll;
+	min-height: 100%;
+	padding-right: 20px;
+}
+
+
+/* 标题 */
+header .navbar{
+	border-bottom: 1px solid #fff;
+}
+
+
+/* 副标题 */
+.banner{
+	height: 70px;
+	background: #1e4e6a;
+	position: relative;
+}
+
+.banner .nav-tabs{
+	margin: 0;
+	position: absolute;
+	bottom:0;
+	left:0;
+	border-bottom: none;
+	height: 30px;
+}
+.banner .nav-tabs > li{
+	margin-left: 15px;
+}
+.banner .nav-tabs > .active >a{
+	background-color:#fff;
+	border: 1px solid #fff;
+	color: #03476b;
+}
+.banner .nav-tabs > .active >a:hover{
+	font-weight: normal;
+}
+.banner .nav-tabs > li > a{
+	padding-top: 4px;
+	padding-bottom: 4px;
+	background-color: #2c7098;
+	border: 1px solid #2c7098;
+	border-bottom: 1px solid transparent;
+	color: #fff;
+}
+.banner .nav-tabs > li > a:hover{
+	background-color: #fff;
+	color: #03476b;
+	font-weight: bolder;
+}
+/* 用户信息显示 */
+.userInfo{
+	width: 230px;
+	height: 150px;
+	background-color: #fff;
+	position: absolute;
+	z-index: 1;
+	border: 1px solid #dadada;
+	border-top:1px solid transparent;
+	padding: 0px 15px;
+	right: 0px;
+}
+.navbar-inverse .nav > .mouse-hover{
+	background-color: #fff;
+}
+.navbar-inverse .nav > .mouse-hover > a{
+	 color: #000; 
+}
+.navbar-inverse .nav li.dropdown.mouse-hover > .dropdown-toggle .caret{
+	/* border-top-color: #000;
+	border-bottom-color: #000; 
+	 */
+}
+
+
+
+
+
+
+
+/* 左侧标题 */
+.leftBar{
+	background-color:#e8e7e6;
+	border-right: 1px solid #aeaeae;
+}
+/* 公司备案号 */
+.leftBar .footer{
+	font-size: 11px;
+	position: absolute;
+	bottom: 10px;
+	left:0;
+	margin: 0;
+}
+
+/* 左侧导航级联 一级导航 */
+.leftBar .nav-child li{
+	margin-bottom: 10px;
+}
+.leftBar .nav-child li .head,.title{
+	display: block;
+	margin-left: 15px;
+	margin-right: 15px;
+	text-align: center;
+	height: 30px;
+	line-height: 35px;
+	background: #2c7098;
+	border-radius: 4px 4px 0 0;
+	color: #fff;
+}
+.leftBar .nav-child li .head .plus,.title .plus{
+	margin-top: 8px;
+	margin-right: 5px;
+	margin-left: -19px;
+}
+
+
+/* 简介标题 */
+.title{
+	display: inline-block;
+	padding-left:30px;
+	padding-right: 30px;
+	background-color: #1e4d6a !important;
+	font-weight: bolder;
+}
+
+
+
+
+/* 二级导航 */
+.leftBar .nav-child .nav-list > li >a{
+	margin-left: 0;
+	padding-left: 0;
+	border: 1px solid transparent;
+	color: #000;
+	text-shadow:none;
+}
+.leftBar .nav-child .nav-list > li >a:hover,.leftBar .nav-child .nav-list > .active >a{
+	border: 1px solid #aeaeae;
+	border-right: 1px solid transparent;
+}
+.leftBar .nav-child .nav-list > .active >a{
+	background-color: #fff;
+	border-right: 1px solid #fff;
+	margin-right: -16px;
+	text-shadow:none;
+}
+.leftBar .nav-child .nav-list > .active >a:hover{
+	color: #000;
+}
+
+/* 快捷设置  重置了 well*/
+.leftBar .well{
+	padding: 5px;
+	border: 1px solid #aeaeae;
+	background-color: transparent;
+	margin-bottom: 5px;
+	color:#03476b;
+}
+.leftBar .well:hover{
+	background-color: #fff;
+	font-weight: bolder;
+}
+
+
+
+/* 简介 */
+.info{
+	padding: 15px 30px;
+	border: 1px solid #e4e4e4;
+	border-radius: 4px;
+}
+.info .row-fluid{
+	margin-left: 2em;
+}
+
+.navbar-inverse .nav li.dropdown > .hover-toggle .caret{
+	border-top-color: #999999;
+    border-bottom-color: #999999;
+}

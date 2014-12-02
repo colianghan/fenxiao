@@ -1,0 +1,34 @@
+{
+  "name": "browser-sync-demo",
+  "version": "0.0.1",
+  "authors": [
+    "korealiang <hanguoliang1992@gmail.com>"
+  ],
+  "description": "bower",
+  "moduleType": [
+    "amd",
+    "node"
+  ],
+  "keywords": [
+    "browser"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.3.4",
+    "angular-animate": "~1.3.4",
+    "jquery": "1.10.2",
+    "ng-table": "~0.3.3",
+    "underscore": "~1.7.0",
+    "highcharts": "~4.0.4",
+    "bootstrap": "~3.3.1",
+    "bootstrap-datetimepicker": "~0.0.11"
+  }
+}

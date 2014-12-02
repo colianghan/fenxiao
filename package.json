@@ -1,0 +1,30 @@
+{
+  "name": "browser-sync-demo",
+  "version": "0.0.1",
+  "description": "demo",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "korealiang (hanguoliang1992@gmail.com)",
+  "email":"hanguoliang1992@gmail.com",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "~3.8.10",
+    "browser-sync": "~1.7.1",
+    "grunt": "~0.4.5",
+    "grunt-contrib-concat": "^0.5.0",
+    "grunt-contrib-copy": "^0.5.0",
+    "grunt-contrib-cssmin": "^0.10.0",
+    "grunt-contrib-uglify": "^0.5.1",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-livereload": "^0.1.3",
+    "grunt-shell": "^0.7.0",
+    "load-grunt-tasks": "~0.6.0",
+    "grunt-contrib-connect": "~0.8.0",
+    "grunt-connect-proxy": "~0.1.11",
+    "when": "~3.6.3",
+    "time-grunt": "~1.0.0",
+    "matchdep": "~0.3.0"
+  }
+}
