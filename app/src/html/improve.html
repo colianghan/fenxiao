@@ -1,0 +1,238 @@
+<!-- 分销提升 -->
+<div class="row-fluid mt30" ng-if="tagIndex==1">
+	<div class="span12">
+		<h3>高流量、高转化关键词TOP50</h3>
+		<table class="table table-hover table-bordered">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>关键词</th>
+					<th>点击量</th>
+					<th>成交量</th>
+					<th>转化率</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in [1,2,3,4,5,6,7,8,9,]">
+					<td>
+						<span class="badge badge-info">{{$index}}</span>
+					</td>
+					<td>
+						<a href="#">泡沫地毯</a>
+					</td>
+					<td>3568</td>
+					<td>247</td>
+					<td>8.14%</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<div class="row-fluid mt30" ng-if="tagIndex==2">
+	<div class="span12">
+		<h3>高展现、高点击关键词TOP50</h3>
+		<table class="table table-hover table-bordered">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>关键词</th>
+					<th>展现</th>
+					<th>点击</th>
+					<th>成交金额</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in [1,2,3,4,5,6,7,8,9,]">
+					<td>
+						<span class="badge badge-info">{{$index}}</span>
+					</td>
+					<td>
+						<a href="#">垫子 地垫 地毯儿童</a>
+					</td>
+					<td>46384</td>
+					<td>7.69%</td>
+					<td>20886.32</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<div class="row-fluid mt30" ng-if="tagIndex==3||tagIndex==4">
+	<div class="span12">
+		<div class="row-fluid">
+			<h3>免费流量详情</h3>
+			<div class="clearfix">
+				<div class="pull-left">
+					<h4 class="inline-block">统计天数：</h4>
+					<label class="radio-inline">
+						<input type="radio" value="7" name="day">
+						7天
+					</label>
+					<label class="radio-inline">
+						<input type="radio" value="7" name="day">
+						15天
+					</label>
+					<label class="radio-inline">
+						<input type="radio" value="7" name="day">
+						30天
+					</label>
+				</div>
+				<div class="pull-right">
+					<h4 class="inline-block">店铺等级：</h4>
+					<label class="radio-inline">
+						<input type="radio" value="7" name="layer">
+						心钻
+					</label>
+					<label class="radio-inline">
+						<input type="radio" value="7" name="layer">
+						钻级
+					</label>
+					<label class="radio-inline">
+						<input type="radio" value="7" name="layer">
+						冠级
+					</label>
+					<label class="radio-inline">
+						<input type="radio" value="7" name="layer">
+						综合
+					</label>
+				</div>
+			</div>
+		</div>
+		<h3 class="text-center"></h3>
+		<table class="table table-hover table-bordered">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>渠道名称</th>
+					<th>独立访客数</th>
+					<th>成交金额</th>
+					<th>成交量</th>
+					<th>转化率</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in [1,2,3,4,5,6,7,8,9,]">
+					<td>
+						<span class="badge badge-info">{{$index}}</span>
+					</td>
+					<td>
+						<a href="#">淘宝搜索</a>
+					</td>
+					<td>18990</td>
+					<td>387139</td>
+					<td>574</td>
+					<td>3.05%</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="row-fluid mt30" ng-if="tagIndex==5">
+	<div class="span12">
+		<h3>最佳搭配宝贝</h3>
+		<div class="clearfix mb10">
+			<div class="pull-left">
+				<h4 class="inline-block">数据类型：</h4>
+				<div class="btn-group">
+					<button class="btn active">关联访问TOP20</button>
+					<button class="btn">关联访问转换率TOP20</button>
+					<button class="btn">关联访问成交额TOP20</button>
+				</div>
+			</div>
+			<div class="pull-right">
+				<h4 class="inline-block">统计天数：</h4>
+				<label class="radio-inline">
+					<input type="radio" value="7" name="layer">
+					7天
+				</label>
+				<label class="radio-inline">
+					<input type="radio" value="15" name="layer">
+					15天
+				</label>
+				<label class="radio-inline">
+					<input type="radio" value="30" name="layer">
+					30天
+				</label>
+			</div>
+		</div>
+		<table class="table table-hover table-bordered">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>产品1</th>
+					<th>产品2</th>
+					<th>关联访问量</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in [1,2,3,4,5,6,7,8,9,10]">
+					<td>
+						<span class="badge badge-info">{{$index}}</span>
+					</td>
+					<td>
+						<a href="#">2014豆豆鞋男鞋透气驾车男士韩版潮流懒人套脚软面皮平跟单鞋</a>
+					</td>
+					<td>
+						<a href="#">断码特价圆头男士休闲鞋日常轻质豆豆鞋子男鞋</a>
+					</td>
+					<td>
+						<a href="#">586</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="row-fluid mt30" ng-if="tagIndex==6">
+	<div class="span12">
+		<div class="clearfix improve-urls">
+			<img src="http://alicdn.trend-data.cn/distributor-manager/prod/images/soft_0.png" class="img-rounded pull-left" />
+			<div class="pull-left  urls-content ml10">
+				<a href="#" target="_blank">订购链接:http://tb.cn/rNCpIey</a>
+				<p>
+		            说明：爆款打造机免费提供给分销商使用，将链接发给分销商之后进入付款环节，请点击代付，
+		            代付支付宝帐号为：2391135836@qq.com
+		            孙然，将会有专员进行支付，支付之后进入店铺卖家中心后台即可点击使用
+				</p>
+			</div>
+		</div>
+		<div class="clearfix improve-urls">
+			<img src="http://alicdn.trend-data.cn/distributor-manager/prod/images/soft_1.png" class="img-rounded pull-left" />
+			<div class="pull-left  urls-content ml10">
+				<a href="#" target="_blank">订购链接:http://tb.cn/eRWb7ey</a>
+				<p>
+		            简化直通车开车复杂操纵，从0开始教学，帮您走上开车的阳光大道。多渠道的词来源，不用再到处翻页找词。 独创的查排名功能， 让您的宝贝精准地到达指定位置。
+				</p>
+			</div>
+		</div>
+		<div class="clearfix improve-urls">
+			<img src="http://alicdn.trend-data.cn/distributor-manager/prod/images/soft_2.png" class="img-rounded pull-left" />
+			<div class="pull-left  urls-content ml10">
+				<a href="#" target="_blank">订购链接:点击订购</a>
+				<p>
+		            微淘最好玩的打折工具。帮助淘宝店家在微淘上开展营销活动。通过趣味游戏，根据获得游戏成绩不同得到不同的折扣。 以达到吸引流量，提高销量的目的。 微淘打折，就上微折！
+				</p>
+			</div>
+		</div>
+		<div class="clearfix improve-urls">
+			<img src="http://alicdn.trend-data.cn/distributor-manager/prod/images/soft_3.jpg" class="img-rounded pull-left" />
+			<div class="pull-left  urls-content ml10">
+				<a href="#" target="_blank">订购链接:点击订购</a>
+				<p>
+		            微淘最好玩的打折工具。帮助淘宝店家在微淘上开展营销活动。通过趣味游戏，根据获得游戏成绩不同得到不同的折扣。 以达到吸引流量，提高销量的目的。 微淘打折，就上微折！
+				</p>
+			</div>
+		</div>
+		<div class="clearfix improve-urls">
+			<img src="http://alicdn.trend-data.cn/distributor-manager/prod/images/soft_4.png" class="img-rounded pull-left" />
+			<div class="pull-left  urls-content ml10">
+				<a href="#" target="_blank">订购链接:点击订购</a>
+				<p>
+		            微淘最好玩的打折工具。帮助淘宝店家在微淘上开展营销活动。通过趣味游戏，根据获得游戏成绩不同得到不同的折扣。 以达到吸引流量，提高销量的目的。 微淘打折，就上微折！
+				</p>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,408 @@
+<!-- 行为管理-->
+
+<!-- 串货监控-->
+<div ng-if="tagIndex==1">
+    <h3 class = "text-center">以下分销商存在窜货嫌疑，详细信息如下:</h3>
+    <table class = "table table-bordered table-hover">
+        <caption></caption>
+        <thead>
+            <tr>
+                <th>
+                    <label style = "margin-bottom:0px;color:#333333;font-weight:bold;">
+                        <input type = "checkbox">
+                        全选
+                    </label>
+                </th>
+                <th>昵称</th>
+                <th>授权类型</th>
+                <th>联系方式</th>
+                <th>等级</th>
+                <th>pv</th>
+                <th>uv</th>
+                <th>30天销售额</th>
+                <th>在售分销产品数</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in [1,2,3,4,5,6,7,8,9,10]">
+                <td><input type="checkbox" /></td>
+                <td>雷士照明浙江店</td>
+                <td>代销</td>
+                <td>
+                   <a class = "wangwangLogo" target = "_blank" href = "http://www.taobao.com/webww/?ver=1&&touid=cntaobao{{i.disNick}}&siteid=cntaobao&status=2&portalId=&gid=&itemsId="></a>
+                </td>
+                <td>
+                    <div class="pr t5 diamond w_5"></div> 
+                </td>
+                <td class="tipTd" name="pv">3466</td>
+                <td class="tipTd" name="uv">2365</td>
+                <td class="tipTd" name="30天销售额">3914.38</td>
+                <td class="tipTd" name="在售分销产品数">96</td>
+                <td>
+                    <span class="btn btn-link">查看详情</span>
+                    <span class="btn btn-link">降低等级</span>
+                    <span class="btn btn-link">终止合作</span>
+                </td>
+            </tr>
+           <!--<tr edc ng-repeat = "i in fleeingGoods.shops">
+               <td>
+                   <input type = 'checkbox' ng-model = "i.selected"/>
+               </td>
+               <td>
+                   {{i.disNick}}
+               </td>
+               <td>
+                   {{i.tradeType | tradeType_filter}}
+               </td>
+               <td>
+                   <a class = "wangwangLogo" target = "_blank" href = "http://www.taobao.com/webww/?ver=1&&touid=cntaobao{{i.disNick}}&siteid=cntaobao&status=2&portalId=&gid=&itemsId="></a>
+               </td>
+               <td>
+                   <div class = "pr t5 {{i.disShopLevel}}"></div>
+               </td>
+               <td class = 'tipTd' name = "pv">{{i.disPv}}</td>
+               <td class = 'tipTd' name = "uv">{{i.disUv}}</td>
+               <td class = 'tipTd' name = "30天销售额">{{i.disSellMoney}}</td>
+               <td class = 'tipTd' name = "在售分销产品数">{{i.disSellAmount}}</td>
+               <td>
+                   <span class = "label label-warning cp" ng-click = "fleeingGoods.checkDetail($event,$index)">查看详情</span>
+                   <span class = "label label-warning cp" ng-click = "fleeingGoods.dropGrade($event,$index)">降低等级</span>
+                   <span class = "label label-warning cp" ng-click = "fleeingGoods.terminateCoor($event,$index)">终止合作</span>
+               </td>
+           </tr>
+           <tr ng-show = "!fleeingGoods.shops.length">
+               <td colspan = "10">暂无数据</td>
+           </tr>
+           
+           <tr class = "fleeingProds" style = "display:none;">
+               <td colspan = "10">
+                   <table class = "table table-bordered table-condensed table-hover">
+                       <caption></caption>
+                       <thead>
+                           <tr>
+                               <th class = "w40">序号</th>
+                               <th colspan = "2">违规嫌疑产品</th>
+                               <th>违规原因</th>
+                               <th>采购量</th>
+                               <th>成交量</th>
+                           </tr>
+                       </thead>
+                       <tbody>
+                           <tr ng-repeat = "i in fleeingGoods.fleeingProds">
+                               <td>
+                                   <span class = "badge badge-warning">{{$index}}</span>
+                               </td>
+                               <td>
+                                   <img ng-src = "{{i.picPath+'_40x40.jpg'}}" class = "br100"/>
+                               </td>
+                               <td>
+                                   <a>{{i.name}}</a>
+                               </td>
+                               <td>{{i.reason}}</td>
+                               <td>
+                                   {{i.purchaseNum}}
+                               </td>
+                               <td>{{i.tradeNum}}
+                               </td>
+                           </tr>
+                           <tr ng-show = "!fleeingGoods.fleeingProds.length">
+                               <td colspan = "6">暂无数据</td>
+                           </tr>
+                       </tbody>
+                   </table>
+               </td>
+           </tr>
+           <tr class = "gradesSelectable" style = "display:none;">
+               <td colspan = "10">
+                   <div class = "tc mt10">
+                       <span>设置等级为:</span>
+                       <span ng-repeat = "i in gradeLayers">
+                           <label class = "inline">
+                               <input type = "radio" name = "ikmn" value = "{{i.gradeId}}" ng-model = "fleeingGoods.selectedGradeLayerId"/>
+                               {{i.name}}
+                           </label>
+                       </span>
+                       <a ng-click = "fleeingGoods.ensureDropGrade($event,$index)" class = "dmButton ml5">确定</a>
+                       <span>
+                           <label class = "inline">
+                               <input name = "oplik" type = "radio" value = "single" ng-model = "fleeingGoods.applyRange"/>
+                               应用到此店
+                           </label>
+                           <label class = "inline">
+                               <input name = "oplik" type = "radio" value = "all" ng-model = "fleeingGoods.applyRange"/>
+                               应用到所选
+                           </label>
+                       </span>
+                   </div>
+               </td>
+           </tr> -->
+        </tbody>
+    </table>
+</div>
+<!-- 乱价监控-->
+<div class = "priceMointer" ng-if="tagIndex==2">
+    <h3 class = "text-center">以下分销商存在乱价嫌疑，详细信息如下:</h3>
+    <table class = "table table-bordered">
+        <caption></caption>
+        <thead>
+            <tr>
+                <th>
+                    <label style = "margin-bottom:0px;color:#333333;font-weight:bold;">
+                        <input type = "checkbox" ng-model = "priceMointer.selectAll">
+                        全选
+                    </label>
+                </th>
+                <th>昵称</th>
+                <th>授权类型</th>
+                <th>联系方式</th>
+                <th>等级</th>
+                <th>pv</th>
+                <th>uv</th>
+                <th>30天销售额</th>
+                <th>30天分销产品数</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+             <tr ng-repeat="item in [1,2,3,4,5,6,7,8,9,10]">
+                    <td><input type="checkbox" /></td>
+                    <td>雷士照明浙江店</td>
+                    <td>代销</td>
+                    <td>
+                       <a class = "wangwangLogo" target = "_blank" href = "http://www.taobao.com/webww/?ver=1&&touid=cntaobao{{i.disNick}}&siteid=cntaobao&status=2&portalId=&gid=&itemsId="></a>
+                    </td>
+                    <td>
+                        <div class="pr t5 diamond w_5"></div> 
+                    </td>
+                    <td class="tipTd" name="pv">3466</td>
+                    <td class="tipTd" name="uv">2365</td>
+                    <td class="tipTd" name="30天销售额">3914.38</td>
+                    <td class="tipTd" name="在售分销产品数">96</td>
+                    <td>
+                        <span class="btn btn-link">查看详情</span>
+                        <span class="btn btn-link">降低等级</span>
+                        <span class="btn btn-link">终止合作</span>
+                    </td>
+            </tr>
+           <!--  <tr ng-repeat = "i in priceMointer.shops">
+               <td>
+                   <input type = 'checkbox' ng-model = "i.selected"/>
+               </td>
+               <td>
+                   <a>{{i.disNick}}</a>
+               </td>
+               <td>
+                   <a>{{i.tradeType | tradeType_filter}}</a>
+               </td>
+               <td>
+                   <a class = "wangwangLogo" target = "_blank" href = "http://www.taobao.com/webww/?ver=1&&touid=cntaobao{{i.disNick}}&siteid=cntaobao&status=2&portalId=&gid=&itemsId="></a>
+               </td>
+               <td>
+                   <div class = "pr t5 {{i.disShopLevel}}"></div>
+               </td>
+               <td>
+                   <a>{{i.disPv}}</a>
+               </td>
+               <td>
+                   <a>{{i.disUv}}</a>
+               </td>
+               <td>{{i.disSellMoney}}</td>
+               <td>{{i.disSellAmount}}</td>
+               <td>
+                   <span class = "label label-warning cp" ng-click = "priceMointer.checkDetail($event,$index)">查看详情</span>
+                   <span class = "label label-warning cp" ng-click = "priceMointer.dropGrade($event,$index)">降低等级</span>
+                   <span class = "label label-warning cp" ng-click = "priceMointer.terminateCoor($event,$index)">终止合作</span>
+               </td>
+           </tr>
+           <tr ng-show = "!priceMointer.shops.length">
+               <td colspan = "10">暂无数据</td>
+           </tr>
+           <tr class = "fleeingProds" style = "display:none;">
+               <td colspan = "10">
+                   <table class = "table table-bordered">
+                       <caption></caption>
+                       <thead>
+                           <tr>
+                               <th class = "w40">序号</th>
+                               <th colspan = "2">产品</th>
+                               <th>违规类型</th>
+                               <th>正常最高价</th>
+                               <th>正常最低价</th>
+                               <th>标价</th>
+                               <th>成交价</th>
+                               <th>违规时间</th>
+                           </tr>
+                       </thead>
+                       <tbody>
+                           <tr ng-repeat = "i in priceMointer.fleeingProds">
+                               <td>
+                                   <span class = "badge badge-warning">{{$index+1}}</span>
+                               </td>
+                               <td>
+                                   <img ng-src = "{{i.picPath}}" class = "br100"/>
+                               </td>
+                               <td>
+                                   <a>{{i.title}}</a>
+                               </td>
+                               <td>{{i.reason}}</td>
+                               <td>{{i.highPrice}}</td>
+                               <td>{{i.lowPrice}}</td>
+                               <td>{{i.markPrice}}</td>
+                               <td>{{i.sellPrice}}</td>
+                               <td>{{i.time}}</td>
+                           </tr>
+                           <tr ng-show = "!priceMointer.fleeingProds.length">
+                               <td colspan = "8">暂无数据</td>
+                           </tr>
+                       </tbody>
+                   </table>
+               </td>
+           </tr>
+           <tr class = "gradesSelectable" style = "display:none;">
+               <td colspan = "10">
+                   <div class = "tc mt10">
+                       <span>设置等级为:</span>
+                       <span ng-repeat = "i in gradeLayers">
+                           <label class = "inline">
+                               <input type = "radio" name = "ikmn" value = "{{i.gradeId}}" ng-model = "priceMointer.selectedGradeLayerId"/>
+                               {{i.name}}
+                           </label>
+                       </span>
+                       <a ng-click = "priceMointer.ensureDropGrade($event,$index)" class = "dmButton ml5">确定</a>
+                       <span>
+                           <label class = "inline">
+                               <input name = "oplik" type = "radio" value = "single" ng-model = "priceMointer.applyRange"/>
+                               应用到此店
+                           </label>
+                           <label class = "inline">
+                               <input name = "oplik" type = "radio" value = "all" ng-model = "priceMointer.applyRange"/>
+                               应用到所选
+                           </label>
+                       </span>
+                   </div>
+               </td>
+           </tr> -->
+        </tbody>
+    </table>
+</div>
+<!-- 中差评-->
+<div class = "badRateMointer" ng-if="tagIndex==3">
+    <div class = "clearfix">
+        <button class = "pull-right btn mt30">
+         <i class="icon-refresh"></i>
+         刷新
+        </button>
+        <div>
+            <div>
+                <h3 class="mt30 mb15">中差评TOP10</h3>
+                <table class = "table table-bordered">
+                    <caption></caption>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>分销商名称</th>
+                            <th>中差评数</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in [1,2,3,4,5,6]">
+                            <td>
+                                <span class="badge badge-info">{{$index+1}}</span>
+                            </td>
+                            <td>fengjie590980</td>
+                            <td>30</td>
+                            <td>
+                                <span class="btn btn-link">点击查看</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <!-- <tr ng-repeat = "i in badRateMointer.neutralBadRate">
+                        <td>
+                            <span class = "badge badge-warning">{{$index+1}}</span>
+                        </td>
+                        <td>{{i.name}}</td>
+                        <td>
+                            {{i.rateNum}}
+                        </td>
+                        <td ng-click = "badRateMointer.lookUpSomeDis(i.name,'neutralBad',$event)">
+                            <a>点击查看</a>
+                        </td>
+                    </tr>
+                    <tr ng-show = "!badRateMointer.neutralBadRate.length">
+                        <td colspan = "4">暂无数据</td>
+                    </tr> -->
+                </table>
+            </div>
+        </div>
+        <div>
+            <div>
+                <h3 class = "bb">差评TOP10</h3>
+                <table class = "table table-bordered">
+                    <caption></caption>
+                    <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>分销商名称</th>
+                            <th>差评数</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                   <tbody>
+                       <tr>
+                           <td colspan="4">
+                               <div class="no-data">暂无数据,正在努力打造中↖(^ω^)↗</div>
+                           </td>
+                       </tr>
+                   </tbody>
+                   <!--  <tr ng-repeat = "i in badRateMointer.badRate">
+                       <td>
+                           <span class = "badge badge-warning">{{$index+1}}</span>
+                       </td>
+                       <td>{{i.name}}</td>
+                       <td>
+                           {{i.rateNum}}
+                       </td>
+                       <td ng-click = "badRateMointer.lookUpSomeDis(i.name,'bad',$event)">
+                           <a>点击查看</a>
+                       </td>
+                   </tr>
+                   <tr ng-show = "!badRateMointer.badRate.length">
+                       <td colspan = "4">暂无数据</td>
+                   </tr> -->
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="" ng-if="false">
+        <div class = "bc">
+            <table class = "table table-bordered">
+                <caption>
+                    <a class = "fr" ng-click = "badRateMointer.mainListShown=true">返回列表</a>
+                </caption>
+                <thead>
+                    <tr>
+                        <th class = "w40">序号</th>
+                        <th colspan = "2">
+                            产品名称
+                        </th>
+                        <th>中评数量</th>
+                        <th>差评数量</th>
+                    </tr>
+                </thead>
+                <!-- <tr ng-repeat = "i in badRateMointer.prodsBadRateDetails">
+                    <td>{{$index+1}}</td>
+                    <td class = "w50">
+                        <img ng-src = "{{i.picPath}}"/>
+                    </td>
+                    <td>
+                        <a>{{i.title}}</a>
+                    </td>
+                    <td>{{i.neutralCount}}</td>
+                    <td>{{i.badCount}}</td>
+                </tr> -->
+            </table>
+        </div>
+    </div>
+</div>
