@@ -1,5 +1,5 @@
 <!-- 分销提升 -->
-<div class="row-fluid mt30" ng-if="tagIndex==1">
+<!-- <div class="row-fluid mt30" ng-if="tagIndex==1">
 	<div class="span12">
 		<h3>高流量、高转化关键词TOP50</h3>
 		<table class="table table-hover table-bordered">
@@ -28,11 +28,12 @@
 		</table>
 	</div>
 </div>
-<div class="row-fluid mt30" ng-if="tagIndex==2">
-	<div class="span12">
-		<h3>高展现、高点击关键词TOP50</h3>
-		<table class="table table-hover table-bordered">
-			<thead>
+ -->
+<div class="row-fluid mt30" ng-if="tagIndex==1||tagIndex==2">
+	<div class="span12" ng-controller="goldkeywords">
+		<h3>{{title}}</h3>
+		<table class="table table-hover table-bordered" ng-table="keywords">
+			<!-- <thead>
 				<tr>
 					<th>序号</th>
 					<th>关键词</th>
@@ -40,18 +41,18 @@
 					<th>点击</th>
 					<th>成交金额</th>
 				</tr>
-			</thead>
+			</thead> -->
 			<tbody>
-				<tr ng-repeat="item in [1,2,3,4,5,6,7,8,9,]">
-					<td>
+				<tr ng-repeat="item in $data">
+					<td data-title="'序号'">
 						<span class="badge badge-info">{{$index}}</span>
 					</td>
-					<td>
-						<a href="#">垫子 地垫 地毯儿童</a>
+					<td data-title="'关键词'">
+						<a href="#">{{item.query}}</a>
 					</td>
-					<td>46384</td>
-					<td>7.69%</td>
-					<td>20886.32</td>
+					<td data-title="theads[0]" sortable="attr[0]">{{item[attrs[0]]}}</td>
+					<td data-title="theads[1]" sortable="attr[1]">{{item[attrs[1]]}}</td>
+					<td data-title="theads[2]" sortable="attr[2]">{{item[attrs[2]]}}</td>
 				</tr>
 			</tbody>
 		</table>

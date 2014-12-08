@@ -594,3 +594,8 @@ h4 .pull-right{
 
 
 /* 页面编写结束 end */
+
+
+.pagination.ng-table-pagination li{
+	display: inline-block;
+}

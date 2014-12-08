@@ -74,7 +74,7 @@
 	</ul>
 	<div class="box container-fluid box-border-recruit">
 		<div class="span12">
-			<button class="btn pull-right mb20"><i class="icon-wrench"></i>设置</button>
+			<button class="btn pull-right mb20" ng-click="add($event);"><i class="icon-wrench"></i>设置</button>
 			<table class="table table-bordered table-hover" ng-table="">
 				<thead>
 					<!--4 个属性 -->
@@ -86,7 +86,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="item in [1,2,3,4,5,6,7,8,9,10]">
+					<tr ng-repeat="item in a">
 						<td>
 							<a href="">永远笑着的人</a>
 						</td>

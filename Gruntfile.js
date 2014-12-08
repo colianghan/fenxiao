@@ -36,6 +36,8 @@ var configureGrunt = function(grunt){
                 }],
                 options:{
                     port:3001,
+                    logger: 'dev',
+                    hostname:'localhost',
                     base:['app'],
                     middleware:function(connect,options){
                         var middlewares=[];
@@ -150,7 +152,8 @@ var configureGrunt = function(grunt){
                         'public/components/bootstrap/docs/assets/css/bootstrap.css',
                         'public/components/bootstrap/docs/assets/css/bootstrap-responsive.css',
                         'public/components/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css',
-                        'public/components/ng-table/ng-table.css'
+                        'public/components/ng-table/ng-table.css',
+                        'public/components/font-awesome/css/font-awesome.css'
                     ]
                 }
             }
@@ -190,6 +193,7 @@ var configureGrunt = function(grunt){
     // grunt.registerTask('watch',['watch']);
     grunt.registerTask('server',[
         'init',
+        'configureProxies:server',
         'connect:server',
         'watch'
     ]);
