@@ -274,6 +274,9 @@
 .table.ng-table th{
 	text-align: left;
 }
+.table.ng-table{
+	margin-bottom: 0;
+}
 
 /* 表单 */
 .form-horizontal .control-label{

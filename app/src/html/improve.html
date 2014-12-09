@@ -32,153 +32,313 @@
 <div class="row-fluid mt30" ng-if="tagIndex==1||tagIndex==2">
 	<div class="span12" ng-controller="goldkeywords">
 		<h3>{{title}}</h3>
-		<table class="table table-hover table-bordered" ng-table="keywords">
-			<!-- <thead>
-				<tr>
-					<th>序号</th>
-					<th>关键词</th>
-					<th>展现</th>
-					<th>点击</th>
-					<th>成交金额</th>
-				</tr>
-			</thead> -->
-			<tbody>
+		<div ng-if="direction==1">
+			<table class="table table-hover table-bordered" ng-table="keywords">
+				<tbody>
+					<tr ng-repeat="item in $data">
+						<td data-title="'序号'">
+							<span class="badge badge-info">{{$index}}</span>
+						</td>
+						<td data-title="'关键词'">
+							<a href="javascript:;" ng-click="getShops(item.query)">{{item.query}}</a>
+						</td>
+						<td data-title="theads[0]" sortable="'attr[0]'">{{item[attrs[0]]}}</td>
+						<td data-title="theads[1]" sortable="'attr[1]'">{{item[attrs[1]]}}</td>
+						<td data-title="theads[2]" sortable="'attr[2]'">{{item[attrs[2]]}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div ng-if="direction==2">
+			<table class="table table-hover table-bordered" ng-table="shopes">
 				<tr ng-repeat="item in $data">
 					<td data-title="'序号'">
 						<span class="badge badge-info">{{$index}}</span>
 					</td>
 					<td data-title="'关键词'">
-						<a href="#">{{item.query}}</a>
+						<a href="javascript:;" ng-click="getProds(item.query,item.shopId);">{{item.query}}</a>
 					</td>
-					<td data-title="theads[0]" sortable="attr[0]">{{item[attrs[0]]}}</td>
-					<td data-title="theads[1]" sortable="attr[1]">{{item[attrs[1]]}}</td>
-					<td data-title="theads[2]" sortable="attr[2]">{{item[attrs[2]]}}</td>
+					<td data-title="theads[0]" sortable="'attr[0]'">{{item[attrs[0]]}}</td>
+					<td data-title="theads[1]" sortable="'attr[1]'">{{item[attrs[1]]}}</td>
+					<td data-title="theads[2]" sortable="'attr[2]'">{{item[attrs[2]]}}</td>
 				</tr>
-			</tbody>
-		</table>
+			</table>
+		</div>
+		<div ng-if="direction==3">
+			<table class="table table-hover table-bordered"  ng-table="prods">
+				<tr ng-repeat="item in $data">
+					<td data-title="'序号'">
+						<span class="badge badge-info">{{$index}}</span>
+					</td>
+					<td data-title="'宝贝'">
+						<img ng-src="{{item.picUrl}}_40x40.jpg" alt="图片" class="img-circle">
+					</td>
+					<td data-title="'标题'">
+						<a href="javascript:;" target="_blank">{{item.title}}</a>
+					</td>
+					<td data-title="theads[0]" sortable="'attr[0]'">{{item[attrs[0]]}}</td>
+					<td data-title="theads[1]" sortable="'attr[1]'">{{item[attrs[1]]}}</td>
+					<td data-title="theads[2]" sortable="'attr[2]'">{{item[attrs[2]]}}</td>
+				</tr>
+			</table>
+		</div>
 	</div>
 </div>
 <div class="row-fluid mt30" ng-if="tagIndex==3||tagIndex==4">
-	<div class="span12">
+	<div class="span12" ng-controller="good_channel_ctrl">
 		<div class="row-fluid">
-			<h3>免费流量详情</h3>
+			<h3>{{title}}</h3>
 			<div class="clearfix">
 				<div class="pull-left">
 					<h4 class="inline-block">统计天数：</h4>
 					<label class="radio-inline">
-						<input type="radio" value="7" name="day">
+						<input type="radio" value="7" name="day" ng-model="day">
 						7天
 					</label>
 					<label class="radio-inline">
-						<input type="radio" value="7" name="day">
+						<input type="radio" value="15" name="day" ng-model="day">
 						15天
 					</label>
 					<label class="radio-inline">
-						<input type="radio" value="7" name="day">
+						<input type="radio" value="30" name="day" ng-model="day">
 						30天
 					</label>
 				</div>
 				<div class="pull-right">
 					<h4 class="inline-block">店铺等级：</h4>
 					<label class="radio-inline">
-						<input type="radio" value="7" name="layer">
+						<input type="radio" value="1" name="layer" ng-model="layer">
 						心钻
 					</label>
 					<label class="radio-inline">
-						<input type="radio" value="7" name="layer">
+						<input type="radio" value="2" name="layer" ng-model="layer">
 						钻级
 					</label>
 					<label class="radio-inline">
-						<input type="radio" value="7" name="layer">
+						<input type="radio" value="3" name="layer" ng-model="layer">
 						冠级
 					</label>
 					<label class="radio-inline">
-						<input type="radio" value="7" name="layer">
+						<input type="radio" value="0" name="layer" ng-model="layer">
 						综合
 					</label>
 				</div>
 			</div>
 		</div>
 		<h3 class="text-center"></h3>
-		<table class="table table-hover table-bordered">
-			<thead>
-				<tr>
-					<th>序号</th>
-					<th>渠道名称</th>
-					<th>独立访客数</th>
-					<th>成交金额</th>
-					<th>成交量</th>
-					<th>转化率</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="item in [1,2,3,4,5,6,7,8,9,]">
-					<td>
-						<span class="badge badge-info">{{$index}}</span>
-					</td>
-					<td>
-						<a href="#">淘宝搜索</a>
-					</td>
-					<td>18990</td>
-					<td>387139</td>
-					<td>574</td>
-					<td>3.05%</td>
-				</tr>
-			</tbody>
-		</table>
+		<div ng-if="direction==1">
+			<table class="table table-hover table-bordered" ng-table="source">
+				<thead>
+					<tr>
+						<th>序号</th>
+						<th>渠道名称</th>
+						<th class="sortable sort-asc" ng-click="getSort($event,'IUV');"><div>独立访客数</div></th>
+						<th class="sortable" ng-click="getSort($event,'ALIPAY_TRADE_AMT');"><div>成交金额</div></th>
+						<th class="sortable" ng-click="getSort($event,'ALIPAY_AUCTION_NUM');"><div>成交量</div></th>
+						<th class="sortable" ng-click="getSort($event,'ALIPAY_WINNER_NUM/IUV');"><div>转化率</div></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="item in $data">
+						<td>
+							<span class="badge badge-info">{{$index}}</span>
+						</td>
+						<td>
+							<a href="javascript:;" ng-click="getShops(item.srcId,item.srcName);">{{item.srcName}}</a>
+						</td>
+						<td>{{item.iuv}}</td>
+						<td>{{item.alipayTradeAmt}}</td>
+						<td>{{item.alipayAuctionNum}}</td>
+						<td>{{item.transformationEfficiency * 100 | number:2}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div ng-if="direction==2">
+			<table class="table table-hover table-bordered" ng-table="shops">
+				<thead>
+					<tr>
+						<th>序号</th>
+						<th>分销商名称</th>
+						<th class="sortable sort-asc" ng-click="getSort($event,'IUV');"><div>独立访客数</div></th>
+						<th class="sortable" ng-click="getSort($event,'ALIPAY_TRADE_AMT');"><div>成交金额</div></th>
+						<th class="sortable" ng-click="getSort($event,'ALIPAY_AUCTION_NUM');"><div>成交量</div></th>
+						<th class="sortable" ng-click="getSort($event,'ALIPAY_WINNER_NUM/IUV');"><div>转化率</div></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="item in $data">
+						<td>
+							<span class="badge badge-info">{{$index}}</span>
+						</td>
+						<td>
+							<a href="javascript:;" ng-click="getProds(item.shopId,item.disNick);">{{item.disNick}}</a>
+						</td>
+						<td>{{item.iuv}}</td>
+						<td>{{item.alipayTradeAmt}}</td>
+						<td>{{item.alipayAuctionNum}}</td>
+						<td>{{item.transformationEfficiency * 100 | number:2}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div ng-if="direction==3">
+			<table class="table table-hover table-bordered" ng-table="prods">
+				<thead>
+					<tr>
+						<th>序号</th>
+						<th>宝贝图片</th>
+						<th>宝贝标题</th>
+						<th class="sortable sort-asc" ng-click="getSort($event,'IUV');"><div>独立访客数</div></th>
+						<th class="sortable" ng-click="getSort($event,'ALIPAY_TRADE_AMT');"><div>成交金额</div></th>
+						<th class="sortable" ng-click="getSort($event,'ALIPAY_AUCTION_NUM');"><div>成交量</div></th>
+						<th class="sortable" ng-click="getSort($event,'ALIPAY_WINNER_NUM/IUV');"><div>转化率</div></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="item in $data">
+						<td>
+							<span class="badge badge-info">{{$index}}</span>
+						</td>
+						<td>
+							<img ng-src="{{item.picUrl}}_40x40.jpg" alt="图片" class="img-circle">
+						</td>
+						<td>
+							<a href="javascript:;">{{item.title}}</a>
+						</td>
+						<td>{{item.iuv}}</td>
+						<td>{{item.alipayTradeAmt}}</td>
+						<td>{{item.alipayAuctionNum}}</td>
+						<td>{{item.transformationEfficiency * 100 | number:2}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>
 
 <div class="row-fluid mt30" ng-if="tagIndex==5">
-	<div class="span12">
+	<div class="span12" ng-controller="best_partner_ctrl">
 		<h3>最佳搭配宝贝</h3>
 		<div class="clearfix mb10">
 			<div class="pull-left">
 				<h4 class="inline-block">数据类型：</h4>
-				<div class="btn-group">
+				<label class="radio-inline">
+					<input type="radio" value="ASSO_ACCESS_USER_NUM" name="sortColumn" ng-model="sortColumn">
+					关联访问TOP20
+				</label>
+				<label class="radio-inline">
+					<input type="radio" value="TRANSFORMATION_EFFICIENCY" name="sortColumn" ng-model="sortColumn">
+					关联访问转换率TOP20
+				</label>
+				<label class="radio-inline">
+					<input type="radio" value="ASSO_ALIPAY_AMT" name="sortColumn" ng-model="sortColumn">
+					关联访问成交额TOP20
+				</label>
+				<!-- <div class="btn-group">
 					<button class="btn active">关联访问TOP20</button>
 					<button class="btn">关联访问转换率TOP20</button>
 					<button class="btn">关联访问成交额TOP20</button>
-				</div>
+				</div> -->
 			</div>
 			<div class="pull-right">
 				<h4 class="inline-block">统计天数：</h4>
 				<label class="radio-inline">
-					<input type="radio" value="7" name="layer">
+					<input type="radio" value="7" name="days" ng-model="day">
 					7天
 				</label>
 				<label class="radio-inline">
-					<input type="radio" value="15" name="layer">
+					<input type="radio" value="15" name="days" ng-model="day">
 					15天
 				</label>
 				<label class="radio-inline">
-					<input type="radio" value="30" name="layer">
+					<input type="radio" value="30" name="days" ng-model="day">
 					30天
 				</label>
 			</div>
 		</div>
-		<table class="table table-hover table-bordered">
+		<table class="table table-hover table-bordered" ng-table="source">
 			<thead>
 				<tr>
 					<th>序号</th>
-					<th>产品1</th>
-					<th>产品2</th>
-					<th>关联访问量</th>
+					<th colspan="2">产品一(点击查看与其他宝贝的关联数据)</th>
+					<th colspan="2">产品二</th>
+					<th>{{dataTitle}}</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="item in [1,2,3,4,5,6,7,8,9,10]">
+				<tr ng-repeat="i in $data">
 					<td>
 						<span class="badge badge-info">{{$index}}</span>
 					</td>
 					<td>
-						<a href="#">2014豆豆鞋男鞋透气驾车男士韩版潮流懒人套脚软面皮平跟单鞋</a>
+						 <img ng-src = "{{i.picUrl1}}" class="img-circle" />
 					</td>
 					<td>
-						<a href="#">断码特价圆头男士休闲鞋日常轻质豆豆鞋子男鞋</a>
+						<a href="javascript:;" ng-click="getOthers($event,i.pid1,i.pid2);">{{i.title1}}</a>
 					</td>
 					<td>
-						<a href="#">586</a>
+						<img ng-src = "{{i.picUrl2}}" class="img-circle" />
+					</td>
+					<td>
+						<a href="javascript:;">{{i.title2}}</a>
+					</td>
+					<td>
+						<a href="javascript:;" ng-click="getOthersData($event,i.pid1,i.pid2);">{{i.sortValue}}</a>
+					</td>
+				</tr>
+				<tr class="othersPartner">
+					<td colspan="6">
+						<div ng-if="showOther==1">
+							<table class="table table-hover table-bordered table-condensed">
+								<tbody>
+									<tr>
+										<td>序号</td>
+										<td>宝贝</td>
+										<td>标题</td>
+										<td>分销商</td>
+										<td>{{dataTitle}}</td>
+									</tr>
+									<tr ng-repeat="item in otherPartners">
+										<td>
+											<span class="badge badge-info">{{$index}}</span>
+										</td>
+										<td>
+											<img  ng-src = "{{item.picUrl2}}"/>
+										</td>
+										<td>
+											<a href="javascript:;">{{item.title2}}</a>
+										</td>
+										<td>{{item.disNick}}</td>
+										<td>{{item.sortValue}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div ng-if="showOther==2">
+							<table class="table table-hover table-bordered table-condensed">
+								<tbody>
+									<tr>
+										<td>序号</td>
+										<td>分销商</td>
+										<td>{{dataTitle}}</td>
+										<td>成交量</td>
+									</tr>
+									<tr ng-repeat="item in shopAssocialData">
+										<td>
+											<span class="badge badge-info">{{$index}}</span>
+										</td>
+										<td>
+											{{item.disNick}}
+										</td>
+										<td>
+											{{item.sortValue}}
+										</td>
+										<td>{{item.assoAlipayAuctionNum}}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 					</td>
 				</tr>
 			</tbody>

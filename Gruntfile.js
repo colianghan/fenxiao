@@ -49,7 +49,8 @@ var configureGrunt = function(grunt){
                         });
                         return middlewares;
                         //return next();
-                    }
+                    },
+                    open:true
                 }
             }
         },
