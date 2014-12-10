@@ -309,6 +309,7 @@
 	margin-top:-20px;
 	padding: 20px;
 	margin-bottom: 10px;
+	overflow: hidden;
 }
 .box-nopadding{
 	padding: 0;
@@ -318,7 +319,7 @@
 }
 .box-scroll-content{
 	/* background-color: red; */
-	height: 250px;
+	/* height: 250px; */
 	overflow: hidden;
 }
 .box-scroll-content [class*="span"]{

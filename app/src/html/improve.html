@@ -1,34 +1,6 @@
 <!-- 分销提升 -->
-<!-- <div class="row-fluid mt30" ng-if="tagIndex==1">
-	<div class="span12">
-		<h3>高流量、高转化关键词TOP50</h3>
-		<table class="table table-hover table-bordered">
-			<thead>
-				<tr>
-					<th>序号</th>
-					<th>关键词</th>
-					<th>点击量</th>
-					<th>成交量</th>
-					<th>转化率</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="item in [1,2,3,4,5,6,7,8,9,]">
-					<td>
-						<span class="badge badge-info">{{$index}}</span>
-					</td>
-					<td>
-						<a href="#">泡沫地毯</a>
-					</td>
-					<td>3568</td>
-					<td>247</td>
-					<td>8.14%</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-</div>
- -->
+
+<!-- 黄金关键词-->
 <div class="row-fluid mt30" ng-if="tagIndex==1||tagIndex==2">
 	<div class="span12" ng-controller="goldkeywords">
 		<h3>{{title}}</h3>
@@ -84,6 +56,7 @@
 		</div>
 	</div>
 </div>
+<!-- 优质渠道-->
 <div class="row-fluid mt30" ng-if="tagIndex==3||tagIndex==4">
 	<div class="span12" ng-controller="good_channel_ctrl">
 		<div class="row-fluid">
@@ -216,7 +189,7 @@
 		</div>
 	</div>
 </div>
-
+<!--黄金搭档-->
 <div class="row-fluid mt30" ng-if="tagIndex==5">
 	<div class="span12" ng-controller="best_partner_ctrl">
 		<h3>最佳搭配宝贝</h3>
@@ -287,7 +260,7 @@
 						<a href="javascript:;" ng-click="getOthersData($event,i.pid1,i.pid2);">{{i.sortValue}}</a>
 					</td>
 				</tr>
-				<tr class="othersPartner">
+				<tr class="othersPartner hide">
 					<td colspan="6">
 						<div ng-if="showOther==1">
 							<table class="table table-hover table-bordered table-condensed">
@@ -345,13 +318,13 @@
 		</table>
 	</div>
 </div>
-
+<!--订购链接 -->
 <div class="row-fluid mt30" ng-if="tagIndex==6">
 	<div class="span12">
 		<div class="clearfix improve-urls">
 			<img src="http://alicdn.trend-data.cn/distributor-manager/prod/images/soft_0.png" class="img-rounded pull-left" />
 			<div class="pull-left  urls-content ml10">
-				<a href="#" target="_blank">订购链接:http://tb.cn/rNCpIey</a>
+				<a href="http://tb.cn/rNCpIey" target="_blank">订购链接:http://tb.cn/rNCpIey</a>
 				<p>
 		            说明：爆款打造机免费提供给分销商使用，将链接发给分销商之后进入付款环节，请点击代付，
 		            代付支付宝帐号为：2391135836@qq.com
@@ -362,7 +335,7 @@
 		<div class="clearfix improve-urls">
 			<img src="http://alicdn.trend-data.cn/distributor-manager/prod/images/soft_1.png" class="img-rounded pull-left" />
 			<div class="pull-left  urls-content ml10">
-				<a href="#" target="_blank">订购链接:http://tb.cn/eRWb7ey</a>
+				<a href="http://tb.cn/rNCpIey" target="_blank">订购链接:http://tb.cn/eRWb7ey</a>
 				<p>
 		            简化直通车开车复杂操纵，从0开始教学，帮您走上开车的阳光大道。多渠道的词来源，不用再到处翻页找词。 独创的查排名功能， 让您的宝贝精准地到达指定位置。
 				</p>
@@ -371,7 +344,7 @@
 		<div class="clearfix improve-urls">
 			<img src="http://alicdn.trend-data.cn/distributor-manager/prod/images/soft_2.png" class="img-rounded pull-left" />
 			<div class="pull-left  urls-content ml10">
-				<a href="#" target="_blank">订购链接:点击订购</a>
+				<a href="http://fuwu.taobao.com/ser/detail.htm?spm=a1z13.2196609.2196609.21.7ACmAc&amp;service_code=FW_GOODS-1911103&amp;tracelog=other_serv" target="_blank">订购链接:点击订购</a>
 				<p>
 		            微淘最好玩的打折工具。帮助淘宝店家在微淘上开展营销活动。通过趣味游戏，根据获得游戏成绩不同得到不同的折扣。 以达到吸引流量，提高销量的目的。 微淘打折，就上微折！
 				</p>
@@ -380,7 +353,7 @@
 		<div class="clearfix improve-urls">
 			<img src="http://alicdn.trend-data.cn/distributor-manager/prod/images/soft_3.jpg" class="img-rounded pull-left" />
 			<div class="pull-left  urls-content ml10">
-				<a href="#" target="_blank">订购链接:点击订购</a>
+				<a href="http://fuwu.taobao.com/ser/detail.htm?spm=a1z13.2196609.2196609.21.7ACmAc&amp;service_code=FW_GOODS-1911103&amp;tracelog=other_serv" target="_blank">订购链接:点击订购</a>
 				<p>
 		            微淘最好玩的打折工具。帮助淘宝店家在微淘上开展营销活动。通过趣味游戏，根据获得游戏成绩不同得到不同的折扣。 以达到吸引流量，提高销量的目的。 微淘打折，就上微折！
 				</p>
@@ -389,7 +362,7 @@
 		<div class="clearfix improve-urls">
 			<img src="http://alicdn.trend-data.cn/distributor-manager/prod/images/soft_4.png" class="img-rounded pull-left" />
 			<div class="pull-left  urls-content ml10">
-				<a href="#" target="_blank">订购链接:点击订购</a>
+				<a href="http://fuwu.taobao.com/ser/detail.htm?spm=a1z13.2196609.2196609.21.7ACmAc&amp;service_code=FW_GOODS-1911103&amp;tracelog=other_serv" target="_blank">订购链接:点击订购</a>
 				<p>
 		            微淘最好玩的打折工具。帮助淘宝店家在微淘上开展营销活动。通过趣味游戏，根据获得游戏成绩不同得到不同的折扣。 以达到吸引流量，提高销量的目的。 微淘打折，就上微折！
 				</p>
