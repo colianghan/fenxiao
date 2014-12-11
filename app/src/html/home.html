@@ -1,27 +1,65 @@
 <!-- 首页-->
 <div class="row-fluid">
 	<div class="span7" ng-controller="data-preview">
-		<h4 class="alert alert-info">数据概览</h4>
-		<div class="box" style="height:400px;">
-			<div class="box-scroll-content">
-				<!-- <div class="row-fluid mt30" ng-repeat="item in [1,2,3,4,5,6,7,8,9,10]">
-					<div class="span2" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">你在么可好啊啊啊啊啊</div>
-					<div class="progress span9">
-						<div class="bar bar-success" ng-style="{width:100%-$index*10}" data-with="100%-$index*10"></div>
-					</div>
-					<div class="span1">12355</div>
-				</div> -->
-				<div ng-if="sort==1" class="highCharts">
-				</div>
-				<div ng-if="sort==2">
-					
+		<h4 class="alert alert-info clearfix pr">
+			数据概览
+			<div class="pull-right">
+				<div class="nav nav-tabs">
+					<li>
+						<a href="javascript:;" ng-click="sort=1">总体概况</a>
+					</li>
+					<li>
+						<a href="javascript:;" ng-click="sort=2">母店概况</a>
+					</li>
+					<li>
+						<a href="javascript:;" ng-click="sort=3">分销概况</a>
+					</li>
+					<li>
+						<a href="javascript:;" ng-click="sort=4">分销宝贝</a>
+					</li>
 				</div>
 			</div>
-			<!-- <ul class="clear-fix nav clearfix dot-wrapper">
-					<li class="page-dot pull-left"><i class="active"></i></li>
-					<li class="page-dot pull-left"><i></i></li>
-					<li class="page-dot pull-left"><i></i></li>
-				</ul> -->	
+		</h4>
+		<div class="box" style="height:400px;">
+			<div class="box-scroll-content">
+				<div ng-show="sort==1" class="highCharts">
+				</div>
+				<div ng-show="sort!=1" class="pr">
+					<div class="scroll-content">
+						<div class="row-fluid mt15" ng-repeat="item in dataList">
+							<!-- <div class="span2" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">{{ item.title}}</div> -->
+							<div class="progress span9">
+								<a class="bar bar-success" ng-style="{width:item.width+'%'}" ng-href="{{item.picUrl}}" target="_blank"></a>
+								<span style="position:relative;">{{item[fieldName]}}</span>
+							</div>
+							<div class="span2"></div>
+						</div>
+					</div>
+					<div class="scroll-index">
+						<label class="radio">
+							<input type="radio" name="type" value="alipayTradeAmt" ng-model="fieldName" />
+							成交金额Top10
+						</label>
+						<label class="radio">
+							<input type="radio" name="type" value="alipayAuctionNum"  ng-model="fieldName" />
+							成交量Top10
+						</label>
+						<label class="radio" ng-show="sort!=3">
+							<input type="radio"  name="type" value="rise"  ng-model="fieldName"/>
+							飙升Top10
+						</label>
+						<label class="radio" ng-show="sort!=3">
+							<input type="radio"  name="type" value="transformationEfficiency" ng-model="fieldName" />
+							转化Top10
+						</label>
+						<label class="radio" ng-show="sort==3">
+							<input type="radio" name="type" value="perCustomerTransaction" ng-model="fieldName" />
+							客单价
+						</label>
+					</div>
+				</div>
+			</div>
+			<!--  -->	
 		</div>
 	</div>
 	<div class="span5">
@@ -32,22 +70,22 @@
 					<img src="http://img.taobaocdn.com/sns_logo/T1SrWwXphlXXb1upjX.jpg" alt="" class="img-circle mt30">
 				</div>
 				<div class="span9 text-center">
-					<h5 class="alert alert-success text-center">宝贝运营大师旗舰店</h5>
+					<h5 class="alert alert-success text-center">{{generaData.nick}}</h5>
 					<p class="mt30">当前分销版本:<span class="f20">分销管理基础版--v4.0</span></p>
 					<div class="clearfix store-info">
 						<div class="pull-left">
 							<ul class="nav">
 								<li>分销商数量:<span class="ml5">{{generaData.coopDistributorNum}}</span></li>
-								<li>活跃占比:<span class="ml5">{{generaData.saleActionDistributorTrend | percent}}</span></li>
-								<li><i class="icon-arrow-up"></i><span class="ml5">5.6%</span></li>
+								<li>活跃占比:<span class="ml5">{{generaData.distributorSalePercent}}%</span></li>
+								<li><i trend-class="{{generaData.saleActionDistributorTrend}}" class="fa"></i><span class="ml5">{{generaData.saleActionDistributorTrend}}</span></li>
 							</ul>
 						</div>
 						<div class="division"></div>
 						<div class="pull-right">
 							<ul class="nav">
 								<li>分销产品量:<span class="ml5">{{generaData.onLineProductNum}}</span></li>
-								<li>动销率:<span class="ml5">{{generaData.saleAuctionProductTrend | percent}}</span></li>
-								<li><i class="icon-arrow-down"></i><span class="ml5">1.2%</span></li>
+								<li>动销率:<span class="ml5">{{generaData.auctionSalePercent}}%</span></li>
+								<li><i trend-class="{{generaData.saleAuctionProductTrend}}" class="fa"></i><span class="ml5">{{generaData.saleAuctionProductTrend}}</span></li>
 							</ul>
 						</div>
 					</div>

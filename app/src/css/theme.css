@@ -320,15 +320,35 @@
 .box-scroll-content{
 	/* background-color: red; */
 	/* height: 250px; */
-	overflow: hidden;
+	/* overflow: hidden; */
 }
 .box-scroll-content [class*="span"]{
 	min-height: 0;
 }
+/* 重新了progress 的东西 */
 .box-scroll-content .progress{
 	height: 20px;
 	margin-bottom: 5px;
+	-webkit-border-radius: 0;
+	   -moz-border-radius: 0;
+			border-radius: 0;
+	-webkit-box-shadow: none; 
+       -moz-box-shadow: none;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff', endColorstr='#fff', GradientType=0);
+    background-color: #fff;
+    background-image: none;
+    /*修正100%的问题*/
+    overflow:visible;
+    white-space: nowrap;
 }
+/* 滚动坐标 */
+.box-scroll-content .scroll-index{
+	position: absolute;
+	top:150px;
+	right: 0;
+}
+
+
 .box-over-hidden{
 	overflow: hidden;
 }
