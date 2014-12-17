@@ -27,6 +27,16 @@ dm.controller('index',['$scope','$routeParams','tools',function($scope,$routePar
 		succ:function(resp){
 			console.log(resp.value);
 			if(resp.success){
+				var value = resp.value||{};
+				if(value.saleActionDistributorTrend!==undefined){
+					value.saleActionDistributorTrendAbs=Math.abs(value.saleActionDistributorTrend);
+					value.saleActionDistributorTrendClass=value.saleActionDistributorTrend>=0?'fa-arrow-up':'fa-arrow-down';
+				}
+				if(value.saleAuctionProductTrend!==undefined){
+					value.saleAuctionProductTrendAbs=Math.abs(value.saleAuctionProductTrend);
+					value.saleAuctionProductTrendClass=value.saleAuctionProductTrend>=0?'fa-arrow-up':'fa-arrow-down';
+				}
+				//value.abs=Math.abs(value.saleActionDistributorTrend);
 				$scope.generaData=resp.value
 			}else{
 				alert(resp.message);
@@ -244,8 +254,6 @@ dm.factory('translate',function(){
 	}
 });
 
-
-
 dm.filter('percent',function(){
 	return function(value,i){
 		if(!Number(value)){
@@ -262,7 +270,14 @@ dm.directive('dateTime',function(){
 	}
 });
 
-dm.directive('trendClass',function(){
+dm.filter('abs',function(){
+	return function(value){
+		var v = Math.abs(value);
+		return v==0?v:v+'%';
+	}
+});
+
+/*dm.directive('trendClass',function(){
 	return{
 		restrict:'A',
 		compile:function(element,attrs,link){
@@ -284,4 +299,27 @@ dm.directive('trendClass',function(){
 			}
 		}
 	}
-})
+})*/
+/*dm.directive('trend',function(){
+	return {
+		restrict:'A',
+		scope:{
+			value:'@'
+		},
+		controller:function($scope,$element,$attrs){
+			$scope.value = $attrs.trend
+			$scope.$watch('value',function(value){
+				debugger;
+				value=value||0;
+				var html = ''
+				if(value>=0){
+					html+='<i class="fa fa-arrow-up"></i>';
+				}else{
+					html+='<i class="fa fa-arrow-down"></i>';
+				}
+				html+='<span class="ml5">'+Math.abs(value)+'</span>';
+				$element.html(html);
+			});
+		}
+	}
+});*/

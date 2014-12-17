@@ -109,6 +109,9 @@
 .border-bottom{
 	border-bottom: 1px dashed #aeaeae;
 }
+.border-top{
+	border-top: 1px solid #aeaeae;
+}
 
 
 /* copy 旧分销样式 begin */
@@ -615,6 +618,21 @@ h4 .pull-right{
 	line-height: 30px;
 	font-size: 13px;
 }
+
+/* 分销管理 */
+.setting-table th,.setting-table td{
+	vertical-align: middle;
+}
+..setting-table td{
+	text-align: center;
+}
+.setting-table td input[type="text"],.setting-table td .input-append{
+	margin-bottom: 0;
+}
+
+
+
+
 
 
 /* 页面编写结束 end */

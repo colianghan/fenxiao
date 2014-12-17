@@ -66,7 +66,7 @@
 </div>
 
 
-<div ng-if="tagIndex>0&&tagIndex<4" class="mt30">
+<div ng-if="tagIndex>0&&tagIndex<4" class="mt30 hide">
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="">忠诚分销商</a></li>
 		<li ><a href="">冲刺分销商</a></li>
@@ -101,7 +101,7 @@
 </div>
 
 
-<div ng-if="tagIndex!=0" class="mt30">
+<div ng-if="tagIndex!=0" class="mt30 hide">
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="">等级分销商</a></li>
 		<li><a href="">等级授权产品</a></li>
@@ -404,6 +404,74 @@
 					</tr>
 				</tbody>
 			</table>
+		</div>
+	</div>
+</div>
+
+
+<div class="mt30">
+	<h5>备注：此处是对运营模式的计算参数进行设置，设置结果仅对运营模式有效，不会改变其他模式的设置！
+		<button class="btn btn-small pull-right"><i class="icon-off"></i>返回</button>
+	</h5>
+	<h3>忠诚分销商</h3>
+	<div class="row-fluid">
+		<div class="span5">
+			<h4 class="alert alert-info">可选参数</h4>
+			<div class="box box-auto-height" parms-to-checked></div>
+		</div>
+		<div class="span7" ng-controller="hasParams">
+			<h4 class="alert alert-info pr">
+				已选参数
+				<div class="pull-right">
+					<ul class="nav nav-tabs">
+						<li>
+							<a href="javascript:;">保存</a>
+						</li>
+						<li>
+							<a href="javascript:;">取消</a>
+						</li>
+					</ul>
+				</div>
+			</h4>
+			<div class="box box-auto-height">
+				<div class="alert alert-danger pr">
+					你好啊
+					<div class="pull-right">
+						<a href="javascript:;">
+							<i class="icon-remove"></i>
+						</a>
+					</div>
+					
+				</div>
+				<table class="table table-striped setting-table">
+					<tbody>
+						<tr>
+							<th>全店PV</th>
+							<td>指标</td>
+							<td>范围</td>
+							<td class="text-center">
+								<div class="input-append">
+										<input type="text" class="input-small">
+										<span class="add-on">元</span>
+								</div>	
+								<span class="ml10 mr10">—</span>
+								<div class="input-append">
+									<input type="text" class="input-small">
+									<span class="add-on">元</span>
+								</div>	
+							</td>
+							<td>
+								<a href="javascript:;">
+									<i class="icon-ok"></i>
+								</a>
+								<a href="javascript:;">
+									<i class="icon-remove"></i>
+								</a> 
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 </div>

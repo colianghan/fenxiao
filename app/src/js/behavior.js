@@ -1,177 +1,251 @@
-dm.factory('behaviorBaseService', function (tools) {
-    var promiseTool = tools.promise;
-    return {
-        get: promiseTool('getBehaviorDistributors.htm'),
-        dropGrade: promiseTool('moveDistributorToGrade.htm'),
-        terminateCoor: promiseTool('terminateCooperation.htm'),
-        getCooperationIdByNick: promiseTool('getCooperationIdByNick.htm', 'cache')
+//经销 代销
+dm.filter('tradeType_filter', function () {
+    return function (value) {
+        if (!value) {
+            return value;
+        }
+        return value.toUpperCase() == 'AGENT' ? '代销' : '经销';
     }
 });
-/*乱价监控和串货监控的抽象类*/
-var shopParent = function (type) {
-    this.shops = [];
-    this.selectAll = false;
-    this.applyRange = 'single';
-    this.selectedGradeLayerId = "";
-    this.type = type;
-    this.fleeingProds = [];
-    this.checkDetail = function (e, index) {
-        var that = this,
-            elem = $(e.target),
-            $closestDiv = elem.closest('tr'),
-            next = $closestDiv.next();
-        //'disFleeingGoodsInfo'
-        var param = {
-            disNick: this.shops[index].disNick,
-            type: this.type
-        };
-        //当前元素存在 隐藏
-        if (next.hasClass('fleeingProds') && !next.is(':hidden')) {
-            //next.addClass('none');
-            next.hide(500);
-            return;
-        }
-        behaviorBaseService.get(param).then(function (resp) {
-            if (resp.success) {
-                that.fleeingProds = resp.value;
-            }
-            elem.text('查看详情');
-            $closestDiv.siblings('.fleeingProds').insertAfter($closestDiv).show(500);
-        }, function (resp) {
-            //console.log(resp);
-            elem.text('查看详情');
-        });
-        elem.text('加载中..');
-        /* if (next.hasClass('fleeingProds') && !next.hasClass('none')) {
-         next.addClass('none');
-         } else {
-         $closestDiv.siblings('.fleeingProds').insertAfter($closestDiv).removeClass('none');
-         }*/
-    };
-    this.dropGrade = function (e, index) {
-        var $closestDiv = $(e.target).closest('tr'),
-            next = $closestDiv.next();
-        if (next.hasClass('gradesSelectable') && !next.is(':hidden')) {
-            /*next.slideUp('slow',function(){
-             $(this).addClass('none');
-             });*/
-            next.hide(500);
-            return;
-        } else {
-            $closestDiv.siblings('.gradesSelectable').slideUp('fast', function () {
-                $(this).insertAfter($closestDiv).show(500);
-            });
-        }
-        this.disNicks = this.shops[index].disNick;
-        this.tradeTypes = this.shops[index].tradeType;
-    },
-    this.ensureDropGrade = function (e, index) {
-        var that = this,
-            tar = $(e.target),
-            disNicks = [],
-            tradeType = [];
-        if (that.applyRange == 'single') {
-            disNicks.push(that.disNicks);
-            tradeType.push(that.tradeTypes);
-        } else {
-            that.shops.forEach_(function (item) {
-                if (item.selected) {
-                    disNicks.push(item.disNick);
-                    tradeType.push(item.tradeType);
-                }
-            });
-            if (!disNicks.length) {
-                return alert('请您至少选择一个分销商进行操作');
-            }
-        }
-        tar.text('正在降低等级....');
-        behaviorBaseService.dropGrade({
-            disNicks: disNicks.join(','),
-            gradeId: that.selectedGradeLayerId,
-            tradeTypes: tradeType.join(',')
-        }).then(function (resp) {
-            if (resp.success) {
-                tar.text('成功降低等级!');
-                that.selectAll = false;
-                setTimeout(function () {
-                    tar.closest('.gradesSelectable').hide().end().text('确定');
-                }, 1500);
-            }
-            else {
-                alert('加载出错，请联系客服人员或重试..');
-                tar.text('确定');
-                //console.log(resp.message);
-            }
-        }, function (resp) {
-            //console.log(resp);
-            tar.text('确定');
-        });
-    },
-    this.terminateCoor = function (e, index) {
-        var that = this;
-        var disNicks = this.shops[index].disNick,
-            tradeTypes = this.shops[index].tradeType,
-            tar = $(e.target);
-        tar.text('正在终止合作....');
-        terminateCooperation({
-            disNick: disNicks,
-            tradeType: tradeTypes
-        }).then(function (resp) {
-            if (resp.success) {
-                setTimeout(function () {
-                    $scope.$apply(function () {
-                        tar.closest('tr').hide(500);
-                    });
-                }, 1000);
-                tar.text('成功终止!');
-            }
-            else {
-                alert('加载出错，请联系客服人员或重试..');
-                tar.text('终止合作');
-            }
-        }, function (resp) {
-            tar.text('终止合作');
-        });
-    };
-    this.init = (function (win) {
-        behaviorBaseService.get({
-            type: win.type
-        }).then(function (resp) {
-            //debugger;
-            if (resp.success) {
-                var value = resp.value;
-                if (!value) return;
-                if (value.forEach_) {
-                    value.forEach_(function (item) {
-                        item.selected = false;
-                        item.disShopLevel = disShopLevel(item.disShopLevel);
-                    });
-                    win.shops = value;
-                }
-                else {
-                    for (var i in value) {
-                        var item = value[i];
-                        item.selected = false;
-                        item.disShopLevel = disShopLevel(item.disShopLevel);
-                        win.shops.push(item);
-                    }
-                }
-            }
-        });
-    })(this);
-};
 
-
-dm.controller('behavior',['$rootScope','$scope','$routeParams',function($rootScope,$scope,$routeParams){
+/*行为监控*/
+dm.controller('behavior',['$rootScope','$scope','$routeParams','tools','gradeLayerService',function($rootScope,$scope,$routeParams,tools,gradeLayerService){
 	/* 进行当前的url 定位*/
 	var bannerIndex = $routeParams.banner||0;
-		$scope.tagIndex=tagIndex = $routeParams.tag||1;
+	var tagIndex = $scope.tagIndex = $routeParams.tag||1;
 	$rootScope.$broadcast('onTagChange',tagIndex);
+    /*--------------- 开始逻辑运算 -----------------------*/
+    var disShopLevel = tools.shopLevel;
+    var api = {
+        get:'getBehaviorDistributors.htm',
+        dropGrade:'moveDistributorToGrade.htm',
+        terminateCoor:'terminateCooperation.htm',
+        getCooperationIdByNick:'getCooperationIdByNick.htm'
+    };
+    var dropDisNick,dropTradeType;
+    $scope.layerType=1;
+    var _data={};
+    var getData = function(data,callback){
+        debugger;
+        tools.http({
+            url:api.get,
+            data:data,
+            succ:function(resp){
+                if(resp.success){
+                    callback(resp.value);
+                }
+            }
+        });
+    };
+    var setShop = function(data){
+        data = _.isArray(data)?data:_.values(data);
+        _.each(data,function(item){
+            item.selected=false;
+            item.disShopLevel  = disShopLevel(item.disShopLevel);
+        });
+        debugger;
+        $scope.shops=data;
+        console.log(data);
+    };
+
+    /*查看详情*/
+    var getProds = $scope.getProds = function(e,index){
+        $scope.showLayers=false;
+        var $ele = $(e.currentTarget);
+        var $ele = $(e.currentTarget);
+        var $tr = $ele.parents('tr');
+        var $nextTr=$tr.next();
+        $ele.siblings().filter('.active').removeClass('active');
+        if ($nextTr.hasClass('othersPartner')&&!$nextTr.hasClass('hide')&&$ele.hasClass('active')) {
+            $nextTr.addClass('hide');
+            $ele.removeClass('active');
+            return;
+        };
+        $scope.showOther=1; //用此来进行跟关联访问量区别开来
+        $ele.addClass('active');
+        $scope.prods=[];
+        $('.othersPartner').insertAfter($tr).removeClass('hide');
+        getData({
+            type:$scope.type,
+            disNick:$scope.shops[index].disNick
+        },function(data){
+            $scope.prods=data;
+        });
+    };
+    /*降低等级*/
+    var dropGrade = $scope.dropGrade = function(e,index){
+        $scope.showLayers=true;
+        var $ele = $(e.currentTarget);
+        var $ele = $(e.currentTarget);
+        var $tr = $ele.parents('tr');
+        var $nextTr=$tr.next();
+        $ele.siblings().filter('.active').removeClass('active');
+        if ($nextTr.hasClass('othersPartner')&&!$nextTr.hasClass('hide')&&$ele.hasClass('active')) {
+            $nextTr.addClass('hide');
+            $ele.removeClass('active');
+            return;
+        };
+        $scope.showOther=1; //用此来进行跟关联访问量区别开来
+        $ele.addClass('active');
+        $('.othersPartner').insertAfter($tr).removeClass('hide');
+        //你额
+    };
+    /*终止合作*/
+    var stopTerminal = $scope.stopTerminal =function(e,index){
+        if(!confirm('是否终止合作')){
+            return;
+        }
+        var disNicks = $scope.shops[index].disNick;
+        var tradeTypes = $scope.shops[index].tradeType;
+        tools.http({
+            url:api.terminateCoor,
+            data:{
+                disNick: disNicks,
+                tradeType: tradeTypes
+            },
+            succ:function(resp){
+                if(resp.success){
+                    alert('成功终止');
+                    $scope.shops.splice(index,1);
+                }else{
+                    alert(resp.message);
+                }
+            }
+        });
+    };
+    /*确定降低等级*/
+    var enDropLayer = $scope.enDropLayer = function(){
+         debugger;
+        var type=$scope.layerType;
+        var layer=$scope.layer;
+
+        var disNicks=[],tradeTypes=[];
+        if(!layer){
+            alert('请选择要降低的等级');
+            return;
+        }
+        if(type==1){
+            disNicks.push(dropDisNick);
+            tradeTypes.push(dropTradeType);
+        }else if(type==2){
+            _.each($scope.shops,function(i){
+                if(i.selected){
+                    disNicks.push(i.disNick);
+                    tradeTypes.push(i.tradeType);
+                }
+            });
+            if(!disNicks.length){
+                alert('请选择要分销商');
+            }
+        }
+        tools.http({
+            url:api.dropGrade,
+            data:{
+                disNicks: disNicks.join(','),
+                gradeId: layer,
+                tradeTypes: tradeTypes.join(',')
+            },
+            succ:function(resp){
+                if(resp.success){
+                    alert('降低等级成功');
+                }else{
+                    alert(resp.message);
+                }
+            }
+        });
+    };
+    /*设置降低等级方式*/
+    $scope.setType=function(value){
+        $scope.layerType=value;
+    };
+
+
+    var gradeLayers = $scope.gradeLayers = [];
+     //debugger;
+     gradeLayerService.get().then(function (resp) {
+     if (resp.success) {
+         data = resp.value;
+         for (var i in data) {
+             var tmp = {};
+             var item = data[i];
+             tmp.gradeLayerId = i;
+             tmp.disNum = item.disNum || 0;
+             tmp.gradeLayerName = item.supGradeInfo.name;
+             tmp.discountName = item.supDiscountInfo ? item.supDiscountInfo.discountName : '';
+             tmp.gradeLayerProdLinesLen = item.supProductCat.length;
+             tmp.gradeLayerProdLines = (function (supProductCat) {
+                 var res = [];
+                 _.each(supProductCat,function (item, index) {
+                    res.push(item.name);
+                });
+                return res.join(',');
+             })(item.supProductCat);
+             tmp.selected = false;
+             tmp.editing = false;
+             $scope.gradeLayers.push(tmp);
+         }
+         // 给其他版块使用
+         $rootScope.$broadcast('gradeLayersDetail', $scope.gradeLayers);
+     }});
 	/*进行任务*/
+    //debugger;
+    switch(Number(tagIndex)){
+        case 1:
+            /*窜货嫌疑*/
+            $scope.title="窜货嫌疑";
+            $scope.type="fleeingGoods";
+            getData({type:'fleeingGoods'},setShop);
+            break;
+        case 2:
+            /*乱价嫌疑*/
+            $scope.title="乱价嫌疑";
+            $scope.type="priceRemind";
+            getData({
+                type:'priceRemind'
+            },setShop);
+            break;
+        case 3 :
+            /*差评监控*/
+            $scope.type="badRateInfo";
+            $scope.showList=true;
+            getData({
+                type:'badRateInfo',
+                days:30
+            },function(resp){
+               function infoProcess(badInfo) {
+                    var res = [];
+                    for (var i in badInfo) {
+                        res.push({
+                            name: i,
+                            rateNum: badInfo[i]
+                        });
+                    }
+                    return res;
+                }
+                $scope.shops=$scope.shops||{};
+                var badRate = infoProcess(resp.badInfo),
+                    neutralBadRate = infoProcess(resp.neutralBadInfo);
+                $scope.shops.badRate = badRate;
+                $scope.shops.neutralBadRate = neutralBadRate;
+            });
+    }
 
-
-
-
-
-
+    /*获取查询详情*/
+    $scope.lookUpSomeDis=function(disNick, result, e){
+        var param = {
+            disNick: disNick,
+            result: result,
+            type: 'badRateInfo',
+            days: 30
+        };
+        getData(param,function(resp){
+            $scope.shops=$scope.shops||{};
+            $scope.shops.prodsBadRateDetails = [];
+            for (var i in resp) {
+                resp[i].numberId = i;
+                $scope.shops.prodsBadRateDetails.push(resp[i]);
+            }
+            $scope.showList=false;
+        });
+    }
 }]);

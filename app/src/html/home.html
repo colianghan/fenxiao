@@ -67,7 +67,7 @@
 		<div class="box box-noborder">
 			<div class="row-fluid">
 				<div class="span3 mt10">
-					<img src="http://img.taobaocdn.com/sns_logo/T1SrWwXphlXXb1upjX.jpg" alt="" class="img-circle mt30">
+					<img src="{{generaData.picUrl}}" alt="" class="img-circle mt30">
 				</div>
 				<div class="span9 text-center">
 					<h5 class="alert alert-success text-center">{{generaData.nick}}</h5>
@@ -77,7 +77,10 @@
 							<ul class="nav">
 								<li>分销商数量:<span class="ml5">{{generaData.coopDistributorNum}}</span></li>
 								<li>活跃占比:<span class="ml5">{{generaData.distributorSalePercent}}%</span></li>
-								<li><i trend-class="{{generaData.saleActionDistributorTrend}}" class="fa"></i><span class="ml5">{{generaData.saleActionDistributorTrend}}</span></li>
+								<li>
+									<i class="fa" ng-class="generaData.saleActionDistributorTrendClass"></i>
+									<span class="ml5">{{generaData.saleActionDistributorTrendAbs | abs}}</span>
+								</li>
 							</ul>
 						</div>
 						<div class="division"></div>
@@ -85,7 +88,10 @@
 							<ul class="nav">
 								<li>分销产品量:<span class="ml5">{{generaData.onLineProductNum}}</span></li>
 								<li>动销率:<span class="ml5">{{generaData.auctionSalePercent}}%</span></li>
-								<li><i trend-class="{{generaData.saleAuctionProductTrend}}" class="fa"></i><span class="ml5">{{generaData.saleAuctionProductTrend}}</span></li>
+								<li>
+									<i class="fa" ng-class="generaData.saleAuctionProductTrendClass"></i>
+									<span class="ml5">{{generaData.saleAuctionProductTrendAbs | abs}}</span>
+								</li>
 							</ul>
 						</div>
 					</div>
@@ -120,14 +126,14 @@
 					<tr ng-repeat="item in ths">
 						<td>{{item}}</td>
 						<td>{{ActionData.supData[$index]}}</td>
-						<td>
-							<i class="icon-arrow-up"></i>
-							<span class="ml10">{{ActionData.supTrend[$index]}}</span>
+						<td trend="{{ActionData.supTrend[$index]}}">
+							<i class="fa" ng-class="ActionData.supTrend[$index]>=0?'fa-arrow-up':'fa-arrow-down'"></i>
+							<span class="ml10">{{ActionData.supTrend[$index] | abs}}</span>
 						</td>
 						<td>{{ActionData.disData[$index]}}</td>
-						<td>
-							<i class="icon-arrow-down"></i>
-							<span class="ml10">{{ActionData.disTrend[$index]}}</span>
+						<td trend="{{ActionData.disTrend[$index]}}">
+							<i class="fa" ng-class="ActionData.disTrend[$index]>=0?'fa-arrow-up':'fa-arrow-down'"></i>
+							<span class="ml10">{{ActionData.disTrend[$index] | abs}}</span>
 						</td>
 					</tr>
 				</tbody>
