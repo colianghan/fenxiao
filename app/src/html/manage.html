@@ -1,4 +1,4 @@
-<div ng-if="tagIndex==0">
+<!-- <div ng-if="tagIndex==0">
 	<div class="row-fluid mt30">
 		<div class="span6">
 			<span class="title">分销产品管理概况</span>
@@ -63,21 +63,19 @@
 			</div>
 		</div>
 	</div>																									
-</div>
+</div> -->
 
-
-<div ng-if="tagIndex>0&&tagIndex<4" class="mt30 hide">
+<div ng-if="tagIndex>0&&tagIndex<4&&!showSetting" class="mt30">
 	<ul class="nav nav-tabs">
-		<li class="active"><a href="">忠诚分销商</a></li>
-		<li ><a href="">冲刺分销商</a></li>
-		<li><a href="">服务型分销商</a></li>
+		<li ng-repeat="item in model" ng-class="item==curModeName?'active':''" data-item="{{item}}">
+			<a href="javascript:;" ng-click="setCur(item);">{{item}}</a>
+		</li>
 	</ul>
 	<div class="box container-fluid box-border-recruit">
 		<div class="span12">
-			<button class="btn pull-right mb20" ng-click="add($event);"><i class="icon-wrench"></i>设置</button>
+			<button class="btn pull-right mb20" ng-click="Settings();"><i class="icon-wrench"></i>设置</button>
 			<table class="table table-bordered table-hover" ng-table="">
 				<thead>
-					<!--4 个属性 -->
 					<tr>
 						<th>店铺旺旺</th>
 						<th>所属分层</th>
@@ -99,6 +97,57 @@
 		</div>
 	</div>
 </div>
+<div class="mt30" ng-show="showSetting">
+	<h5>备注：此处是对运营模式的计算参数进行设置，设置结果仅对运营模式有效，不会改变其他模式的设置！
+		<button class="btn btn-small pull-right" ng-click="showSetting=false;"><i class="icon-off"></i>返回</button>
+	</h5>
+	<h3>忠诚分销商</h3>
+	<div class="row-fluid">
+		<div class="span5">
+			<h4 class="alert alert-info">可选参数</h4>
+			<div class="box box-auto-height" parms-to-checked></div>
+		</div>
+		<div class="span7" ng-controller="hasParams">
+			<h4 class="alert alert-info pr">
+				已选参数
+			</h4>
+			<div class="box box-auto-height">
+				<div class="alert alert-danger pr mb5">
+					你好啊
+				</div>
+				<table class="table table-striped setting-table">
+					<tbody>
+						<tr ng-repeat=" i in hasChecked" data-key="{{i.key}}">
+							<th>{{i.des}}</th>
+							<td>指标</td>
+							<td>范围</td>
+							<td class="text-center">
+								<div class="input-append">
+										<input type="text" class="input-small low-input" value="{{i.low}}">
+										<span class="add-on">{{i.unit}}</span>
+								</div>	
+								<span class="ml10 mr10">—</span>
+								<div class="input-append">
+									<input type="text" class="input-small high-input" value="{{i.high}}">
+									<span class="add-on">{{i.unit}}</span>
+								</div>	
+							</td>
+							<td>
+								<a href="javascript:;" ng-click="addDim($index,$event);">
+									<i class="icon-ok"></i>
+								</a>
+								<a href="javascript:;" ng-click="reMov($index,$event);">
+									<i class="icon-remove"></i>
+								</a> 
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
 
 
 <div ng-if="tagIndex!=0" class="mt30 hide">
@@ -404,74 +453,6 @@
 					</tr>
 				</tbody>
 			</table>
-		</div>
-	</div>
-</div>
-
-
-<div class="mt30">
-	<h5>备注：此处是对运营模式的计算参数进行设置，设置结果仅对运营模式有效，不会改变其他模式的设置！
-		<button class="btn btn-small pull-right"><i class="icon-off"></i>返回</button>
-	</h5>
-	<h3>忠诚分销商</h3>
-	<div class="row-fluid">
-		<div class="span5">
-			<h4 class="alert alert-info">可选参数</h4>
-			<div class="box box-auto-height" parms-to-checked></div>
-		</div>
-		<div class="span7" ng-controller="hasParams">
-			<h4 class="alert alert-info pr">
-				已选参数
-				<div class="pull-right">
-					<ul class="nav nav-tabs">
-						<li>
-							<a href="javascript:;">保存</a>
-						</li>
-						<li>
-							<a href="javascript:;">取消</a>
-						</li>
-					</ul>
-				</div>
-			</h4>
-			<div class="box box-auto-height">
-				<div class="alert alert-danger pr">
-					你好啊
-					<div class="pull-right">
-						<a href="javascript:;">
-							<i class="icon-remove"></i>
-						</a>
-					</div>
-					
-				</div>
-				<table class="table table-striped setting-table">
-					<tbody>
-						<tr>
-							<th>全店PV</th>
-							<td>指标</td>
-							<td>范围</td>
-							<td class="text-center">
-								<div class="input-append">
-										<input type="text" class="input-small">
-										<span class="add-on">元</span>
-								</div>	
-								<span class="ml10 mr10">—</span>
-								<div class="input-append">
-									<input type="text" class="input-small">
-									<span class="add-on">元</span>
-								</div>	
-							</td>
-							<td>
-								<a href="javascript:;">
-									<i class="icon-ok"></i>
-								</a>
-								<a href="javascript:;">
-									<i class="icon-remove"></i>
-								</a> 
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
 		</div>
 	</div>
 </div>
