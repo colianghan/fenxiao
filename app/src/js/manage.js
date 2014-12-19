@@ -1,4 +1,4 @@
-dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','tools',function($rootScope,$scope,$routeParams,$animate,tools){
+dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter','tools','ngTableParams',function($rootScope,$scope,$routeParams,$animate,$filter,tools,ngTableParams){
 	var bannerIndex = $routeParams.banner||0,
 		tagIndex = $scope.tagIndex = $routeParams.tag||0;
 		if (tagIndex==0 && bannerIndex!=0){
@@ -24,7 +24,30 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','tools',
 	var models = config.model,
 		model  = $scope.model = models[tagIndex];
 	$scope.curModeName = $scope.curModeName || model[0];
+	$scope.dimensions = [];//维度列表
+	$scope.getDis=[];//分销商列表
+	var getDis = function(dimensions){
+		var modelName = $scope.curModeName;
+		var getDistr = tools.promise('getModeOfDistributors.htm',true);
+		getDistr({
+			data:{
+				modeName:$scope.curModeName
+			},
+			succ:function(resp){
+				if(resp.succ){
+					debugger;
+					/*if(!dimensions){
+						$scope.getDis = resp.value;	
+					}else{
+						_.each(resp.value,function(item){
 
+						});
+					}*/
+					$scope.getDis = resp.value;
+				}
+			}
+		});
+	}
 	var getDimensions = function(){
 		tools.http({
 			url:'getDimensions.htm',
@@ -33,7 +56,17 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','tools',
 			},
 			succ:function(resp){
 				if(resp.success){
-					$scope.dimensions=resp.value;
+					var dimensions = [];
+					_.each(resp.value.dimensions,function(item){
+						_.each(config.settingManage,function(v){
+							if(item.dimension==v.name){
+								dimensions.push($.extend(item,v));
+							}
+						});
+					});
+					debugger;
+					$scope.dimensions=dimensions;
+					getDis(dimensions);
 					$rootScope.$broadcast('setDimensions',resp.value);
 				}
 			}
@@ -48,9 +81,53 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','tools',
 		$scope.curModeName = item;
 		getDimensions();
 	};
+	/*$scope.$watch('getDis',function(v,old){
+		debugger;
+		if(!old){
+			//过滤第一次
+			return;
+		}else{
+			$scope['distr'].page(1).reload();
+		}
+	});*/
+	$scope['distr'] = new ngTableParams({
+		page: 1,
+        count: tools.config.table.count,
+        sorting: {
+           gradeId:'desc'
+        },
+        defaultSort: 'desc'
+	},{
+		total: 0,
+        counts: [],
+        getData: function ($defer, params) {
+        	debugger;
+            var begin = (params.page() - 1) * params.count(), end = params.page() * params.count();
+            var words = [];
+            if (!$scope.getDis.length) {
+               words = params.sorting ?
+                                        $filter('orderBy')($scope.getDis, params.orderBy()) :
+                                        $scope.getDis;
+	           params.total(words.length);
+	           $defer.resolve(words.slice(begin, end));
+	        } else {
+	           $defer.resolve($scope.getDis.slice(begin, end));
+	        }
+        }
+	});
+
+
+
+
+
+
+
 }]);
 
 
+
+
+/*已选参数*/
 dm.controller('hasParams',['$scope','$rootScope','tools',function($scope,$rootScope,tools){
 	var parms = $scope.parms = config.settingManage;
 	var hasChecked = $scope.hasChecked =[];
@@ -65,7 +142,7 @@ dm.controller('hasParams',['$scope','$rootScope','tools',function($scope,$rootSc
 		}else{
 			item = parms[v];
 			item.index=v;
-			item.modeName=$scope.modeName;
+			item.modeName=$scope.modelName;
 		}
 		/*bug 事件更新没有放到angular上下文中*/
 		/*$scope.$apply(function(){
@@ -110,7 +187,7 @@ dm.controller('hasParams',['$scope','$rootScope','tools',function($scope,$rootSc
 			tools.http({
 				url:'addDimension.htm',
 				data:{
-					modeName:$scope.modeName,
+					modeName:$scope.modelName,
 					dimension:$scope.hasChecked[index].name,
 					high:low,
 					low:high
@@ -170,64 +247,33 @@ dm.controller('hasParams',['$scope','$rootScope','tools',function($scope,$rootSc
 			}
 		});
 	};
-}]);
 
-dm.directive('paramsHasChecked',['$compile','$parse','tools',function($compile,$parse,tools){
-	return {
-		restrict:'A',
-		compile:function($element,$attrs,$transclude){
-			/*$transclude 是为了使其中的各指令间互相通信*/
-			debugger;
-			var Index = $attrs.index;
-			var item  =  config.settingManage[Index]||{};
-			item.low  =  $attrs.dataLow||'';
-			item.high =  $attrs.dataHigh||'';
-			var  html = '';
-			html+='<th>'+item.name+'</th>'+
-					'<td>指标</td>'+
-					'<td>范围</td>'+
-					'<td class="text-center">'+
-						'<div class="input-append">'+
-							'<input type="text" class="input-small low-input" value="'+item.low+'">'+
-							'<span class="add-on">'+item.unit+'</span>'+
-						'</div>'+	
-						'<span class="ml10 mr10">—</span>'+
-						'<div class="input-append">'+
-							'<input type="text" class="input-small high-input" value="'+item.high+'">'+
-							'<span class="add-on">'+item.unit+'</span>'+
-						'</div>'+	
-					'</td>'+
-					'<td>'+
-						'<a href="javascript:;">'+
-							'<i class="icon-ok"></i>'+
-						'</a>'+
-						'<a href="javascript:;">'+
-							'<i class="icon-remove"></i>'+
-						'</a>'+ 
-					'</td>'+
-			$element.html(html);
-			return function($scope,$element,$attrs){
-				console.log('paramsHasChecked');
+	$scope.check=function(v){
+		if(!v){
+			return;
+		}
+		switch(v.type){
+			case 'int':function(){
+				if(v%1){
+					$scope.$broadcast('erro-alert','必须为整数');
+				}
 			}
-		},
-		controller:function($scope,$element,$attrs,tools){
-			debugger;
-			console.log(tools);
-			var low = $('.low-input',$element).val();
-			var high= $('.high-input',$element).val();
-			$element.on('click','.icon-ok',function(e){
+			break;
+			case 'dor':function(){
+				if(!(v%1).toFixed(2)>0.10){
+					$scope.$broadcast('erro-alert','只能精确到1位小数');
+				}
+			}
+			break;
+			case 'date':function(){
 				
-			});
-			$element.on('blur','input[type="text"]',function(e){
-
-			});
-			$element.on('click','.icon-remove',function(e){
-
-			});
-		},
-		replace:true
+			}
+			break;
+		}
 	}
+
 }]);
+
 
 dm.directive('parmsToChecked',['$compile','$parse',function($compile,$parse){
 	return{
@@ -282,7 +328,7 @@ dm.directive('parmsToChecked',['$compile','$parse',function($compile,$parse){
 					model.high= item.high;
 					model.key = item.id;
 					model.index=index;
-					model.modelName=$scope.modeName;
+					model.modelName=$scope.modelName;
 					$('input[value="'+item.dimension+'"]',$element).prop('checked',true);
 					//$rootScope.$broadcast('mange-checked',model);
 					models.push(model);
@@ -292,5 +338,25 @@ dm.directive('parmsToChecked',['$compile','$parse',function($compile,$parse){
 				}
 			});
 		}]
+	}
+}]);
+
+/*错误信息*/
+dm.directive('erro',['$compile',function($compile){
+	return{
+		restrict:'A',
+		compile:function($element){
+			return function($scope,$element,$attrs){
+
+			}
+		},
+		controller:function($scope,$element,$timeout){
+			$scope.$on('erro-alert',function(e,v){
+				$element.html(v).removeClass('hide');
+				$timeout(function(){
+					$element.addClass('hide');
+				},3000);
+			});
+		}
 	}
 }]);

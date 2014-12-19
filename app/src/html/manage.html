@@ -74,23 +74,16 @@
 	<div class="box container-fluid box-border-recruit">
 		<div class="span12">
 			<button class="btn pull-right mb20" ng-click="Settings();"><i class="icon-wrench"></i>设置</button>
-			<table class="table table-bordered table-hover" ng-table="">
-				<thead>
-					<tr>
-						<th>店铺旺旺</th>
-						<th>所属分层</th>
-						<th>成交额</th>
-						<th>金额占比</th>
-					</tr>
-				</thead>
+			<table class="table table-bordered table-hover" ng-table="distr">
 				<tbody>
-					<tr ng-repeat="item in a">
-						<td>
-							<a href="">永远笑着的人</a>
+					<tr ng-repeat="item in $data">
+						<td data-title="'店铺旺旺'">
+							<a href="javascript:;">{{item.disNick}}</a>
 						</td>
-						<td>未分组</td>
-						<td>2849</td>
-						<td>35.72%</td>			
+						<td data-title="'所属分层'" sortable="'item.gradeId'">{{item.gradeId}}</td>
+						<td ng-repeat="i in dimensions" data-title="i.des" sortable="'i.name'">
+							{{item[i.name]}}
+						</td>	
 					</tr>
 				</tbody>
 			</table>
@@ -112,7 +105,7 @@
 				已选参数
 			</h4>
 			<div class="box box-auto-height">
-				<div class="alert alert-danger pr mb5">
+				<div class="alert alert-danger pr mb5 hide" erro>
 					你好啊
 				</div>
 				<table class="table table-striped setting-table">
@@ -147,9 +140,6 @@
 		</div>
 	</div>
 </div>
-
-
-
 <div ng-if="tagIndex!=0" class="mt30 hide">
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="">等级分销商</a></li>

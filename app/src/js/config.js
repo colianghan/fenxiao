@@ -233,7 +233,7 @@ var config ={
 			name:'disShopCreateTime',
 			des:'开店时间',
 			type:'date',
-			unit:'<i class="fa fa-calendar"></i>;'
+			unit:'<i class="fa fa-calendar"></i>'
 		},{
 			name:'disBuyerGoodRate',
 			des:'好评率',
