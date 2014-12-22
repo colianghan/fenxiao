@@ -138,6 +138,7 @@ var configureGrunt = function(grunt){
                         'public/components/bootstrap/docs/assets/js/bootstrap.js',
                         'public/components/angular/angular.js',
                         'public/components/angular-route/angular-route.js',
+                        'public/components/angular-sanitize/angular-sanitize.js',
                         'public/components/angular-animate/angular-animate.js'
                     ],
                     '<%= paths.builtDir %>/js/plugin.js':[

@@ -1,10 +1,17 @@
 dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter','tools','ngTableParams',function($rootScope,$scope,$routeParams,$animate,$filter,tools,ngTableParams){
-	var bannerIndex = $routeParams.banner||0,
-		tagIndex = $scope.tagIndex = $routeParams.tag||0;
+	var gradeId,bannerIndex = $routeParams.banner||0,
+		tagIndex = $scope.tagIndex = $routeParams.tag||1;
 		if (tagIndex==0 && bannerIndex!=0){
-			tagIndex = $scope.tagIndex = 1;
+			tagIndex = $scope.tagIndex = 4;
 		}
-	$rootScope.$broadcast('onTagChange',tagIndex);
+		debugger;
+		if(tagIndex<6){
+			$rootScope.$broadcast('onTagChange',tagIndex);
+		}else{
+			gradeId = $routeParams.gradeId;
+			$rootScope.$broadcast('onTagChange',gradeId);
+		}
+	
 	/*----------------------路由设置 end----------------------------------------*/
 	
 	/*----------------------自定义分层设置--------------------------------------*/
@@ -23,28 +30,19 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 	};
 	var models = config.model,
 		model  = $scope.model = models[tagIndex];
-	$scope.curModeName = $scope.curModeName || model[0];
+	$scope.curModeName = $scope.curModeName ||!model||model[0];
 	$scope.dimensions = [];//维度列表
 	$scope.getDis=[];//分销商列表
-	var getDis = function(dimensions){
+	var getDis = function(callback){
 		var modelName = $scope.curModeName;
 		var getDistr = tools.promise('getModeOfDistributors.htm',true);
 		getDistr({
 			data:{
 				modeName:$scope.curModeName
-			},
-			succ:function(resp){
-				if(resp.succ){
-					debugger;
-					/*if(!dimensions){
-						$scope.getDis = resp.value;	
-					}else{
-						_.each(resp.value,function(item){
-
-						});
-					}*/
-					$scope.getDis = resp.value;
-				}
+			}
+		}).then(function(resp){
+			if(resp.success){
+				callback(resp.value);
 			}
 		});
 	}
@@ -66,7 +64,7 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 					});
 					debugger;
 					$scope.dimensions=dimensions;
-					getDis(dimensions);
+					//getDis(dimensions);
 					$rootScope.$broadcast('setDimensions',resp.value);
 				}
 			}
@@ -81,15 +79,6 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 		$scope.curModeName = item;
 		getDimensions();
 	};
-	/*$scope.$watch('getDis',function(v,old){
-		debugger;
-		if(!old){
-			//过滤第一次
-			return;
-		}else{
-			$scope['distr'].page(1).reload();
-		}
-	});*/
 	$scope['distr'] = new ngTableParams({
 		page: 1,
         count: tools.config.table.count,
@@ -101,32 +90,26 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 		total: 0,
         counts: [],
         getData: function ($defer, params) {
-        	debugger;
+        	//debugger;
             var begin = (params.page() - 1) * params.count(), end = params.page() * params.count();
             var words = [];
             if (!$scope.getDis.length) {
-               words = params.sorting ?
+            	getDis(function(words){
+            		$scope.getDis= words;
+            		words = params.sorting ?
                                         $filter('orderBy')($scope.getDis, params.orderBy()) :
                                         $scope.getDis;
-	           params.total(words.length);
-	           $defer.resolve(words.slice(begin, end));
+                    debugger;
+			        params.total(words.length);
+			        $defer.resolve(words.slice(begin, end));
+            	});
 	        } else {
 	           $defer.resolve($scope.getDis.slice(begin, end));
 	        }
         }
 	});
-
-
-
-
-
-
-
+	//$scope.f='分销流量';
 }]);
-
-
-
-
 /*已选参数*/
 dm.controller('hasParams',['$scope','$rootScope','tools',function($scope,$rootScope,tools){
 	var parms = $scope.parms = config.settingManage;
@@ -247,31 +230,6 @@ dm.controller('hasParams',['$scope','$rootScope','tools',function($scope,$rootSc
 			}
 		});
 	};
-
-	$scope.check=function(v){
-		if(!v){
-			return;
-		}
-		switch(v.type){
-			case 'int':function(){
-				if(v%1){
-					$scope.$broadcast('erro-alert','必须为整数');
-				}
-			}
-			break;
-			case 'dor':function(){
-				if(!(v%1).toFixed(2)>0.10){
-					$scope.$broadcast('erro-alert','只能精确到1位小数');
-				}
-			}
-			break;
-			case 'date':function(){
-				
-			}
-			break;
-		}
-	}
-
 }]);
 
 
@@ -360,3 +318,20 @@ dm.directive('erro',['$compile',function($compile){
 		}
 	}
 }]);
+
+
+dm.directive('dimensionsRepeat',function($compile){
+	return{
+		restrict:'A',
+		compile:function($element,$attrs,link){
+			//var html = '<tr data-title="'++'"></tr>';
+			return function($scope,$element,$attrs){
+
+			}
+		},
+		controller:function($scope,$element,$attrs,link){
+
+		},
+		scope:true
+	}
+});

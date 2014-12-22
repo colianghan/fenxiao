@@ -94,7 +94,7 @@
 		<div class="span2 leftBar" ng-controller="leftBar">
 			<ul class="nav nav-child mt30 text-center" ng-if="contr!='index'&&contr!='compete'" bar>
 				<li ng-repeat="item in linkList" ng-click="animateShow(item);">
-					<label class="head">{{item}}</label>
+					<label class="head">{{item}} <i class="icon-plus pull-right plus" graders ng-if="item==='自定义分层'"></i></label>
 					<ul class="nav nav-list" ng-show="currentParent==item">
 						<li ng-repeat="a in child[item]" ng-class="activeItem==a.name?'active':''">
 							<a ng-href="{{prehref+a.href}}">{{a.name}}</a>
@@ -119,7 +119,7 @@
 					</ul>
 				</li>
 				<li>
-					<label class="head">自定义分层 <i class="icon-plus pull-right plus"></i></label>
+					<label class="head">自定义分层 </label>
 					<ul class="nav nav-list">
 						<li>
 							<a href=""></a>
@@ -273,13 +273,12 @@
 		</div>
 	</div>
 	<script src="../../built/js/vendor.js"></script>
-	<!--<script src="../../built/js/angular-animate.js"></script>-->
-	<!--<script src=""></script>-->
 	<script src = "http://alicdn.trend-data.cn/distributor-manager/lib/DatePicker/WdatePicker.js"></script>
 	<script src="../../built/js/plugin.min.js"></script>
 	<script src="../js/config.js"></script>
 	<script src="../js/main.js"></script>
 	<script src="../js/service.js"></script>
+	<script src="../js/layers.js"></script>
 	<script src="../js/index.js"></script>
 	<script src="../js/recruit.js"></script>
 	<script src="../js/manage.js"></script>

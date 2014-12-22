@@ -94,9 +94,9 @@ dm.controller('banner',['$scope','$element',function($scope,$element){
 	//$scope.$on()
 }]);
 
-dm.controller('leftBar',['$scope','$element','$compile',function($scope,$element,$compile){
+dm.controller('leftBar',['$scope','$element','$compile','grades',function($scope,$element,$compile,grades){
 
-	var configer;
+	var configer,layers;
 	$scope.$on('onChangeBanner',function(e,v){
 		var controller,params,child={},bannerIndex,tagIndex;
 		$scope.contr = controller=v.controller;//controller
@@ -117,7 +117,6 @@ dm.controller('leftBar',['$scope','$element','$compile',function($scope,$element
 		}
 
 
-
 		/*首页*/
 		if (controller==='index') {
 			$scope.quickLinks =['商品录入','创建活动','订单管理'];
@@ -125,18 +124,42 @@ dm.controller('leftBar',['$scope','$element','$compile',function($scope,$element
 		if (controller==='compete') {
 			/*ajax 请求 获取 竞争对手列表*/
 		};
+
+		/*分销管理 处理自定义分层*/
+		if(controller==='manage'){
+			layers = new grades();
+			i=6;
+			layers.get(function(value){
+				//debugger;
+				var _arr= {};
+				_arr['自定义分层']=[];
+				_.each(value,function(item,key){
+					item.id=key;
+					item.parent='自定义分层';
+					item.href=i+'&gradeId='+item.id;
+					_arr['自定义分层'].push(item);
+					i++;
+				});
+				$scope.child = $.extend($scope.child,_arr);
+			});
+		}
 	});
 
 	$scope.$on('onTagChange',function(e,v){
 		$scope.activeItem=null;
 		$scope.currentParent=null;
-		_.each(configer.child,function(item,index){
-			if(item.href==v){
-				$scope.activeItem=item.name;
-				$scope.currentParent = item.parent;
-				return;
-			}
-		})
+		debugger;
+		_.each($scope.child,function(i,index){
+			//item.id 是为了hack自定义分层的情况
+			_.each(i,function(item){
+				if(item.href==v||item.id===v){
+					$scope.activeItem=item.name;
+					$scope.currentParent = item.parent;
+					return;
+				}
+			});
+			
+		});
 		//debugger
 	});
 	
@@ -158,5 +181,53 @@ dm.directive('bar',['$rootScope',function($rootScope){
 		restricit:'EA',
 		transclude:true,
 		scope:false
+	}
+}]);
+
+
+
+/*自定义分层 添加分层*/
+dm.directive('graders',['$rootScope','$compile','grades',function($rootScope,$compile,grades){
+	var compile = function(element,attrs,link){
+		var html='<li class="addGrades"><span>名称:</span><input type="text" class="gradName input-small mb0 ml10 mr5" placeholder="五字内" /><input type="button" value="确定" class="btn addGrades btn-mini" /></li>';
+	    return function($scope,$element){
+	    	$element.click(function(){
+	    		debugger;
+	    		$scope.$apply(function(){
+	    			var $ul = $element.parent().next();
+	    			var $li = $ul.find('li:first'),
+	    				isClicked=$li.hasClass('addGrades');
+	    			if(isClicked){
+	    				$li.remove();
+	    				return;
+	    			}
+	    			$ul.prepend($(html));
+	    			$ul.off('click','.btn');
+	    			$ul.on('click','.btn',function(){
+						debugger;
+						var name = $('.gradName',$ul).val();
+						var length = $.trim(name).replace(/[\u4e00-\u9fa5]/g, 'xx').length;
+						if(!length){
+							alert('请输入要定义分层的名字');
+							return;
+						}
+						if(length>10){
+							alert('只能添加5个字以内');
+							return;
+						}
+					    var grade = new  grades();
+					    grade.add(name,function(v){
+					    	console.log(v);
+					    });
+					});
+	    		});
+	    	});
+	    	
+	    }
+	}
+	return{
+		compile:compile,
+		restricit:'A',
+		scope:true
 	}
 }]);

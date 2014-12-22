@@ -81,7 +81,7 @@
 							<a href="javascript:;">{{item.disNick}}</a>
 						</td>
 						<td data-title="'所属分层'" sortable="'item.gradeId'">{{item.gradeId}}</td>
-						<td ng-repeat="i in dimensions" data-title="i.des" sortable="'i.name'">
+						<td dimensions-repeat ng-repeat="i in dimensions" data-title="dimensions[$index].des" sortable="'item[i.name]'">
 							{{item[i.name]}}
 						</td>	
 					</tr>
