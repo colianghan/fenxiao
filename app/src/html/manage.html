@@ -1,70 +1,3 @@
-<!-- <div ng-if="tagIndex==0">
-	<div class="row-fluid mt30">
-		<div class="span6">
-			<span class="title">分销产品管理概况</span>
-			<div class="info">
-				<label class="header f15">铺货概况：</label>
-				<div class="row-fluid f13">
-					<div class="span6">
-						<a href="">已铺货产品数量 <span>（5）</span></a>
-					</div>
-					<div class="span6">
-						<a href="">昨日上架新品数量<span>(5)</span></a>
-					</div>
-				</div>
-				<div class="row-fluid f13">
-					<div class="span6">
-						<a href="">昨日下架产品数量 <span>（5）</span></a>
-					</div>
-					<div class="span6">
-						<a href="">昨日删除产品数量<span>(5)</span></a>
-					</div>
-				</div>
-				<label class="header f15">提示预警：</label>
-				<div class="row-fluid f13">
-					<div class="span6">
-						<a href="">昨连续3个月无动销<span>（5）</span></a>
-					</div>
-					<div class="span6">
-						<a href="">乱价窜货嫌疑<span>（2）</span></a>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="span6">
-			<span class="title">分销订单管理概况</span>
-			<div class="info">
-				<label class="header f15">成交概况：</label>
-				<div class="row-fluid f13">
-					<div class="span6">
-						<a href="">待发货订单 <span>（5）</span></a>
-					</div>
-					<div class="span6">
-						<a href="">昨日成交订单 <span>（5）</span></a>
-					</div>
-				</div>
-				<div class="row-fluid f13">
-					<div class="span6">
-						<a href="">待付款订单 <span>（5）</span></a>
-					</div>
-					<div class="span6">
-						<a href="">退款中订单 <span>（5）</span></a>
-					</div>
-				</div>
-				<label class="header f15">销售概况：</label>
-				<div class="row-fluid f13">
-					<div class="span6">
-						<a href="">动销款数 <span>（5）</span></a>
-					</div>
-					<div class="span6">
-						<a href="">动销率 <span>（86.38%）</span></a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>																									
-</div> -->
-
 <div ng-if="tagIndex>0&&tagIndex<4&&!showSetting" class="mt30">
 	<ul class="nav nav-tabs">
 		<li ng-repeat="item in model" ng-class="item==curModeName?'active':''" data-item="{{item}}">
@@ -74,19 +7,60 @@
 	<div class="box container-fluid box-border-recruit">
 		<div class="span12">
 			<button class="btn pull-right mb20" ng-click="Settings();"><i class="icon-wrench"></i>设置</button>
-			<table class="table table-bordered table-hover" ng-table="distr">
+			
+			<div class="clearfix">
+				<label class="checkbox inline">
+					<input type="checkbox" ng-click="selAll($event);" value="true">
+					全选
+				</label>
+				<button class="btn ml10">
+					<i class="fa fa-plus"></i>
+					添加到
+				</button>
+			</div>
+			<table class="table table-bordered ng-table table-hover">
+				<thead>
+					<tr>
+						<th>店铺旺旺</th>
+						<th>所属分层</th>
+						<th ng-repeat="i in dimensions" ng-click="sort($event,i.name);" class="sortable">
+							<div>{{i.des}}</div>
+						</th>
+					</tr>
+				</thead>
 				<tbody>
-					<tr ng-repeat="item in $data">
-						<td data-title="'店铺旺旺'">
-							<a href="javascript:;">{{item.disNick}}</a>
+					<tr ng-repeat="item in getDis">
+						<td>
+							<label class="checkbox">
+								<input type="checkbox" value="true" ng-model="item.select">
+								{{item.disNick}}
+							</label>
 						</td>
-						<td data-title="'所属分层'" sortable="'item.gradeId'">{{item.gradeId}}</td>
-						<td dimensions-repeat ng-repeat="i in dimensions" data-title="dimensions[$index].des" sortable="'item[i.name]'">
+						<td>{{item.gradeId}}</td>
+						<td ng-repeat="i in dimensions">
 							{{item[i.name]}}
-						</td>	
+						</td>
 					</tr>
 				</tbody>
 			</table>
+			<div class="clearfix">
+				<div class="pagination pull-right">
+					<ul>
+						<li ng-if="pages.length" ng-class="now===1?'disabled':''">
+							<a href="javascript:;" ng-click="getPage(1);">&laquo;</a>
+						</li>
+						<li ng-repeat="page in pages" ng-class="now===(page+1)?'disabled':''">
+							<a href="javascript:;" ng-click="getPage(page+1)">{{page+1}}</a>
+						</li>
+						<!-- <li ng-if="">
+							<a href="">&#8230;</a>
+						</li> -->
+						<li ng-if="pages.length" ng-class="now===pages.length?'disabled':''">
+							<a href="javascript:;" ng-click="getPage(pages.length);">&raquo;</a>
+						</li>
+					</ul>		
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -117,12 +91,12 @@
 							<td class="text-center">
 								<div class="input-append">
 										<input type="text" class="input-small low-input" value="{{i.low}}">
-										<span class="add-on">{{i.unit}}</span>
+										<span class="add-on" ng-bind-html="i.unit"></span>
 								</div>	
 								<span class="ml10 mr10">—</span>
 								<div class="input-append">
 									<input type="text" class="input-small high-input" value="{{i.high}}">
-									<span class="add-on">{{i.unit}}</span>
+									<span class="add-on" ng-bind-html="i.unit"></span>
 								</div>	
 							</td>
 							<td>

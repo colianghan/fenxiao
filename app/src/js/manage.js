@@ -4,16 +4,14 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 		if (tagIndex==0 && bannerIndex!=0){
 			tagIndex = $scope.tagIndex = 4;
 		}
-		debugger;
+		//debugger;
 		if(tagIndex<6){
 			$rootScope.$broadcast('onTagChange',tagIndex);
 		}else{
 			gradeId = $routeParams.gradeId;
 			$rootScope.$broadcast('onTagChange',gradeId);
 		}
-	
 	/*----------------------路由设置 end----------------------------------------*/
-	
 	/*----------------------自定义分层设置--------------------------------------*/
 	$scope.showHighSearch=false;
 	$scope.highSearch=function(){
@@ -21,8 +19,6 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 	};
 	$scope.a=[1,2,3,4,5,6,7,8,9,10];
 	var tbody =  $('.table').find('tbody');
-
-
 	/*—-----------------系统分层设置-----------------------*/
 	$scope.showSetting = false;
 	$scope.Settings=function(){
@@ -32,8 +28,8 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 		model  = $scope.model = models[tagIndex];
 	$scope.curModeName = $scope.curModeName ||!model||model[0];
 	$scope.dimensions = [];//维度列表
-	$scope.getDis=[];//分销商列表
-	var getDis = function(callback){
+	$scope.getDis=[];$scope.Dis=[];//分销商列表
+	var getDis = (function(callback){
 		var modelName = $scope.curModeName;
 		var getDistr = tools.promise('getModeOfDistributors.htm',true);
 		getDistr({
@@ -42,10 +38,25 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 			}
 		}).then(function(resp){
 			if(resp.success){
-				callback(resp.value);
+				//callback(resp.value);
+				_.each(resp.value,function(item){
+					item.select=false;
+				});
+				$scope.Dis=resp.value;
+				$scope.getDis = $scope.Dis.slice(0,tools.config.table.count);
+				var length = resp.value.length;
+				var maxPages = 0,pages=[];
+				if(length>=tools.config.table.count){
+					maxPages = length%tools.config.table.count==0?(length/tools.config.table.count):(length/tools.config.table.count+1);	
+				}
+				for(var i=0,j=Math.floor(maxPages);i<j&&j!=1;i++){
+					pages.push(i);
+				}
+				$scope.pages=pages;
+				$scope.now=1;
 			}
 		});
-	}
+	})();
 	var getDimensions = function(){
 		tools.http({
 			url:'getDimensions.htm',
@@ -69,7 +80,7 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 				}
 			}
 		});
-	}
+	};
 	getDimensions();
 	$scope.setCur = function(item){
 		if($scope.curModeName===item){
@@ -79,37 +90,48 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 		$scope.curModeName = item;
 		getDimensions();
 	};
-	$scope['distr'] = new ngTableParams({
-		page: 1,
-        count: tools.config.table.count,
-        sorting: {
-           gradeId:'desc'
-        },
-        defaultSort: 'desc'
-	},{
-		total: 0,
-        counts: [],
-        getData: function ($defer, params) {
-        	//debugger;
-            var begin = (params.page() - 1) * params.count(), end = params.page() * params.count();
-            var words = [];
-            if (!$scope.getDis.length) {
-            	getDis(function(words){
-            		$scope.getDis= words;
-            		words = params.sorting ?
-                                        $filter('orderBy')($scope.getDis, params.orderBy()) :
-                                        $scope.getDis;
-                    debugger;
-			        params.total(words.length);
-			        $defer.resolve(words.slice(begin, end));
-            	});
-	        } else {
-	           $defer.resolve($scope.getDis.slice(begin, end));
-	        }
-        }
-	});
-	//$scope.f='分销流量';
+    /*table begin*/
+	/*获取分页*/
+	$scope.getPage=function(i){
+		if(i===$scope.now){
+			return;
+		}
+		$scope.now=i;
+		var begin = (i-1)*tools.config.table.count,
+			end = i*tools.config.table.count;
+		$scope.getDis=$scope.Dis.slice(begin,end);
+	};
+	/*获取排序*/
+	$scope.sort=function(e,key){
+		debugger;
+		var $ele = $(e.currentTarget),sortBy;
+		if($ele.hasClass('sort-desc')){
+			//升序
+			$ele.removeClass('sort-desc').addClass('sort-asc');
+			//sortBy='asc';
+			sortBy=false;			
+		}else{
+			//降序
+			$ele.removeClass('sort-asc').addClass('sort-desc');
+			//sortBy='desc';
+			sortBy=true;
+		}
+		$scope.Dis = $filter('orderBy')($scope.Dis,key,sortBy)||$scope.Dis;
+		$scope.now=1;
+		$scope.getDis=$scope.Dis.slice(0,30);
+	}
+	/*table end*/
+
+	/*全选*/
+	$scope.selAll =function(e){
+		var bool = $(e.currentTarget).prop('checked');
+		_.each($scope.Dis,function(item){
+			item.select=bool;
+		});
+	}
 }]);
+
+
 /*已选参数*/
 dm.controller('hasParams',['$scope','$rootScope','tools',function($scope,$rootScope,tools){
 	var parms = $scope.parms = config.settingManage;
@@ -231,8 +253,6 @@ dm.controller('hasParams',['$scope','$rootScope','tools',function($scope,$rootSc
 		});
 	};
 }]);
-
-
 dm.directive('parmsToChecked',['$compile','$parse',function($compile,$parse){
 	return{
 		restrict:'A',
@@ -298,7 +318,6 @@ dm.directive('parmsToChecked',['$compile','$parse',function($compile,$parse){
 		}]
 	}
 }]);
-
 /*错误信息*/
 dm.directive('erro',['$compile',function($compile){
 	return{
@@ -319,19 +338,74 @@ dm.directive('erro',['$compile',function($compile){
 	}
 }]);
 
-
-dm.directive('dimensionsRepeat',function($compile){
+dm.directive('dimensions',function($compile){
+	var com = function(dimensions){
+		var html='';
+		for(var i=0,j=dimensions.length;i<j;i++){
+			html+='<td data-title="'+dimensions[i].des+'" sortable="\''+dimensions[i].name+'\'">'+dimensions[i].name+'</td>';
+		}
+		return html;
+	}
 	return{
 		restrict:'A',
+		priority: 1002,
 		compile:function($element,$attrs,link){
-			//var html = '<tr data-title="'++'"></tr>';
+			var dimensions = $attrs.dimensions;
+			var html = com(dimensions);
+			$element.parents('tr').append($(html));
 			return function($scope,$element,$attrs){
-
+				console.log($scope.dimensions);
+				$scope.$watch('$attrs.dimensions',function(v){
+					if(v!=undefined){
+						var html = com(dimensions);
+						$element.parents('tr').append($(html));
+					}
+				});
 			}
 		},
 		controller:function($scope,$element,$attrs,link){
 
 		},
-		scope:true
+		scope:true,
+		replace:true
+	}
+});
+
+dm.directive('c',function($parse,tools){
+	var Html = function(data){
+			var html = '<ul>';
+			for(var i=0,j=data.length;i<j;i++){
+				if(i===0){
+					html+='<li><a href="javascript:;" ng-click="page(1);">&laquo;</a></li>';
+				}
+				html+='<li><a href="javascript:;" ng-click="page('+(i+1)+');">'+(i+1)+'</a></li>';
+				if(i===j-1){
+					html+='<li><a href="javascript:;" ng-click="page('+(i+1)+');">&raquo;</a></li>'
+				}
+			}
+			html+='</ul>';
+	};
+	var compile = function($element,$attrs,link){
+		//debugger;
+		return function($scope,$element,$attrs){
+			var data = $parse($attrs.source)($scope),
+				count = tools.config.table.count;
+			debugger;
+			if(data.length<=count){
+				$element.addClass('hide');
+				return;
+			}
+		    var html = Html(data);
+			$element.html(html);
+			$scope.$watch('data',function(e,v){
+				var html = Html(v);
+				$element.html(html);
+			});
+		}
+	}
+	return {
+		restrict:'A',
+		scope:true,
+		compile:compile
 	}
 });

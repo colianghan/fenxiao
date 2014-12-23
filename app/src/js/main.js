@@ -1,4 +1,4 @@
-var dm = angular.module('distributManager',['ngTable','ngRoute','ngAnimate']);
+var dm = angular.module('distributManager',['ngTable','ngRoute','ngAnimate','ngSanitize']);
 dm.config(['$routeProvider',function($routeProvider){
 	$routeProvider
 		.when('/index',{
