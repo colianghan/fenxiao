@@ -1,4 +1,4 @@
-dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter','tools','ngTableParams',function($rootScope,$scope,$routeParams,$animate,$filter,tools,ngTableParams){
+dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter','tools','ngTableParams','grades',function($rootScope,$scope,$routeParams,$animate,$filter,tools,ngTableParams,grades){
 	var gradeId,bannerIndex = $routeParams.banner||0,
 		tagIndex = $scope.tagIndex = $routeParams.tag||1;
 		if (tagIndex==0 && bannerIndex!=0){
@@ -39,8 +39,17 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 		}).then(function(resp){
 			if(resp.success){
 				//callback(resp.value);
+				layers =  new grades();
+				layers.get(function(v){
+					_.each($scope.Dis,function(item){
+						debugger
+						item.gradeName=v[item.gradeId==null?0:item.gradeId].name;
+					});
+					$scope.getDis = $scope.Dis.slice(0,tools.config.table.count);
+				});
 				_.each(resp.value,function(item){
 					item.select=false;
+					item.gradeName = '--';
 				});
 				$scope.Dis=resp.value;
 				$scope.getDis = $scope.Dis.slice(0,tools.config.table.count);
@@ -121,7 +130,6 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 		$scope.getDis=$scope.Dis.slice(0,30);
 	}
 	/*table end*/
-
 	/*全选*/
 	$scope.selAll =function(e){
 		var bool = $(e.currentTarget).prop('checked');
@@ -133,7 +141,7 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 
 
 /*已选参数*/
-dm.controller('hasParams',['$scope','$rootScope','tools',function($scope,$rootScope,tools){
+dm.controller('hasParams',['$scope','$rootScope','$element','tools',function($scope,$rootScope,$element,tools){
 	var parms = $scope.parms = config.settingManage;
 	var hasChecked = $scope.hasChecked =[];
 	$scope.$on('mange-checked',function(e,v){
@@ -186,6 +194,43 @@ dm.controller('hasParams',['$scope','$rootScope','tools',function($scope,$rootSc
 		if(low==''&&high==''){
 			$scope.$broadcast('erro-alert','范围不能同时为空');
 			return;
+		}
+		var model =  $scope.hasChecked[index];
+		if(model){
+			var type = model.type;
+			if(type=='int'){
+				var _low = Number(low),_high=Number(high);
+				var str = /^[0-9]*[1-9][0-9]*$/;  //获取正整数
+				if(str.test(_low)&&str.test(_high)){
+					//return true;
+				}else{
+					$scope.$broadcast('erro-alert','指标需要正整数');
+					return;
+				}
+			}else if(type=='dor'){
+				var _low = Number(low),_high=Number(high);
+				if(isNaN(_low)||isNaN(_high)){
+					$scope.$broadcast('erro-alert','请输入数字');
+					return;
+				}
+				if(_low>100||_high>100){
+					$scope.$broadcast('erro-alert','不能超过100%');
+					return;
+				}
+				low = _low.toFixed(1)/100;
+				high = _high.toFixed(1)/100;
+				$('.low-input',parentTr).val(_low.toFixed(1)==0.0?'':_low.toFixed(1));
+				$('.high-input',parentTr).val(_high.toFixed(1)==0.0?'':_high.toFixed(1));
+			}else if(type=='date'){
+				if(low!=''&&high!=''){
+					if(high<low){
+						$scope.$broadcast('erro-alert','结束时间不能晚于开始时间');
+						return;
+					}
+				}
+				low = low==''?'':low+' 00:00:00';
+				high = high ==''?'':high+' 00:00:00';
+			}
 		}
 		if(!id){
 			//添加
@@ -252,6 +297,7 @@ dm.controller('hasParams',['$scope','$rootScope','tools',function($scope,$rootSc
 			}
 		});
 	};
+	$element.on('click','.date',WdatePicker);
 }]);
 dm.directive('parmsToChecked',['$compile','$parse',function($compile,$parse){
 	return{
@@ -329,7 +375,7 @@ dm.directive('erro',['$compile',function($compile){
 		},
 		controller:function($scope,$element,$timeout){
 			$scope.$on('erro-alert',function(e,v){
-				$element.html(v).removeClass('hide');
+				$element.removeClass('hide').find('span').html(v);
 				$timeout(function(){
 					$element.addClass('hide');
 				},3000);
@@ -371,41 +417,24 @@ dm.directive('dimensions',function($compile){
 	}
 });
 
-dm.directive('c',function($parse,tools){
-	var Html = function(data){
-			var html = '<ul>';
-			for(var i=0,j=data.length;i<j;i++){
-				if(i===0){
-					html+='<li><a href="javascript:;" ng-click="page(1);">&laquo;</a></li>';
-				}
-				html+='<li><a href="javascript:;" ng-click="page('+(i+1)+');">'+(i+1)+'</a></li>';
-				if(i===j-1){
-					html+='<li><a href="javascript:;" ng-click="page('+(i+1)+');">&raquo;</a></li>'
-				}
+dm.filter('formateLayers',function(){
+	//var _laryers=_laryers||[];
+	return function(v,o){
+		var _laryers = o||[];
+		_.each(_laryers,function(item){
+			if(v==item.id){
+				return item.name;
 			}
-			html+='</ul>';
-	};
-	var compile = function($element,$attrs,link){
-		//debugger;
-		return function($scope,$element,$attrs){
-			var data = $parse($attrs.source)($scope),
-				count = tools.config.table.count;
-			debugger;
-			if(data.length<=count){
-				$element.addClass('hide');
-				return;
-			}
-		    var html = Html(data);
-			$element.html(html);
-			$scope.$watch('data',function(e,v){
-				var html = Html(v);
-				$element.html(html);
-			});
-		}
+		});
 	}
-	return {
-		restrict:'A',
-		scope:true,
-		compile:compile
-	}
+});
+
+
+/*dm.directive('add-grades',function(){
+
+})*/
+
+
+dm.directive('',function(){
+	
 });

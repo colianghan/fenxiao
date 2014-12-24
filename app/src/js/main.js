@@ -94,7 +94,7 @@ dm.controller('banner',['$scope','$element',function($scope,$element){
 	//$scope.$on()
 }]);
 
-dm.controller('leftBar',['$scope','$element','$compile','grades',function($scope,$element,$compile,grades){
+dm.controller('leftBar',['$scope','$rootScope','$element','$compile','grades',function($scope,$rootScope,$element,$compile,grades){
 
 	var configer,layers;
 	$scope.$on('onChangeBanner',function(e,v){
@@ -115,8 +115,6 @@ dm.controller('leftBar',['$scope','$element','$compile','grades',function($scope
 			$scope.child=child;
 			//console.log(child);
 		}
-
-
 		/*首页*/
 		if (controller==='index') {
 			$scope.quickLinks =['商品录入','创建活动','订单管理'];
@@ -141,6 +139,7 @@ dm.controller('leftBar',['$scope','$element','$compile','grades',function($scope
 					i++;
 				});
 				$scope.child = $.extend($scope.child,_arr);
+				//$rootScope.$broadcast('pulishLayers',value);
 			});
 		}
 	});
@@ -158,7 +157,6 @@ dm.controller('leftBar',['$scope','$element','$compile','grades',function($scope
 					return;
 				}
 			});
-			
 		});
 		//debugger
 	});

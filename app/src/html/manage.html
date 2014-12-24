@@ -13,10 +13,39 @@
 					<input type="checkbox" ng-click="selAll($event);" value="true">
 					全选
 				</label>
-				<button class="btn ml10">
+				<button class="btn ml10" add-grades>
 					<i class="fa fa-plus"></i>
 					添加到
 				</button>
+				<div class="add-layers">
+					<h5 class='alert alert-info clearfix'>
+						<span>请选择要移入的等级</span>
+						<div class="pull-right">
+							<a href="javascript:;">移入</a>
+							<a href="javascript:;">取消</a>
+						</div>
+					</h5>
+					<div class="layers-content">
+						<label class="radio" ng-repeat="i in [1,2,3]">
+							<input type="radio" name="layer" >
+							皇冠级会员
+						</label>
+					</div>
+					<div class="layer-footer">
+						<h5 class="alert alert-info clearfix">
+							<span>新建等级并移入</span>
+							<div class="pull-right">
+								<a href="javascript:;">移入</a>
+								<a href="javascript:;">取消</a>
+							</div>
+						</h5>
+						<div class="create-layer text-center">
+							<span>等级名称：</span>
+							<input type="text" class="input" placeholder="5个字以内">
+						</div>
+					</div>
+					
+				</div>
 			</div>
 			<table class="table table-bordered ng-table table-hover">
 				<thead>
@@ -36,7 +65,7 @@
 								{{item.disNick}}
 							</label>
 						</td>
-						<td>{{item.gradeId}}</td>
+						<td>{{item.gradeName}}</td>
 						<td ng-repeat="i in dimensions">
 							{{item[i.name]}}
 						</td>
@@ -80,7 +109,8 @@
 			</h4>
 			<div class="box box-auto-height">
 				<div class="alert alert-danger pr mb5 hide" erro>
-					你好啊
+					<i class="fa fa-exclamation-circle"></i>
+					<span>错误占位符</span>
 				</div>
 				<table class="table table-striped setting-table">
 					<tbody>
@@ -90,12 +120,12 @@
 							<td>范围</td>
 							<td class="text-center">
 								<div class="input-append">
-										<input type="text" class="input-small low-input" value="{{i.low}}">
+										<input type="text" class="input-small low-input" ng-class="i.type=='date'?'date':''"  value="{{i.low}}">
 										<span class="add-on" ng-bind-html="i.unit"></span>
 								</div>	
 								<span class="ml10 mr10">—</span>
 								<div class="input-append">
-									<input type="text" class="input-small high-input" value="{{i.high}}">
+									<input type="text" class="input-small high-input"  ng-class="i.type=='date'?'date':''"  value="{{i.high}}">
 									<span class="add-on" ng-bind-html="i.unit"></span>
 								</div>	
 							</td>

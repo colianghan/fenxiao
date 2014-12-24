@@ -638,6 +638,22 @@ h4 .pull-right{
 }
 
 
+/* 移入等级 */
+.add-layers{
+	width:400px;height:400px;position:absolute;z-index:1;background:#fff;
+	border: 1px solid #aeaeae;
+}
+.add-layers .alert{
+	margin-top: 0;
+}
+.add-layer .layer-footer{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 400px;
+	z-index: 2;
+	background: #fff;
+}
 
 
 
