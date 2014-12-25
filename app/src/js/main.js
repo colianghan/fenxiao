@@ -139,7 +139,8 @@ dm.controller('leftBar',['$scope','$rootScope','$element','$compile','grades',fu
 					i++;
 				});
 				$scope.child = $.extend($scope.child,_arr);
-				//$rootScope.$broadcast('pulishLayers',value);
+				/*debugger;
+				$rootScope.$broadcast('c',value);*/
 			});
 		}
 	});
@@ -147,7 +148,7 @@ dm.controller('leftBar',['$scope','$rootScope','$element','$compile','grades',fu
 	$scope.$on('onTagChange',function(e,v){
 		$scope.activeItem=null;
 		$scope.currentParent=null;
-		debugger;
+		//debugger;
 		_.each($scope.child,function(i,index){
 			//item.id 是为了hack自定义分层的情况
 			_.each(i,function(item){
@@ -163,7 +164,14 @@ dm.controller('leftBar',['$scope','$rootScope','$element','$compile','grades',fu
 	
 	$scope.animateShow=function(item){
 		$scope.currentParent=item;
-	}
+	};
+	$scope.$on('add-layers',function(e,v){
+		debugger;
+		v.id = v.gradeId;
+		v.parent = '自定义分层';
+		v.href=i+'&gradeId='+v.id;
+		$scope.child['自定义分层'].push(v);
+	});
 
 }]);
 

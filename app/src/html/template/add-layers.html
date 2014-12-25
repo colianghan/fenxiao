@@ -1,0 +1,28 @@
+<div class="add-layers hide mt10">
+	<h5 class='alert alert-info clearfix'>
+		<span>请选择要移入的等级</span>
+		<div class="pull-right">
+			<a href="javascript:;" ng-click="move();">移入</a>
+			<a href="javascript:;" ng-click="cansel();">取消</a>
+		</div>
+	</h5>
+	<div class="layers-content">
+		<label class="radio" ng-repeat="i in lay">
+			<input type="radio" name="layer" value="{{i.id}}">
+			{{i.name}}
+		</label>
+	</div>
+	<div class="layer-footer">
+		<h5 class="alert alert-info clearfix">
+			<span>新建等级并移入</span>
+			<div class="pull-right">
+				<a href="javascript:;" ng-click="creatMove();">移入</a>
+				<a href="javascript:;" ng-click="cansel();">取消</a>
+			</div>
+		</h5>
+		<div class="create-layer mt10">
+			<span>等级名称：</span>
+			<input type="text" class="input" ng-model="layeName" placeholder="5个字以内">
+		</div>
+	</div>
+</div>

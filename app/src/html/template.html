@@ -1,0 +1,30 @@
+<script id="add-layers" type="text/ng-template">
+	<div class="add-layers">
+		<h5 class='alert alert-info clearfix'>
+			<span>请选择要移入的等级</span>
+			<div class="pull-right">
+				<a href="javascript:;">移入</a>
+				<a href="javascript:;">取消</a>
+			</div>
+		</h5>
+		<div class="layers-content">
+			<label class="radio" ng-repeat="i in [1,2,3,5,6,7,8,9,10,11,12,13,14,15]">
+				<input type="radio" name="layer" >
+				皇冠级会员
+			</label>
+		</div>
+		<div class="layer-footer">
+			<h5 class="alert alert-info clearfix">
+				<span>新建等级并移入</span>
+				<div class="pull-right">
+					<a href="javascript:;">移入</a>
+					<a href="javascript:;">取消</a>
+				</div>
+			</h5>
+			<div class="create-layer mt10">
+				<span>等级名称：</span>
+				<input type="text" class="input" placeholder="5个字以内">
+			</div>
+		</div>
+	</div>
+</script>

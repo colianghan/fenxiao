@@ -640,13 +640,20 @@ h4 .pull-right{
 
 /* 移入等级 */
 .add-layers{
-	width:400px;height:400px;position:absolute;z-index:1;background:#fff;
+	width:400px;
+	height:400px;
+	position:absolute;
+	z-index:1;
+	background:#fff;
 	border: 1px solid #aeaeae;
 }
 .add-layers .alert{
-	margin-top: 0;
+	margin: 0;
 }
-.add-layer .layer-footer{
+.add-layers .layers-content,.layer-footer .create-layer{
+	padding: 0 25px;
+}
+.add-layers .layer-footer{
 	position: absolute;
 	bottom: 0;
 	left: 0;
@@ -654,13 +661,12 @@ h4 .pull-right{
 	z-index: 2;
 	background: #fff;
 }
-
-
-
-
+.add-layers .layers-content{
+	overflow: hidden;
+	overflow-y: visible;
+	max-height: 270px;
+}
 /* 页面编写结束 end */
-
-
 .pagination.ng-table-pagination li{
 	display: inline-block;
 }

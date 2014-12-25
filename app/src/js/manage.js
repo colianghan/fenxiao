@@ -11,6 +11,18 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 			gradeId = $routeParams.gradeId;
 			$rootScope.$broadcast('onTagChange',gradeId);
 		}
+		/*潜力模型分销商*/
+		if(tagIndex==3){
+			/*id 是识别 nick是设置*/
+			$scope.potential=[
+				{id:'amtData',name:'30天成交额',nick:'sellAmt',click:true},
+				{id:'chainIndex',name:'环比增长率',nick:'chainIndex',click:true},
+				{id:'yearToYears',name:'同比增长率',nick:'yearOnOear',click:true},
+				{id:'scores',name:'综合潜力值',nick:'',click:false}
+			];
+		}else{
+			$scope.potential=[];//
+		}
 	/*----------------------路由设置 end----------------------------------------*/
 	/*----------------------自定义分层设置--------------------------------------*/
 	$scope.showHighSearch=false;
@@ -30,30 +42,42 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 	$scope.dimensions = [];//维度列表
 	$scope.getDis=[];$scope.Dis=[];//分销商列表
 	var getDis = (function(callback){
-		var modelName = $scope.curModeName;
-		var getDistr = tools.promise('getModeOfDistributors.htm',true);
-		getDistr({
-			data:{
+		var modelName = $scope.curModeName,getDistr,data;
+		if(tagIndex==3){
+			getDistr = tools.promise('getPotentialDistributors.htm',false);
+			data = {};
+		}else{
+			getDistr = tools.promise('getModeOfDistributors.htm',true);
+			data = {
 				modeName:$scope.curModeName
-			}
+			};
+		}
+		getDistr({
+			data:data
 		}).then(function(resp){
 			if(resp.success){
+				var value,source;
+				if(tagIndex==3){
+					value=resp.value.distributors;
+					$scope.source=resp.value;
+				}else{
+					value = resp.value;
+				}
 				//callback(resp.value);
 				layers =  new grades();
 				layers.get(function(v){
 					_.each($scope.Dis,function(item){
-						debugger
 						item.gradeName=v[item.gradeId==null?0:item.gradeId].name;
 					});
 					$scope.getDis = $scope.Dis.slice(0,tools.config.table.count);
 				});
-				_.each(resp.value,function(item){
+				_.each(value,function(item){
 					item.select=false;
 					item.gradeName = '--';
 				});
-				$scope.Dis=resp.value;
+				$scope.Dis=value;
 				$scope.getDis = $scope.Dis.slice(0,tools.config.table.count);
-				var length = resp.value.length;
+				var length = value.length;
 				var maxPages = 0,pages=[];
 				if(length>=tools.config.table.count){
 					maxPages = length%tools.config.table.count==0?(length/tools.config.table.count):(length/tools.config.table.count+1);	
@@ -82,7 +106,7 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 							}
 						});
 					});
-					debugger;
+					//debugger;
 					$scope.dimensions=dimensions;
 					//getDis(dimensions);
 					$rootScope.$broadcast('setDimensions',resp.value);
@@ -95,7 +119,7 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 		if($scope.curModeName===item){
 			return;
 		}
-		debugger;
+		//debugger;
 		$scope.curModeName = item;
 		getDimensions();
 	};
@@ -112,7 +136,7 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 	};
 	/*获取排序*/
 	$scope.sort=function(e,key){
-		debugger;
+		//debugger;
 		var $ele = $(e.currentTarget),sortBy;
 		if($ele.hasClass('sort-desc')){
 			//升序
@@ -136,6 +160,22 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 		_.each($scope.Dis,function(item){
 			item.select=bool;
 		});
+	}
+	$scope.mark=function(item){
+		if(item!=null){
+			_.each($scope.Dis,function(v){
+				if(v.disNick==item.disNick){
+					v.select = item.select;
+				}
+			})
+		}
+	};
+	$scope.addLayers=function(){
+		$rootScope.$broadcast('show-layers',$scope.Dis);
+	};
+	// 潜力型分销商的获取接口
+	var getWeightShops = function(){
+		tools.promise('')
 	}
 }]);
 
@@ -186,7 +226,7 @@ dm.controller('hasParams',['$scope','$rootScope','$element','tools',function($sc
 		});
 	});
 	$scope.addDim=function(index,e){
-		debugger;
+		//debugger;
 		var  parentTr = $(e.currentTarget).parents('tr'),
 			 low = $('.low-input',parentTr).val(),
 			 high= $('.high-input',parentTr).val(),
@@ -279,7 +319,7 @@ dm.controller('hasParams',['$scope','$rootScope','$element','tools',function($sc
 			 id = parentTr.data('key'),
 			 index =  $scope.hasChecked[sort].index;
 		if(!id){
-			debugger;
+			//debugger;
 			$rootScope.$broadcast('remove-checked',index);
 			$scope.hasChecked.splice(sort,1);
 			return;
@@ -318,7 +358,7 @@ dm.directive('parmsToChecked',['$compile','$parse',function($compile,$parse){
 			}
 		},
 		controller:['$rootScope','$scope','$element',function($rootScope,$scope,$element){
-			debugger;
+			//debugger;
 			//var modelName = '';
 			$element.on('click','input[type="checkbox"]',function(e){
 				var $ele = $(this);
@@ -340,7 +380,7 @@ dm.directive('parmsToChecked',['$compile','$parse',function($compile,$parse){
 				$element.find('input[type="checkbox"]').eq(v).prop('checked',false);
 			});
 			$scope.$on('setDimensions',function(e,v){
-				debugger;
+				//debugger;
 				var models = [];
 				$scope.modelName = v.modeName;
 				_.each(v.dimensions,function(item){
@@ -417,7 +457,7 @@ dm.directive('dimensions',function($compile){
 	}
 });
 
-dm.filter('formateLayers',function(){
+/*dm.filter('formateLayers',function(){
 	//var _laryers=_laryers||[];
 	return function(v,o){
 		var _laryers = o||[];
@@ -427,14 +467,143 @@ dm.filter('formateLayers',function(){
 			}
 		});
 	}
+});*/
+
+
+/*dm.directive('add-grades',function($rootScope){
+	return{
+		restrict:'A',
+		compile:function(element,attrs,link){
+			return function(scope,element,attrs){
+				element.click(function(){
+					$rootScope.$broadcast('show-layers',true);
+				});
+			}
+		}
+	}
+});
+*/
+
+dm.directive('layers',function($rootScope){
+	return {
+		restrict:'E',
+		templateUrl:'../html/template/add-layers.html',
+		compile:function(element,attrs,link){
+			return function(scope,element,attrs){
+				console.log('layers');
+			}
+		},
+		controller:function($scope,$element,tools,grades){
+			var select = [];
+			var layer = new grades();
+			layer.get(function(v){
+				_.each(v,function(item){
+					item.select=false;
+				});
+				$scope.lay=v;
+				console.log(v);
+			});
+			$scope.data={id:''};
+			$scope.$on('show-layers',function(e,v){
+				$element.toggle();
+				if(v){
+					select = _.pluck(_.filter(v,function(item){return item.select;}),'disNick');
+				}
+			});
+			$scope.cansel = function(){
+				$element.toggle();
+			};
+			$scope.move = function(id){
+				debugger;
+				var gradeId = id|| (function(){
+					var _id = '';
+					$('input[type="radio"]',$element).each(function(index,item){
+						if(item.checked){
+							_id = item.value;
+							return; 
+						}
+					});
+					return _id;
+				})(),
+					disNicks = select.join(',');
+				if(gradeId==''){
+					alert('请选择要移入的等级');
+					return;
+				}
+				if(disNicks==''){
+					alert('请选择要进行操作的分销商');
+					return;
+				}
+				tools.http({
+					url:'moveDistributorToGrade.htm',
+					data:{
+						gradeId:gradeId,
+						disNicks:disNicks
+					},
+					succ:function(resp){
+						if(resp.success){
+							if(resp.value.successList.length){
+								alert('移入成功');
+							}
+							else{
+								alert('操作失败，请稍后重试..');
+							}
+						}else{
+							alert('操作失败，请稍后重试..');
+						}
+					}
+				});
+			};
+			$scope.creatMove = function(){
+				var name = $scope.layeName;
+				var length = $.trim(name).replace(/[\u4e00-\u9fa5]/g, 'xx').length;
+				if(!length){
+					alert('请输入要定义分层的名字');
+					return;
+				}
+				if(length>10){
+					alert('只能添加5个字以内');
+					return;
+				}
+				layer.add(name,function(v){
+					if(!v) return;
+					$scope.move(v.id); // 添加东西
+					//$scope.lay.push(v);
+					$rootScope.$broadcast('add-layers',v);
+				});
+				$scope.$on('add-layers',function(e,v){
+					debugger;
+					$scope.lay[v.gradeId]=v;
+				});
+			};
+		},
+		replace:true,
+		scope:true
+	}	
 });
 
-
-/*dm.directive('add-grades',function(){
-
-})*/
-
-
-dm.directive('',function(){
-	
+dm.directive('weight',function(){
+	return {
+		templateUrl:'../html/template/potential.html',
+		restrict:'E',
+		scope:true,
+		compile:function(element,attrs,link){
+			return function(scope,element,attrs){
+				console.log('weight');
+			}
+		},
+		controller:function($scope,tools){
+			$scope.alter = function(){
+				var sellAmt = Number($scope.sellAmt),
+					chainIndex = Number($scope.chainIndex),
+					yearOnOear = Number($scope.yearOnOear);
+				if(sellAmt+chainIndex+yearOnOear!=100){
+					alert('三个权重之和必须等于100%哦');
+					return;
+				}
+				alert('修改成功');
+			};
+		},
+		replace:true
+	}
 });

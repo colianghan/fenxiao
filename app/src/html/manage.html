@@ -6,52 +6,29 @@
 	</ul>
 	<div class="box container-fluid box-border-recruit">
 		<div class="span12">
+			<div ng-if="tagIndex==3">
+				<weight></weight>
+			</div>
 			<button class="btn pull-right mb20" ng-click="Settings();"><i class="icon-wrench"></i>设置</button>
-			
 			<div class="clearfix">
 				<label class="checkbox inline">
 					<input type="checkbox" ng-click="selAll($event);" value="true">
 					全选
 				</label>
-				<button class="btn ml10" add-grades>
+				<button class="btn ml10" ng-click="addLayers();">
 					<i class="fa fa-plus"></i>
 					添加到
 				</button>
-				<div class="add-layers">
-					<h5 class='alert alert-info clearfix'>
-						<span>请选择要移入的等级</span>
-						<div class="pull-right">
-							<a href="javascript:;">移入</a>
-							<a href="javascript:;">取消</a>
-						</div>
-					</h5>
-					<div class="layers-content">
-						<label class="radio" ng-repeat="i in [1,2,3]">
-							<input type="radio" name="layer" >
-							皇冠级会员
-						</label>
-					</div>
-					<div class="layer-footer">
-						<h5 class="alert alert-info clearfix">
-							<span>新建等级并移入</span>
-							<div class="pull-right">
-								<a href="javascript:;">移入</a>
-								<a href="javascript:;">取消</a>
-							</div>
-						</h5>
-						<div class="create-layer text-center">
-							<span>等级名称：</span>
-							<input type="text" class="input" placeholder="5个字以内">
-						</div>
-					</div>
-					
-				</div>
+				<layers></layers>
 			</div>
 			<table class="table table-bordered ng-table table-hover">
 				<thead>
 					<tr>
 						<th>店铺旺旺</th>
 						<th>所属分层</th>
+						<th ng-repeat = "item in potential">
+							{{item.name}}
+						</th>
 						<th ng-repeat="i in dimensions" ng-click="sort($event,i.name);" class="sortable">
 							<div>{{i.des}}</div>
 						</th>
@@ -61,11 +38,14 @@
 					<tr ng-repeat="item in getDis">
 						<td>
 							<label class="checkbox">
-								<input type="checkbox" value="true" ng-model="item.select">
+								<input type="checkbox" value="true" ng-model="item.select" ng-click="mark(item);">
 								{{item.disNick}}
 							</label>
 						</td>
 						<td>{{item.gradeName}}</td>
+						<td ng-repeat = "v in potential" ng-click="getTrend(item,v);">
+							{{item[v.id]}}
+						</td>
 						<td ng-repeat="i in dimensions">
 							{{item[i.name]}}
 						</td>
