@@ -9,28 +9,22 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 			$rootScope.$broadcast('onTagChange',tagIndex);
 		}else{
 			gradeId = $routeParams.gradeId;
+			//debugger;
 			$rootScope.$broadcast('onTagChange',gradeId);
 		}
 		/*潜力模型分销商*/
 		if(tagIndex==3){
 			/*id 是识别 nick是设置*/
 			$scope.potential=[
-				{id:'amtData',name:'30天成交额',nick:'sellAmt',click:true},
-				{id:'chainIndex',name:'环比增长率',nick:'chainIndex',click:true},
-				{id:'yearToYears',name:'同比增长率',nick:'yearOnOear',click:true},
+				{id:'amtData',name:'30天成交额',nick:'amtDataOfTrend',click:true,unit:'元'},
+				{id:'chainIndexs',name:'环比增长率',nick:'chainIndexOfTrend',click:true,unit:'%'},
+				{id:'yearToYears',name:'同比增长率',nick:'yearToYearOfTrend',click:true,unit:'%'},
 				{id:'scores',name:'综合潜力值',nick:'',click:false}
 			];
 		}else{
 			$scope.potential=[];//
 		}
 	/*----------------------路由设置 end----------------------------------------*/
-	/*----------------------自定义分层设置--------------------------------------*/
-	$scope.showHighSearch=false;
-	$scope.highSearch=function(){
-		$scope.showHighSearch=!$scope.showHighSearch;
-	};
-	$scope.a=[1,2,3,4,5,6,7,8,9,10];
-	var tbody =  $('.table').find('tbody');
 	/*—-----------------系统分层设置-----------------------*/
 	$scope.showSetting = false;
 	$scope.Settings=function(){
@@ -59,9 +53,14 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 				var value,source;
 				if(tagIndex==3){
 					value=resp.value.distributors;
-					$scope.source=resp.value;
+					$scope.trend = resp.value.data;
+					$scope.weight= resp.value.weightPercents;
+					//console.log(resp.value.data[value[0].disSid]);
+					//debugger;
 				}else{
 					value = resp.value;
+					$scope.trend = {}; //趋势数据
+					$scope.weight= {}; //权重信息
 				}
 				//callback(resp.value);
 				layers =  new grades();
@@ -89,7 +88,8 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 				$scope.now=1;
 			}
 		});
-	})();
+	});
+	getDis();
 	var getDimensions = function(){
 		tools.http({
 			url:'getDimensions.htm',
@@ -109,6 +109,9 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 					//debugger;
 					$scope.dimensions=dimensions;
 					//getDis(dimensions);
+					if(!resp.value.modeName){
+						resp.value.modeName = $scope.curModeName;
+					}
 					$rootScope.$broadcast('setDimensions',resp.value);
 				}
 			}
@@ -174,9 +177,73 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 		$rootScope.$broadcast('show-layers',$scope.Dis);
 	};
 	// 潜力型分销商的获取接口
-	var getWeightShops = function(){
-		tools.promise('')
-	}
+	$scope.$on('reset',function(e,v){
+		if(v){
+			getDis();
+		}
+	});
+	/*获得柱形图*/
+	$scope.getTrend = function(e,item,v){
+		var _src = $scope.trend[item.disSid] || {},
+			_dataSrc = _src[v.nick],
+			$container = $('.pop-charts').length?$('.pop-charts'):$('<div>',{'class':'pop-charts'}),
+			$ele = $(e.currentTarget),
+			$tr = $ele.parents('tr:first'),
+			$next = $tr.next();
+		if($next.hasClass('active-charts')&&$ele.hasClass('active')){
+			$next.addClass('hide');
+			$ele.removeClass('active');
+		}else{
+			$('.active-charts').removeClass('hide').insertAfter($tr);
+			$ele.addClass('active').siblings('.active').removeClass('active');
+		}
+		//$ele.append($container);
+		debugger;
+		var dates = _.keys(_dataSrc).sort()[0].split(' ')[0].split('-'),
+			data = _.values(_dataSrc);
+		var options={
+			chart:{
+				type:'line'
+			},
+			title:{
+				text:v.name+'趋势'
+			},
+			xAxis:{
+				type:'datetime',
+				dateTimeLabelFormats:{
+					day:'%e/%b'
+				}
+			},
+			yAxis:{
+				title:{
+					text:v.name+'(单位:'+v.unit+')'
+				}
+			},
+			tooltip:{
+				shared:true,
+				formatter:function(){
+					var day = new Date();
+					day.setTime(this.x);
+					var dayFormater= day.getFullYear()+'-'+(day.getMonth()+1)+'-'+day.getDate();
+					var s = '<b>'+dayFormater+'</b>';
+					$.each(this.points,function(){
+						s+='<br />'+this.series.name+':'+this.y+v.unit;
+					});
+					return s;
+				}
+			},
+			credits:{
+				enabled:false
+			},
+			series:[{
+				name:v.name,
+				data:data,
+				pointStart:Date.UTC(dates[0],dates[1]-1,dates[2]),
+				pointInterval:24*60*60*1000
+			}]
+		}
+		$container.highcharts(options).highcharts();
+	};
 }]);
 
 
@@ -279,13 +346,14 @@ dm.controller('hasParams',['$scope','$rootScope','$element','tools',function($sc
 				data:{
 					modeName:$scope.modelName,
 					dimension:$scope.hasChecked[index].name,
-					high:low,
-					low:high
+					high:high,
+					low:low
 				},
 				succ:function(resp){
 					if(resp.success){
 						//parentTr.data('key',resp.value);
 						$scope.hasChecked[index].key=resp.value;
+						alert('添加成功');
 					}else{
 						alert(resp.message);
 					}
@@ -514,7 +582,7 @@ dm.directive('layers',function($rootScope){
 				$element.toggle();
 			};
 			$scope.move = function(id){
-				debugger;
+				//debugger;
 				var gradeId = id|| (function(){
 					var _id = '';
 					$('input[type="radio"]',$element).each(function(index,item){
@@ -572,7 +640,7 @@ dm.directive('layers',function($rootScope){
 					$rootScope.$broadcast('add-layers',v);
 				});
 				$scope.$on('add-layers',function(e,v){
-					debugger;
+					//debugger;
 					$scope.lay[v.gradeId]=v;
 				});
 			};
@@ -592,16 +660,29 @@ dm.directive('weight',function(){
 				console.log('weight');
 			}
 		},
-		controller:function($scope,tools){
+		controller:function($rootScope,$scope,tools){
 			$scope.alter = function(){
-				var sellAmt = Number($scope.sellAmt),
-					chainIndex = Number($scope.chainIndex),
-					yearOnOear = Number($scope.yearOnOear);
-				if(sellAmt+chainIndex+yearOnOear!=100){
+				var sellAmt = Number($('#sellAmt').val()),
+					chainIndex = Number($('#chainIndex').val()),
+					yearOnYear = Number($('#yearOnYear').val());
+				if(sellAmt+chainIndex+yearOnYear!=100){
 					alert('三个权重之和必须等于100%哦');
 					return;
 				}
-				alert('修改成功');
+				tools.http({
+					url:'updatePotentialWeightPercent.htm',
+					data:{
+						weightPercents:'sellAmt='+sellAmt/100+';chainIndex='+chainIndex/100+';yearOnYear='+yearOnYear/100
+					},
+					succ:function(resp){
+						if(resp.success){
+							alert('修改成功');
+							$rootScope.$broadcast('reset',true);
+						}else{
+							alert(resp.message);
+						}
+					}
+				});
 			};
 		},
 		replace:true

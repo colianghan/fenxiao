@@ -2,17 +2,17 @@
 	<span>权重设置：</span>
 	<div class="input-prepend input-append mb0">
 		<span class="add-on">30天成交额</span>
-		<input type="text" class="mb0" ng-model="sellAmt"/>
+		<input type="text" class="mb0" id="sellAmt" ng-value="weight.sellAmt*100"/>
 		<span class="add-on">%</span>
 	</div>
 	<div class="input-prepend input-append mb0">
 		<span class="add-on">环比增长</span>
-		<input type="text" class="mb0" ng-model="chainIndex"/>
+		<input type="text" class="mb0" id="chainIndex" ng-value="weight.chainIndex*100"/>
 		<span class="add-on">%</span>
 	</div>
 	<div class="input-prepend input-append mb0">
 		<span class="add-on">同比增长</span>
-		<input type="text" class="mb0" ng-model="yearOnOear"/>
+		<input type="text" class="mb0"  id="yearOnYear" ng-value="weight.yearOnYear*100"/>
 		<span class="add-on">%</span>
 	</div>
 	<a href="javascript:;" class="btn btn-link" ng-click="alter();">修改</a>

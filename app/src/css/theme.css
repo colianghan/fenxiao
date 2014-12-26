@@ -666,6 +666,17 @@ h4 .pull-right{
 	overflow-y: visible;
 	max-height: 270px;
 }
+
+/* 表格浮出 */
+.pop-charts{
+	/* position: absolute; */
+	/* z-index: 1;
+	background-color: #fff; */
+}
+
+
+
+
 /* 页面编写结束 end */
 .pagination.ng-table-pagination li{
 	display: inline-block;

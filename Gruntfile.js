@@ -56,7 +56,7 @@ var configureGrunt = function(grunt){
         },
         watch:{
             js:{
-                files:['<%= paths.srcDir %>/js/*.js'],
+                files:['<%= paths.srcDir %>/js/**/*.js'],
                 tasks:['copy:prod'],
                 options:{
                     livereload:9000
@@ -70,7 +70,7 @@ var configureGrunt = function(grunt){
                 }
             },
             html:{
-                files:['<%= paths.srcDir %>/html/*.html'],
+                files:['<%= paths.srcDir %>/html/**/*.html'],
                 tasks:[],
                 options:{
                     livereload:9000
