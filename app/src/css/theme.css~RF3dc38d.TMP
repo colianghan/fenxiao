@@ -49,8 +49,9 @@
 .mb5{
 	margin-bottom: 5px;
 }
+
 .mb0{
-	margin-bottom: 0 !important;
+	margin-bottom: 0;
 }
 .mb10{
 	margin-bottom: 10px;
@@ -644,71 +645,41 @@ h4 .pull-right{
 	margin-bottom: 0;
 }
 /* 自定义分层 详情页 */
-.detail-distributor-status{
-	background-color: #d9edf7;
-	padding:20px;
-	border-bottom: 1px solid #bce8f1;
+.detail-distributor-status li{
+	/* height: 122px; */
 }
 
 
 /* 星级评测 */
 .rating {
   unicode-bidi: bidi-override;
-  direction: rtl; /*从有到左*/
-  font-size: 20px;
-  display: inline-block;
-  margin-right: 10px;
+  direction: rtl;
+  font-size: 30px;
 }
-.rating span.stars,.thumbs i {
+.rating span.stars {
   font-family: FontAwesome;
   font-weight: normal;
   font-style: normal;
   display: inline-block;
 }
-.rating span.stars:hover,.thumbs i:hover {
+.rating span.stars:hover {
   cursor: pointer;
 }
 .rating span.stars:before {
-  content: "\f006";  /*空心*/
-  color: #777;
+  content: "\f006";
+  padding-right: 5px;
+  color: #777777;
 }
 .rating span.stars:hover:before,
-.rating span.stars.active:before,
-.rating span.stars:hover ~ span.stars:before,
-.rating span.stars.active ~ span.statrs:before
-{
-  content: "\f005";  /*实心*/
+.rating span.stars:hover ~ span.stars:before {
+  content: "\f005";
   color: #e3cf7a;
 }
-/* 关注/预警 */
-.thumbs{
-	font-size: 20px;
-}
-.thumbs i.up{
-	margin-right: 10px;
-}
-.thumbs i.up:before{
-	content: '\f087';
-	color:#777;
-}
-.thumbs i.up:hover:before,.thumbs i.up.active:before{
-	content: '\f164';
-	color: blue;
-}
-.thumbs i.down:before{
-	content: '\f088';
-	color: #777;
-}
-.thumbs i.down:hover:before,.thumbs i.down.active:before{
-	content: '\f165';
-	color: red
+.rating span.stars.active{
+	content: '\f005';
+	color: '$e3cf7a';
 }
 
-/* 其他操作 */
-.other-opitions .option-other-content{
-	border-top:1px solid #dadada;
-	padding-top: 15px;
-}
 
 
 
