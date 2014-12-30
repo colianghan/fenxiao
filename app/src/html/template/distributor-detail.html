@@ -60,78 +60,223 @@
 				<li class="pull-right">
 					<span>统计周期:</span>
 					<div class="input-append mb0">
-						<input type="text" date-time class="input-small">
+						<input type="text" data-model="lowThedate" date-time class="input-small lowThedate">
 						<span class="add-on"><i class="fa fa-calendar"></i></span>
 					</div>
 					<span>~</span>
 					<div class="input-append mb0">
-						<input type="text" date-time class="input-small">
+						<input type="text" data-model="highThedate" date-time class="input-small highThedate">
 						<span class="add-on"><i class="fa fa-calendar"></i></span>
 					</div>
+					<button class="btn btn-link" ng-click="getData();">确定</button>
 				</li>
 			</ul>
 			<div class="box container-fluid box-border-recruit">
-				<h5 class="clearfix">
-					<span>概况:</span>
-					<div class="pull-right">
-						<a href="javascript:;"><i class="fa fa-angle-up"></i>收起</a>
+				<div ng-if="curNavIndex == 0">
+					<h5 class="clearfix">
+						<span>概况:</span>
+						<div class="pull-right">
+							<a href="javascript:;"><i class="fa fa-angle-up"></i>收起</a>
+						</div>
+					</h5>
+					<table class="table table-hover table-bordered">
+						<thead>
+							<tr>
+								<th>数据范围</th>
+								<th>浏览量</th>
+								<th>访客数</th>
+								<th>成交金额</th>
+								<th>成交量</th>
+								<th>转化率(%)</th>
+								<th>拍下未付款</th>
+								<th>购物车</th>
+								<th>停留时间</th>
+								<th>跌势率</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><b>母店</b></td>
+								<td ng-repeat="attr in shopAttr">
+									{{parms.shopData.inAllDmDwbAuctionEffect[attr]}}
+								</td>
+							</tr>
+							<tr>
+								<td><b>整店环比</b></td>
+								<td ng-repeat="item in [0,1,2,3,4,5,6,7,8]">
+									<i class="fa" ng-class="parms.shopData.inAllComparison[$index]>=0?'fa-arrow-up':'fa-arrow-down'"></i>
+									{{parms.shopData.inAllComparison[$index] | abs}}
+								</td>
+							</tr>
+							<tr>
+								<td><b>分销</b></td>
+								<td ng-repeat="attr in shopAttr">
+									{{parms.shopData.disDmDwbAuctionEffect[attr]}}
+								</td>
+							</tr>
+							<tr>
+								<td><b>分销环比</b></td>
+								<td ng-repeat="item in [0,1,2,3,4,5,6,7,8]">
+									<i class="fa" ng-class="parms.shopData.disComparison[$index]>=0?'fa-arrow-up':'fa-arrow-down'"></i>
+									{{parms.shopData.disComparison[$index] | abs}}
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div ng-if="curNavIndex == 1">
+					<h5 class="clearfix">
+						<span>概况:</span>
+						<div class="pull-right">
+							<a href="javascript:;"><i class="fa fa-angle-up"></i>收起</a>
+						</div>
+					</h5>
+					<table class="table table-hover table-bordered">
+						<thead>
+							<tr>
+								<th>数据范围</th>
+								<th>浏览量</th>
+								<th>访客数</th>
+								<th>成交金额</th>
+								<th>成交量</th>
+								<th>转化率(%)</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><b>母店</b></td>
+								<td ng-repeat="attr in shopAttr">
+									<span ng-if="attr!='transformationEfficiency'">
+										{{parms.keyword.shop.inAllGatherQueryEffect[attr]}}
+									</span>
+									<span ng-if="attr=='transformationEfficiency'">
+										{{parms.keyword.shop.inAllGatherQueryEffect[attr]*100 | number:2}}%
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<td><b>分销</b></td>
+								<td ng-repeat="attr in shopAttr">
+									<span ng-if="attr!='transformationEfficiency'">
+										{{parms.keyword.shop.disGatherQueryEffect[attr]}}
+									</span>
+									<span ng-if="attr=='transformationEfficiency'">
+										{{parms.keyword.shop.disGatherQueryEffect[attr]*100 | number:2}}%
+									</span>
+									
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div ng-if="curNavIndex == 0||curNavIndex == 1">
+					<h5 class="clearfix">
+						<span>宝贝详情:</span>
+					</h5>
+					<table class="table table-hover table-bordered ng-table">
+						<thead>
+							<tr>
+								<th>编号</th>
+								<th ng-repeat="item in thead[curNavIndex]" ng-class="item.sortable!=false?'sortable':''" ng-click="sort($event,item);">
+									<div>
+										{{item.name}}
+									</div>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in data">
+								<td><span class="badge badge-info">{{$index}}</span></td>
+								<td ng-repeat = "i in thead[curNavIndex]">
+									<span ng-if="'clickRate'!=i.key&&'transformationEfficiency'!=i.key&&'lossRate'!=i.key">{{item[i.key]}}</span>
+									<span ng-if="'clickRate'==i.key||'transformationEfficiency'==i.key||'lossRate'==i.key">{{item[i.key]*100 | number:2}}%</span>
+								</td>
+							</tr>
+							<tr ng-if="!data.length">
+								<td colspan="{{thead[curNavIndex].length+1}}">
+									<div class="no-data">
+										暂无数据,正在努力打造中↖(^ω^)↗
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<page ng-if="pages.length">
+					</page>
+				</div>
+				<div ng-if="curNavIndex==2">
+					<table class="table table-hover table-bordered ng-table">
+						<thead>
+							<tr>
+								<th>渠道分类</th>
+								<th>渠道名称</th>
+								<th ng-repeat="item in thead[curNavIndex]" ng-class="item.sortable!=false?'sortable':''" ng-click="sort($event,item);">
+									<div>{{item.name}}</div>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in parms.distriDataSrc">
+								<td ng-if="!!item.parentName" rowspan="{{item.childLength}}">{{item.parentName}}</td>
+								<td>{{item.srcName}}</td>
+								<td ng-repeat="i in thead[curNavIndex]">
+									{{item[i.key]}}
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div ng-if="curNavIndex==3">
+					<!-- 授权产品及折扣 -->
+					<table class="table table-hover table-bordered">
+						<thead>
+							<tr>
+								<th>编号</th>
+								<th colspan="2">产品</th>
+								<th>所属分类</th>
+								<th>原价</th>
+								<th>折扣</th>
+								<th>折扣价</th>
+								<th>利润</th>
+								<th>销量</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="i in parms.prods">
+								<td><span class="badge badge-info">{{$index}}</span></td>
+								<td>
+									<img ng-src="{{i.picUrl}}_70x70.jpg" alt="{{i.title}}">
+								</td>
+								<td>{{i.title}}</td>
+								<td>{{parms.productLines[i.productCatId].name}}</td>
+								<td>{{i.standardPrice}}</td>
+								<td ng-init="i.edit=false;">
+									<div ng-show="!i.edit">
+										<span>{{i.agentCostPrice/i.standardPrice*100 | number:2}}%</span>
+										<i class="fa fa-edit pull-right" style="cursor:pointer;" ng-click="i.edit=true;"></i>
+									</div>
+									<div class="input-append" ng-show="i.edit">
+										<input type="text" class="input-small" id="pricCount_{{$index}}" ng-value="i.agentCostPrice/i.standardPrice*100 | number:2"/>
+										<span class="btn" ng-click="editCount($index);"><i class="fa fa-check"></i></span>
+										<span class="btn" ng-click="i.edit=false;"><i class="fa fa-times"></i></span>
+									</div>
+								</td>
+                                <td>{{i.agentCostPrice | number:2}}</td>
+                                <td>{{i.standardPrice-i.discountPrice | number:2}}</td>
+                                <td>{{i.alipayAuctionNum}}</td>
+							</tr>
+						</tbody>
+					</table>
+					<page ng-if="pages.length">
+					</page>
+				</div>
+				<div ng-if="curNavIndex==4">
+					<button class="btn" ng-click="addConcat();"><i class="fa fa-plus"></i>添加记录</button>
+					<div class="DisLink clearfix mt30">
+						<concat ng-repeat="item in parms.concats" a="item"></concat>
 					</div>
-				</h5>
-				<table class="table table-hover table-bordered">
-					<thead>
-						<tr>
-							<th>数据范围</th>
-							<th>浏览量</th>
-							<th>访客数</th>
-							<th>成交金额</th>
-							<th>成交量</th>
-							<th>转化率(%)</th>
-							<th>拍下未付款</th>
-							<th>购物车</th>
-							<th>停留时间</th>
-							<th>跌势率</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr ng-repeat="item in [1,2,3]">
-							<td><b>母店</b></td>
-							<td>221</td>
-							<td>188</td>
-							<td>961.00</td>
-							<td>9</td>
-							<td>4.79%</td>
-							<td>0</td>
-							<td>0</td>
-							<td>79</td>
-							<td>88.89%</td>
-						</tr>
-					</tbody>
-				</table>
-				<h5 class="clearfix">
-					<span>宝贝详情:</span>
-				</h5>
-				<table class="table table-hover table-bordered ng-table">
-					<thead>
-						<tr>
-							<th ng-repeat="item in thead[curNavIndex]" ng-class="item.sortable!=false?'sortable':''">
-								<div>
-									{{item.name}}
-								</div>
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr ng-repeat="item in [1,2,3]">
-							<td ng-repeat = "i in thead[curNavIndex]">
-								{{item[i.key]}}
-							</td>
-						</tr>
-					</tbody>
-				</table>
-				<page ng-if="pages.length">
-				</page>
+				</div>
 			</div>
 		</div>
-		<!-- <div>{{options | json}}</div> -->
 	</div>
 </div>

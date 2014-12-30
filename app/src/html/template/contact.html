@@ -1,0 +1,30 @@
+<div class="pageContainer">
+	<a href="javascript:;" ng-click="remove();" class="delete pull-right"><i class="fa fa-times"></i>删除该联系人</a>
+	<div class="oneConcatPage">
+		<form class="form-horizontal">
+			<div class="control-group mt20">
+				<div class="controls text-center">
+					<input type="text" class="input-small" ng-blur="attrCheck($event,'name');" ng-model="model.name" placeholder="姓名">
+					<span class="help-block" ng-show="errorMessage!=''">
+					{{errorMessage}}</span>
+				</div>
+			</div>
+			<div class="control-group" ng-repeat="attr in attrs">
+				<label class="control-label">{{attr.name}}:</label>
+				<div class="controls">
+					<input type="text" ng-model="model[attr.key]" ng-blur="attrCheck($event,attr.key);">
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">备注:</label>
+				<div class="controls">
+					<textarea ng-model="model['remark']" ng-blur="attrCheck($event,'remark');"></textarea>
+				</div>
+			</div>
+			<div class="control-group text-right">
+				<button class="btn" ng-if="!item.id" ng-click="save();"><i class="fa fa-floppy-o"></i>保存</button>
+				<button class="btn" ng-if="item.id" ng-click="edit();"><i class="fa fa-edit"></i>编辑</button>
+			</div>
+		</form>
+	</div>
+</div>

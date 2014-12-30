@@ -99,7 +99,12 @@
 	*zoom:1;
 	*display: inline;
 }
-
+.vshow{
+	visibility: visible;
+}
+.vhide{
+	visibility: hidden;
+}
 
 
 /* 边框 */
@@ -219,7 +224,7 @@ dt,dd{
 	display: inline-block;
 	*zoom:1;
 	*display: inline;
-};
+}
 
 .no-data{
 	display: block;
@@ -703,11 +708,39 @@ h4 .pull-right{
 	content: '\f165';
 	color: red
 }
-
 /* 其他操作 */
 .other-opitions .option-other-content{
 	border-top:1px solid #dadada;
 	padding-top: 15px;
+}
+
+/* 联系人列表 */
+.DisLink{
+	overflow: hidden;
+	overflow-x:visible;
+	/* max-width: 100%;
+	white-space: nowrap; */
+	/* margin: 20px; */
+}
+.DisLink .pageContainer{
+	padding: 10px;
+	float: left;
+	background: #dadada;
+	text-align: center;
+	width: 400px;
+	margin: 20px;
+}
+.DisLink .oneConcatPage{
+	width: 340px;
+}
+.DisLink .oneConcatPage .control-group{
+	margin-bottom: 10px;
+}
+.DisLink .oneConcatPage .control-group textarea{
+	height: 120px;
+}
+.DisLink .oneConcatPage .control-group .help-block{
+	color: #b94a48;
 }
 
 
