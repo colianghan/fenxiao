@@ -139,7 +139,7 @@ dm.directive('distrdetail',['$rootScope','$compile',function($rootScope,$compile
 				});
 			},
 			4:function(){
-				$scope.parms.getRecordList(function(v){
+				$scope.parms.concats || $scope.parms.getRecordList(function(v){
 					//$scope.parms.concats=v.disLinkManInfos;
 					/*for(var i =0;i<=10;i++){
 						$scope.parms.concats.unshift({});
@@ -164,10 +164,19 @@ dm.directive('distrdetail',['$rootScope','$compile',function($rootScope,$compile
 				});
 			},
 			5:function(){
-				$scope.parms.getRecordList();
+				$scope.parms.records ||$scope.parms.getRecordList();
+				$scope.record={};//添加的东西
+				$scope.showAdd = false;
+				$scope.addRecord = function(){
+					$scope.record.contactTime = $('.contactTime',$element).val();
+					$scope.parms.addRecord($scope.record,function(v){
+						$scope.record={};
+					});
+				};
 			},
 			6:function(){
-				$scope.parms.getRecordList();
+				$scope.parms.shopUrl || $scope.parms.getRecordList();
+				console.log($scope.parms.shopUrl);
 				console.log('店铺基本信息');
 			}
 		};
@@ -180,7 +189,12 @@ dm.directive('distrdetail',['$rootScope','$compile',function($rootScope,$compile
 			$scope.parms.editCount(i,value);
 		};
 		$scope.addConcat =function(){
-			$scope.parms.concats.unshift({});
+			var item = $scope.parms.concats[0]
+			if(item&&item.id){
+				$scope.parms.concats.unshift({});
+			}else if(item == undefined){
+				$scope.parms.concats.unshift({});
+			}	
 		};
 	}];
 	var compile = function(element,attrs,link){
@@ -453,6 +467,8 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 				if(resp.success){
 					//
 					self.concats = resp.value.disLinkManInfos;
+					self.records = resp.value.disContactHistoryRecords;
+					self.shopUrl = resp.value.disRateUrl;
 					if(callback){
 						callback(resp.value);
 					}
@@ -497,6 +513,7 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 				}
 			});
 		};
+		//删除联系人
 		this.deleteConcat = function(item){
 			if(!item.id){
 				//alert('页面异常，请刷新页面');
@@ -515,6 +532,46 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 						self.concats =_.reject(self.concats,function(i){
 							return i.id==item.id
 						});
+					}
+				}
+			});
+		}
+		//联系记录
+		this.addRecord = function(item,callback){
+			if(item.name==undefined||item.name==''){
+				alert('请填写真实姓名');
+				return;
+			}
+			if(item.contactTime==undefined||item.contactTime==''){
+				alert('请填写联系时间');
+				return;
+			}
+			if(item.aliNick == undefined || item.aliNick==''){
+				alert('请填写联系旺旺');
+				return;
+			}
+			if(item.contactResult==undefined || item.contactResult ==''){
+				alert('请填写联系结果');
+				return;
+			}
+			$.extend(item,{
+				disSid:this.disId
+			});
+			tools.http({
+				url:api.insertRecordList,
+				data:item,
+				succ:function(resp){
+					if(resp.success){
+						//
+						var obj = {};
+						$.extend(obj,item);
+						self.records.push(obj);
+						alert('添加成功');
+						if(callback){
+							callback(resp.value);
+						}
+					}else{
+						alert(resp.message);
 					}
 				}
 			});

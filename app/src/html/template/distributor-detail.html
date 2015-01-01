@@ -1,7 +1,7 @@
 <div class="row-fluid">
 	<div class="span12">
 		<h5 class="alert alert-info clearfix mb0">
-			<span class="pull-left">店铺名称：<b>永远笑着的人</b></span>
+			<span class="pull-left">店铺名称：<b>{{distr.disNick}}</b></span>
 			<div class="pull-right">
 				<a href="javascript:;" class="mr10"><i class="fa fa-angle-up mr5"></i>展开</a>
 				<a href="javascript:;" ng-click="return();"><i class="fa fa-power-off mr5"></i>返回</a>
@@ -275,6 +275,50 @@
 					<div class="DisLink clearfix mt30">
 						<concat ng-repeat="item in parms.concats" a="item"></concat>
 					</div>
+				</div>
+				<div ng-if="curNavIndex==5">
+					<button class="btn pull-right" ng-click="showAdd=!showAdd;"><i class="fa fa-plus"></i>添加记录</button>
+					<table class="table table-hover table-bordered mt30">
+						<thead>
+							<tr>
+								<th>时间</th>
+								<th>联系旺旺</th>
+								<th>联系人</th>
+								<th>联系结果</th>
+								<th>备注</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-if="showAdd">
+								<td><input type="text" class="contactTime" date-time></td>
+								<td><select ng-model="record.aliNick">
+										<option ng-value="{{i.aliNick}}" ng-repeat="i in parms.concats" ng-if="i.id">{{i.aliNick}}</option>
+									</select>
+								</td>
+								<td><input type="text" ng-model="record.name"></td>
+								<td><input type="text" ng-model="record.contactResult"></td>
+								<td>
+									<input type="text" ng-model="record.remark">
+									<a href="javascript:;" ng-click="addRecord();"><i class="fa fa-plus"></i>添加</a>
+								</td>
+							</tr>
+							<tr ng-repeat="i in parms.records">
+								<td>{{i.contactTime}}</td>
+								<td>{{i.aliNick}}</td>
+								<td>{{i.name}}</td>
+								<td>{{i.contactResult}}</td>
+								<td>{{i.remark}}</td>
+							</tr>
+							<tr ng-if="!parms.records.length">
+								<td colspan="5">
+									<div class="no-data">暂无联系记录哦..</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div ng-if="curNavIndex==6">
+					<iframe ng-src="{{parms.shopUrl}}" style="height:1000px;width:100%;" name="shopUrl" frameborder="0"></iframe>
 				</div>
 			</div>
 		</div>

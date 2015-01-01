@@ -4,7 +4,7 @@
 		<form class="form-horizontal">
 			<div class="control-group mt20">
 				<div class="controls text-center">
-					<input type="text" class="input-small" ng-blur="attrCheck($event,'name');" ng-model="model.name" placeholder="姓名">
+					<input type="text" class="input-small name" ng-blur="attrCheck($event,'name');" ng-model="model.name" placeholder="姓名">
 					<span class="help-block" ng-show="errorMessage!=''">
 					{{errorMessage}}</span>
 				</div>
@@ -12,13 +12,13 @@
 			<div class="control-group" ng-repeat="attr in attrs">
 				<label class="control-label">{{attr.name}}:</label>
 				<div class="controls">
-					<input type="text" ng-model="model[attr.key]" ng-blur="attrCheck($event,attr.key);">
+					<input type="text" ng-model="model[attr.key]" ng-class="attr.key" ng-blur="attrCheck($event,attr.key);">
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label">备注:</label>
 				<div class="controls">
-					<textarea ng-model="model['remark']" ng-blur="attrCheck($event,'remark');"></textarea>
+					<textarea ng-model="model['remark']" class="remark" ng-blur="attrCheck($event,'remark');"></textarea>
 				</div>
 			</div>
 			<div class="control-group text-right">

@@ -21,7 +21,7 @@ dm.directive('concat',['$rootScope',function($rootScope){
 		//var attrSrc = $scope.attrSrc = concatModel;
 		var attrs= $scope.attrs = values.slice(1,keys.length-1);
 		$scope.attrCheck = function(e,key){
-			var $ele = $(e.currentTarget).parents('.control-group');
+			var $ele = $('.'+key,$element).parents('.control-group');
 			if(concatModel[key].check){
 				var resp = concatModel[key].check(model[key]);
 				if(!resp.success){
@@ -47,10 +47,26 @@ dm.directive('concat',['$rootScope',function($rootScope){
 		};
 		$scope.save = function(){
 			//保存
+			//$('input[type="text"]',$element).blur();
+			$scope.attrCheck(null,'name');
+			$scope.attrCheck(null,'aliNick');
+			/*if(!concatModel['name'].check(model['name'])){
+				$('.name',$element).blur();
+				return;
+			}*/
+			var $error = $('.error',$element);
+			if($error.length){
+				return;
+			}
 			$rootScope.$broadcast('save-concat',model);
 		};
 		$scope.edit = function(){
 			//编辑
+			$('input[type="text"]',$element).blur();
+			var $error = $('.error',$element);
+			if($error.length){
+				return;
+			}
 			$rootScope.$broadcast('edit-concat',model);
 		};
 	}];
@@ -111,7 +127,7 @@ dm.factory('concatModel',['tools',function(tools){
 			name:'手机号码',
 			check:function(v){
 				var _bool = {success:true};
-				if(v!=undefined&&v!=''&&!url.test(v)){
+				if(v!=undefined&&v!=''&&!mobilePhone.test(v)){
 					_bool.success = false;
 					_bool.message="手机号码格式不正确";
 				}
@@ -122,13 +138,21 @@ dm.factory('concatModel',['tools',function(tools){
 			name:'联系电话'
 		},
 		aliNick:{
-			name:'旺旺'
+			name:'旺旺',
+			check:function(v){
+				var _bool = {success:true};
+				if(v==undefined || v==''){
+					_bool.success = false;
+					_bool.message="旺旺没有填写";
+				}
+				return _bool;
+			}
 		},
 		qq:{
 			name:'QQ',
 			check:function(v){
 				var _bool = {success:true};
-				if(v!=undefined&&v!=''&&!/^\d{n}$/.test(v)){
+				if(v!=undefined&&v!=''&&!/^\d+$/.test(v)){
 					_bool.success = false;
 					_bool.message="QQ格式不正确";
 				}

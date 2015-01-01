@@ -1,0 +1,57 @@
+<div>
+	<div class="clearfix">
+		<div class="pull-left clearfix">
+			<img ng-src="" class="pull-left">
+			<div class="pull-right">
+				<a href="javascript:;">秋冬新款韩版连衣裙中长袖羊毛衣女装宽松套装修身打底毛呢包臀裙</a>
+				<label>商品编码:960218</label>
+			</div>
+		</div>
+		<div class="pull-left">
+			
+		</div>
+		<div class="pull-left">
+			<p>13</p>
+			<div></div>
+		</div>
+	</div>
+	<table class="table table-hover table-bordered">
+		<caption class="text-left"><h4>授权分销商列表</h4></caption>
+		<thead>
+			<tr>
+				<th>序号</th>
+				<th>分销商名称</th>
+				<th>月成交额</th>
+				<th>月成交量</th>
+				<th>客单价</th>
+				<th>折扣(%)</th>
+				<th>当前采购价</th>
+				<th>所属等级</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="i in model.list">
+				<td><span class="badge badge-info">{{$index}}</span></td>
+				<td>
+					<a href="javascript:;">{{i.title}}</a>
+				</td>
+				<td>{{i.alipayTradeAmt}}</td>
+				<td>{{i.alipayWinnerNum}}</td>
+				<td>客单价</td>
+				<td ng-init="i.edit=false;">
+					<div ng-show="!i.edit">
+						<span>{{i.agentCostPrice/i.standardPrice*100 | number:2}}%</span>
+						<i class="fa fa-edit pull-right" style="cursor:pointer;" ng-click="i.edit=true;"></i>
+					</div>
+					<div class="input-append" ng-show="i.edit">
+						<input type="text" class="input-small" id="pricCount_{{$index}}" ng-value="i.agentCostPrice/i.standardPrice*100 | number:2"/>
+						<span class="btn" ng-click="editCount($index);"><i class="fa fa-check"></i></span>
+						<span class="btn" ng-click="i.edit=false;"><i class="fa fa-times"></i></span>
+					</div>
+				</td>
+				<td>{{i.agentCostPrice | number:2}}</td>
+				<td>{{i.productCatId}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

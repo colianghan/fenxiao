@@ -784,6 +784,16 @@ h4 .pull-right{
 	background-color: #fff; */
 }
 
+/* 上下架操作 */
+.up-down-options{
+	vertical-align: middle !important;
+	text-align: center !important;
+	font-size: 25px;
+	cursor: pointer;
+}
+.table-tr-last{
+	border-bottom: 1px solid #dddddd;
+}
 
 
 

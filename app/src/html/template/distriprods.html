@@ -1,0 +1,155 @@
+<div class="mt30">
+	<div ng-show="show==1">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="javascript:;">{{tagIndex==4?'出售中':'仓库'}}</a></li>
+		</ul>
+		<div class="box box-border-recruit container-fluid">
+			<div ng-show="highSearch">
+				<div class="row-fluid">
+					<div class="span4">
+						<div class="form-horizontal">
+							<div class="control-group">
+								<label class="control-label">浏览量:</label>
+								<div class="controls">
+									<input type="text" class="input-small" ng-model="searchParm['low'+searchBase+'Ipv']">
+									<span>~</span>
+									<input type="text" class="input-small" ng-model="searchParm['high'+searchBase+'Ipv']">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">转化率(%):</label>
+								<div class="controls controls-row">
+									<input type="text" class="input-small" ng-model="searchParm['low'+searchBase+'TransformationEfficiency']">
+									<span>~</span>
+									<input type="text" class="input-small" ng-model="searchParm['high'+searchBase+'TransformationEfficiency']">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">收藏数:</label>
+								<div class="controls controls-row">
+									<input type="text" class="input-small" ng-model="searchParm['low'+searchBase+'AuctionCollectNum']">
+									<span>~</span>
+									<input type="text" class="input-small" ng-model="searchParm['high'+searchBase+'AuctionCollectNum']">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="span4">
+						<div class="form-horizontal">
+							<div class="control-group">
+								<label class="control-label">访客数:</label>
+								<div class="controls">
+									<input type="text" class="input-small" ng-model="searchParm['low'+searchBase+'Iuv']">
+									<span>~</span>
+									<input type="text" class="input-small" ng-model="searchParm['high'+searchBase+'Iuv']">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">成交件数:</label>
+								<div class="controls">
+									<input type="text" class="input-small" ng-model="searchParm['low'+searchBase+'AlipayAuctionNum']">
+									<span>~</span>
+									<input type="text" class="input-small" ng-model="searchParm['high'+searchBase+'AlipayAuctionNum']">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">加入购物车数:</label>
+								<div class="controls">
+									<input type="text" class="input-small" ng-model="searchParm['low'+searchBase+'AddCartUserNum']">
+									<span>~</span>
+									<input type="text" class="input-small" ng-model="searchParm['high'+searchBase+'AddCartUserNum']">
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="span4">
+						<div class="form-horizontal">
+							<div class="control-group">
+								<label class="control-label">成交金额:</label>
+								<div class="controls">
+									<input type="text" class="input-small" ng-model="searchParm['low'+searchBase+'AlipayTradeAmt']">
+									<span>~</span>
+									<input type="text" class="input-small" ng-model="searchParm['high'+searchBase+'AlipayTradeAmt']">
+								</div>
+							</div>
+							<!-- <div class="control-group">
+								<div class="controls">
+									<button class="btn"><i class="fa fa-search"></i>搜索</button>
+									<button class="btn"><i class="fa fa-power-off"></i>取消</button>
+								</div>
+							</div> -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="pull-right">
+				<form class="form-inline form-search">
+					<label class="radio mr5">
+						<input type="radio" name="tap" value="Dis" ng-model="searchBase" />
+						基于分销搜索
+					</label>
+					<label class="radio">
+						<input type="radio" name="tap" value="Sup" ng-model="searchBase" />
+						基于母店搜索
+					</label>
+					<input type="text" class="search-query" ng-model="searchParm.title" />
+					<button class="btn" ng-click="search();"><i class="fa fa-search"></i>搜索</button>
+					<a href="javascript:;" class="btn btn-link" ng-click="highSearch=!highSearch;">高级搜索</a>
+				</form>
+			</div>
+			<table class="table ng-table table-tr-last">
+				<thead>
+					<tr>
+						<th>产品</th>
+						<th>范围</th>
+						<th ng-repeat="i in theads" ng-class="i.sortable!=false?'sortable':''" ng-click="getSort($event,i);">
+							<div>{{i.name}}</div>
+						</th>
+						<th>上下架</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="i in model.prods">
+						<td ng-if="$index%3==0" colspan="{{3+theads.length}}">
+							<a href="javascript:;" ng-click="getDistrList(i);">{{i.title}}</a>
+						</td>
+						<td ng-if="$index%3==1" rowspan="2">
+							<img ng-src="{{i.picUrl}}_40x40.jpg">
+						</td>
+						<td ng-if='$index%3==1'>
+							<span class="badge badge-warning">母店</span>
+						</td>
+						<td ng-if='$index%3==2'>
+							<span class="badge badge-warning">分销</span>
+						</td>
+						<td ng-if="$parent.$index%3>0" ng-repeat="attr in theads">
+							<span ng-if="attr.key=='TransformationEfficiency'||attr.key=='LossRate'">
+								{{i[attr.key]*100 | number:2}}%
+							</span>
+							<span ng-if="attr.key!='TransformationEfficiency'&&attr.key!='LossRate'">
+								{{i[attr.key]}}
+							</span>
+						</td>
+						<td ng-if="$index%3==1" class="up-down-options" rowspan="2">
+							<i class="fa" ng-class="tagIndex==4?'fa-arrow-circle-up':'fa-arrow-circle-down'" ng-click="up_down_options(i.pid);"></i>
+						</td>
+					</tr>
+					<tr ng-if="!model.prods.length">
+						<td colspan="{{3+theads.length}}">
+							<div class="no-data">
+								没有找到搜索条件对应的宝贝
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<page></page>
+		</div>
+	</div>
+	<div ng-if="show==2">
+		<distrilist data-item="detailDistr"></distrilist>
+	</div>
+	<div ng-if="show==3">
+		<distrdetail></distrdetail>
+	</div>
+</div>

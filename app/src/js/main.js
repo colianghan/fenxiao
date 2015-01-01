@@ -1,5 +1,5 @@
 var dm = angular.module('distributManager',['ngTable','ngRoute','ngAnimate','ngSanitize']);
-dm.config(['$routeProvider',function($routeProvider){
+dm.config(['$routeProvider','$sceDelegateProvider',function($routeProvider,$sceDelegateProvider){
 	$routeProvider
 		.when('/index',{
 			templateUrl:'../html/home.html',
@@ -28,6 +28,12 @@ dm.config(['$routeProvider',function($routeProvider){
 		.otherwise({
 			redirectTo:'/index'
 		});
+	$sceDelegateProvider.resourceUrlWhitelist([
+	    // Allow same origin resource loads.
+	    'self',
+	    // Allow loading from our assets domain.  Notice the difference between * and **.
+	    'http://*.taobao.com/**'
+	]);
 }]);
 
 dm.controller('layout',['$rootScope','$scope','$route','$location',function($rootScope,$scope,$route,$location){

@@ -64,24 +64,6 @@
 				</tbody>
 			</table>
 			<page></page>
-			<!-- <div class="clearfix">
-				<div class="pagination pull-right">
-					<ul>
-						<li ng-if="pages.length" ng-class="now===1?'disabled':''">
-							<a href="javascript:;" ng-click="getPage(1);">&laquo;</a>
-						</li>
-						<li ng-repeat="page in pages" ng-class="now===(page+1)?'disabled':''">
-							<a href="javascript:;" ng-click="getPage(page+1)">{{page+1}}</a>
-						</li>
-						<li ng-if="">
-							<a href="">&#8230;</a>
-						</li>
-						<li ng-if="pages.length" ng-class="now===pages.length?'disabled':''">
-							<a href="javascript:;" ng-click="getPage(pages.length);">&raquo;</a>
-						</li>
-					</ul>		
-				</div>
-			</div> -->
 		</div>
 	</div>
 </div>
@@ -135,6 +117,9 @@
 			</div>
 		</div>
 	</div>
+</div>
+<div ng-if="tagIndex>3&&tagIndex<6">
+	<distriprods data-tag="tagIndex"></distriprods>
 </div>
 <div ng-if="tagIndex>=6">
 	<distributors ng-show="true"></distributors>

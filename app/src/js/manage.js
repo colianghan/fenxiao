@@ -1,7 +1,8 @@
 dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter','tools','ngTableParams','grades',function($rootScope,$scope,$routeParams,$animate,$filter,tools,ngTableParams,grades){
 	var gradeId,bannerIndex = $routeParams.banner||0,
 		tagIndex = $scope.tagIndex = $routeParams.tag||1;
-		if (tagIndex==0 && bannerIndex!=0){
+		//debugger;
+		if (tagIndex==1 && bannerIndex!=0){
 			tagIndex = $scope.tagIndex = 4;
 		}
 		//debugger;
