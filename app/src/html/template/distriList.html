@@ -1,21 +1,39 @@
-<div>
-	<div class="clearfix">
-		<div class="pull-left clearfix">
-			<img ng-src="" class="pull-left">
-			<div class="pull-right">
-				<a href="javascript:;">秋冬新款韩版连衣裙中长袖羊毛衣女装宽松套装修身打底毛呢包臀裙</a>
-				<label>商品编码:960218</label>
+<div class="pr">
+	<div class="pull-right"><button class="btn" ng-click="back();"><i class="fa fa-times"></i>返回</button></div>
+	<div class="clearfix disPrds-info">
+		<div class="pull-left clearfix mr30 list">
+			<img ng-src="{{item.picUrl}}_70x70.jpg" class="pull-left">
+			<div class="pull-right disNick">
+				<a href="javascript:;">{{item.title}}</a>
+				<p class="mt10"><span>商品编码:</span><b>{{item.outerId}}</b></p>
 			</div>
 		</div>
-		<div class="pull-left">
-			
+		<div class="pull-left mr30 list">
+			<p>
+				<span>利润区间:</span>
+				<b><i class="fa fa-jpy"></i>{{item.retailPriceLow-item.costPrice | number:2}}</b> - <b><i class="fa fa-jpy"></i>{{item.retailPriceHigh-item.costPrice | number:2}}</b>
+			</p>
+			<p>
+				<span>默认最低零售价:</span>
+				<b><i class="fa fa-jpy"></i>{{item.retailPriceLow}}</b>
+			</p>
+			<p>
+				<span>默认代销采购价:</span>
+				<b><i class="fa fa-jpy"></i>{{item.costPrice}}</b>
+			</p>
 		</div>
-		<div class="pull-left">
-			<p>13</p>
-			<div></div>
+		<div class="pull-left list">
+			<p>
+				<span>月成交量:</span>
+				<b>{{item.disAlipayAuctionNum}}</b>
+			</p>
+			<p>
+				<span>铺货时间:</span>
+				<b>{{item.created}}</b>
+			</p>
 		</div>
 	</div>
-	<table class="table table-hover table-bordered">
+	<table class="table table-hover table-bordered ng-table">
 		<caption class="text-left"><h4>授权分销商列表</h4></caption>
 		<thead>
 			<tr>
@@ -26,32 +44,48 @@
 				<th>客单价</th>
 				<th>折扣(%)</th>
 				<th>当前采购价</th>
-				<th>所属等级</th>
+				<th>
+					<select ng-model="gradeCur">
+						<option value="all" ng-selected="gradeCur=='all'">所选等级</option>
+						<option ng-repeat="i in model.gradeList" ng-value="i.gradeId">{{i.name}}</option>
+					</select>
+				</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="i in model.list">
 				<td><span class="badge badge-info">{{$index}}</span></td>
 				<td>
-					<a href="javascript:;">{{i.title}}</a>
+					<a href="javascript:;" ng-click="showDetail(i);">{{i.disNick}}</a>
 				</td>
 				<td>{{i.alipayTradeAmt}}</td>
 				<td>{{i.alipayWinnerNum}}</td>
-				<td>客单价</td>
-				<td ng-init="i.edit=false;">
-					<div ng-show="!i.edit">
+				<td>{{i.perCustomerTransaction}}</td>
+				<td ng-init="i.discount_edit=false;">
+					<div ng-show="!i.discount_edit">
 						<span>{{i.agentCostPrice/i.standardPrice*100 | number:2}}%</span>
-						<i class="fa fa-edit pull-right" style="cursor:pointer;" ng-click="i.edit=true;"></i>
+						<i class="fa fa-edit pull-right" style="cursor:pointer;" ng-click="i.discount_edit=true;"></i>
 					</div>
-					<div class="input-append" ng-show="i.edit">
-						<input type="text" class="input-small" id="pricCount_{{$index}}" ng-value="i.agentCostPrice/i.standardPrice*100 | number:2"/>
-						<span class="btn" ng-click="editCount($index);"><i class="fa fa-check"></i></span>
-						<span class="btn" ng-click="i.edit=false;"><i class="fa fa-times"></i></span>
+					<div class="input-append" ng-show="i.discount_edit">
+						<input type="text" class="input-small" id="pricCount_discount_{{$index}}" ng-value="i.agentCostPrice/i.standardPrice*100 | number:2"/>
+						<span class="btn" ng-click="editCount($index,'discount');"><i class="fa fa-check"></i></span>
+						<span class="btn" ng-click="i.discount_edit=false;"><i class="fa fa-times"></i></span>
 					</div>
 				</td>
-				<td>{{i.agentCostPrice | number:2}}</td>
-				<td>{{i.productCatId}}</td>
+				<td>
+					<div ng-show="!i.price_edit">
+						<span>{{i.agentCostPrice | number:2}}</span>
+						<i class="fa fa-edit pull-right" style="cursor:pointer;" ng-click="i.price_edit=true;"></i>
+					</div>
+					<div class="input-append" ng-show="i.price_edit">
+						<input type="text" class="input-small" id="pricCount_price_{{$index}}" ng-value="{{i.agentCostPrice | number:2}}"/>
+						<span class="btn" ng-click="editCount($index,'price');"><i class="fa fa-check"></i></span>
+						<span class="btn" ng-click="i.price_edit=false;"><i class="fa fa-times"></i></span>
+					</div>
+				</td>
+				<td>{{model.gradeList[i.gradeId].name}}</td>
 			</tr>
 		</tbody>
 	</table>
+	<page></page>	
 </div>

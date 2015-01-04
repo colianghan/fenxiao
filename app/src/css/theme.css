@@ -795,6 +795,14 @@ h4 .pull-right{
 	border-bottom: 1px solid #dddddd;
 }
 
+/* 分销商列表 */
+.disPrds-info .disNick{
+	width: 16em;
+}
+.disPrds-info .list{
+	margin-right: 10%;
+}
+
 
 
 /* 页面编写结束 end */

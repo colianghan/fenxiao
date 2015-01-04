@@ -12,6 +12,7 @@ dm.directive('distrdetail',['$rootScope','$compile',function($rootScope,$compile
 		});*/
 		console.log($scope.$parent.detail);
 		var distr = $scope.distr = $scope.$parent.detail;
+		//debugger;
 		var parms = $scope.parms = new distrDetail($scope.distr);
 		//返回
 		$scope.return = function(){
@@ -104,6 +105,8 @@ dm.directive('distrdetail',['$rootScope','$compile',function($rootScope,$compile
 					$scope.data = $scope.parms.operateBasicData;
 					if(v.resultSize){
 						initPages($scope,v.resultSize);
+						distr = $scope.distr = $scope.$parent.detail = v.distributor;//重置了详细页的详情
+						debugger;
 					}
 				});
 				$scope.shopAttr = ['ipv','iuv','alipayTradeAmt','alipayAuctionNum','transformationEfficiency',
@@ -132,7 +135,7 @@ dm.directive('distrdetail',['$rootScope','$compile',function($rootScope,$compile
 			3:function(){
 				//产品授权及折扣
 				$scope.parms.getProds(function(v){
-					debugger;
+					//debugger;
 					if(v.resultSize){
 						initPages($scope,v.resultSize);
 					}
@@ -154,7 +157,7 @@ dm.directive('distrdetail',['$rootScope','$compile',function($rootScope,$compile
 						$scope.parms.concats.shift();
 					}*/
 					$scope.parms.deleteConcat(v);
-					debugger;
+					//debugger;
 				});
 				$scope.$on('save-concat',function(e,v){
 					$scope.parms.addConcat(v);
@@ -232,7 +235,7 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 	var action = function(item){
 		var self = this;
 		this.tableLength = tools.config.table.count;
-		this.disId = item.disShopId;
+		this.disId = item.disShopId||item.disSid;
 		this.tradeType = item.tradeType;
 		this.operateBasicData = [];//运营基础数据
 		this.shopData = {}; // 对象 店铺概况
