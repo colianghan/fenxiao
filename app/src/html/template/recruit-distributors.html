@@ -4,206 +4,230 @@
 	</ul>
 	<div class="box container-fluid box-border-recruit">
 		<div class="span12">
-			<div class="border-bottom mb10" ng-if="showHighSearch">
-				<!-- 运营数据筛选 -->
-				<div class="row-fluid">
-					<div class="span12">
-						<div class="span6">
-							<h4 class="alert alert-info">运营数据筛选</h4>
-							<div class="form-horizontal">
-								<div class="control-group">
-									<label class="control-label">30天成交额:</label>
-									<div class="controls">
-										<input type="text" ng-model="model.parms.lowSellMoney" class="input-small">
-										<span>~</span>
-										<input type="text" ng-model="model.parms.highSellMoney" class="input-small">
+			<div ng-show="!showMessage">
+				<div class="border-bottom mb10" ng-if="showHighSearch">
+					<!-- 运营数据筛选 -->
+					<div class="row-fluid">
+						<div class="span12">
+							<div class="span6">
+								<h4 class="alert alert-info">运营数据筛选</h4>
+								<div class="form-horizontal">
+									<div class="control-group">
+										<label class="control-label">30天成交额:</label>
+										<div class="controls">
+											<input type="text" ng-model="model.parms.lowSellMoney" class="input-small">
+											<span>~</span>
+											<input type="text" ng-model="model.parms.highSellMoney" class="input-small">
+										</div>
 									</div>
-								</div>
-								<div class="control-group">
-									<label class="control-label">30天成交量:</label>
-									<div class="controls controls-row">
-										<input type="text" ng-model="model.parms.lowSellAmount" class="input-small">
-										<span>~</span>
-										<input type="text" ng-model="model.parms.highSellAmount" class="input-small">
+									<div class="control-group">
+										<label class="control-label">30天成交量:</label>
+										<div class="controls controls-row">
+											<input type="text" ng-model="model.parms.lowSellAmount" class="input-small">
+											<span>~</span>
+											<input type="text" ng-model="model.parms.highSellAmount" class="input-small">
+										</div>
 									</div>
-								</div>
-								<div class="control-group">
-									<label class="control-label">成交均价:</label>
-									<div class="controls controls-row">
-										<input type="text" ng-model="model.parms.lowAveragePrice" class="input-small">
-										<span>~</span>
-										<input type="text" ng-model="model.parms.highAveragePrice" class="input-small">
+									<div class="control-group">
+										<label class="control-label">成交均价:</label>
+										<div class="controls controls-row">
+											<input type="text" ng-model="model.parms.lowAveragePrice" class="input-small">
+											<span>~</span>
+											<input type="text" ng-model="model.parms.highAveragePrice" class="input-small">
+										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-						<div class="span6">
-							<h4 class="alert alert-info">联系记录筛选</h4>
-							<div class="form-horizontal">
-								<div class="control-group">
-									<label class="control-label">操作时间:</label>
-									<div class="controls">
-										<div class="input-append">
-											<input type="text" date-time class="date input-small low">
-											<span class="add-on"><i class="fa fa-calendar"></i></span>
-										</div>
-										<span>~</span>
-										<div class="input-append">
-											<input type="text" date-time class="date input-small high">
-											<span class="add-on"><i class="fa fa-calendar"></i></span>
-										</div>
-									</div>
-								</div>
-								<div class="control-group">
-									<label class="control-label">是否分销商:</label>
-									<div class="controls">
-										<form class="form-inline mb0">
-											<label class="radio mr5">
-												<input type="radio" name="s" ng-model="model.parms.isFenxiao" value="1">是
-											</label>
-											<label class="radio mr5 ">
-												<input type="radio" name="s" ng-model="model.parms.isFenxiao" value="0">否
-											</label>
-											<label class="radio mr5">
-												<input type="radio" name="s" ng-model="model.parms.isFenxiao" value="">全部
-											</label>
-										</form>
-									</div>
-								</div>
-								<div class="control-group">
-									<label class="control-label">操作员:</label>
-									<div class="controls">
-										<select ng-model="model.parms.operater" class="input-large">
-											<option ng-value="i" ng-repeat="i in model.operaters">{{i}}</option>
-										</select>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- 基础数据筛选 -->
-				<div class="row-fluid">
-					<div class="span12">
-						<h4 class="alert alert-info">基础数据筛选</h4>
-						<div class="row-fluid">
-							<div class="span12">
-								<div class="span6">
-									<div class="form-horizontal row-fluid">
-										<div class="control-group">
-											<label class="control-label">店铺等级:</label>
-											<div class="controls">
-												<select ng-model="model.parms.lowShopLevel">
-													<option ng-value="{{$index}}" ng-repeat="i in model.graders">{{i}}</option>
-												</select>
-												<span>~</span>
-												<select ng-model="model.parms.highShopLevel">
-													<option ng-value="{{$index}}" ng-repeat="i in model.graders">{{i}}</option>
-												</select>
+							<div class="span6">
+								<h4 class="alert alert-info">联系记录筛选</h4>
+								<div class="form-horizontal">
+									<div class="control-group">
+										<label class="control-label">操作时间:</label>
+										<div class="controls">
+											<div class="input-append">
+												<input type="text" date-time class="date input-small low">
+												<span class="add-on"><i class="fa fa-calendar"></i></span>
 											</div>
-										</div>
-										<div class="control-group">
-											<label class="control-label">店铺类型:</label>
-											<div class="controls">
-												<form class="form-inline mb0">
-													<label class="radio mr5">
-														<input type="radio" name="store" ng-model="model.parms.shopType" value="商城">淘宝店
-													</label>
-													<label class="radio mr5">
-														<input type="radio" name="store" value="C店" ng-model="model.parms.shopType">天猫店
-													</label>
-													<label class="radio mr5">
-														<input type="radio" name="store" value="" ng-model="model.parms.shopType">全部
-													</label>
-												</form>
-											</div>
-										</div>
-										<div class="control-group">
-											<label class="control-label">好评率:</label>
-											<div class="controls">
-												<div class="input-append">
-													<input type="text" class="input-small low-buyer-rate">
-													<span class="add-on">%</span>
-												</div>
-												<span>~</span>
-												<div class="input-append">
-													<input type="text" class="input-small high-buyer-rate">
-													<span class="add-on">%</span>
-												</div>
+											<span>~</span>
+											<div class="input-append">
+												<input type="text" date-time class="date input-small high">
+												<span class="add-on"><i class="fa fa-calendar"></i></span>
 											</div>
 										</div>
 									</div>
-								</div>
-								<div class="span6" >
-									<div class="form-horizontal">
-										<div class="control-group">
-											<label class="control-label">开店时间:</label>
-											<div class="controls">
-												<div class="input-append">
-													<input type="text" date-time class="input-small creat-time-low">
-													<span class="add-on"><i class="fa fa-calendar"></i></span>
-												</div>
-												<span>~</span>
-												<div class="input-append">
-													<input type="text" date-time class="input-small creat-time-high">
-													<span class="add-on"><i class="fa fa-calendar"></i></span>
-												</div>
-											</div>
+									<div class="control-group">
+										<label class="control-label">是否分销商:</label>
+										<div class="controls">
+											<form class="form-inline mb0">
+												<label class="radio mr5">
+													<input type="radio" name="s" ng-model="model.parms.isFenxiao" value="1">是
+												</label>
+												<label class="radio mr5 ">
+													<input type="radio" name="s" ng-model="model.parms.isFenxiao" value="0">否
+												</label>
+												<label class="radio mr5">
+													<input type="radio" name="s" ng-model="model.parms.isFenxiao" value="">全部
+												</label>
+											</form>
 										</div>
-										<div class="control-group">
-											<label class="control-label">所在地:</label>
-											<div class="controls">
-												<select name="" id="" class="input-medium">
-													<option value="">乌鲁木齐</option>
-												</select>
-											</div>
-										</div>
-										<div class="control-group">
-											<label class="control-label">店铺名称:</label>
-											<div class="controls controls-row">
-												<input type="text" ng-model="model.parms.nick" class="input-large">
-											</div>
+									</div>
+									<div class="control-group">
+										<label class="control-label">操作员:</label>
+										<div class="controls">
+											<select ng-model="model.parms.operater" class="input-large">
+												<option ng-value="i" ng-repeat="i in model.operaters">{{i}}</option>
+											</select>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
+					<!-- 基础数据筛选 -->
+					<div class="row-fluid">
+						<div class="span12">
+							<h4 class="alert alert-info">基础数据筛选</h4>
+							<div class="row-fluid">
+								<div class="span12">
+									<div class="span6">
+										<div class="form-horizontal row-fluid">
+											<div class="control-group">
+												<label class="control-label">店铺等级:</label>
+												<div class="controls">
+													<select ng-model="model.parms.lowShopLevel">
+														<option ng-value="{{$index}}" ng-repeat="i in model.graders">{{i}}</option>
+													</select>
+													<span>~</span>
+													<select ng-model="model.parms.highShopLevel">
+														<option ng-value="{{$index}}" ng-repeat="i in model.graders">{{i}}</option>
+													</select>
+												</div>
+											</div>
+											<div class="control-group">
+												<label class="control-label">店铺类型:</label>
+												<div class="controls">
+													<form class="form-inline mb0">
+														<label class="radio mr5">
+															<input type="radio" name="store" ng-model="model.parms.shopType" value="商城">淘宝店
+														</label>
+														<label class="radio mr5">
+															<input type="radio" name="store" value="C店" ng-model="model.parms.shopType">天猫店
+														</label>
+														<label class="radio mr5">
+															<input type="radio" name="store" value="" ng-model="model.parms.shopType">全部
+														</label>
+													</form>
+												</div>
+											</div>
+											<div class="control-group">
+												<label class="control-label">好评率:</label>
+												<div class="controls">
+													<div class="input-append">
+														<input type="text" class="input-small low-buyer-rate">
+														<span class="add-on">%</span>
+													</div>
+													<span>~</span>
+													<div class="input-append">
+														<input type="text" class="input-small high-buyer-rate">
+														<span class="add-on">%</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="span6" >
+										<div class="form-horizontal">
+											<div class="control-group">
+												<label class="control-label">开店时间:</label>
+												<div class="controls">
+													<div class="input-append">
+														<input type="text" date-time class="input-small creat-time-low">
+														<span class="add-on"><i class="fa fa-calendar"></i></span>
+													</div>
+													<span>~</span>
+													<div class="input-append">
+														<input type="text" date-time class="input-small creat-time-high">
+														<span class="add-on"><i class="fa fa-calendar"></i></span>
+													</div>
+												</div>
+											</div>
+											<div class="control-group">
+												<label class="control-label">所在地:</label>
+												<div class="controls pr">
+													<div class="input-append">
+														<input type="text" ng-model="model.parms.city" ng-focus="show.showLocation();" readonly="readonly">
+														<span class="add-on"><i class="fa fa-anchor"></i></span>
+													</div>
+													<div class="location-city-selcet" ng-show="isShowLocation">
+														<ul class="nav border-bottom mb0">
+															<li ng-repeat="(key,value) in locations">
+																<label class="checkbox" ng-click="selectPros($event,key);">
+																	<input type="checkbox" ng-checked="citys[key].all" value="{{key}}">{{key}}
+																</label>
+																<ul ng-repeat="i in value">
+																	<li>
+																		<label class="checkbox" ng-click="selectCity($event,key,i,$index);">
+																			<input type="checkbox"  ng-checked="citys[key][$index]" value="{{i}}">{{i}}
+																		</label>
+																	</li>
+																</ul>
+															</li>
+														</ul>
+														<div class="pull-right mt10">
+															<button class="btn btn-mini" ng-click="ensureCity();"><i></i>确定</button>
+															<button class="btn btn-mini" ng-click="show.caselLocation();"><i></i>取消</button>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="control-group">
+												<label class="control-label">店铺名称:</label>
+												<div class="controls controls-row">
+													<input type="text" ng-model="model.parms.nick" class="input-large">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row-fluid clearfix mb10">
+						<div class="pull-right">
+							<a class="btn" href="javascript:;" ng-click="getRest();">清除筛选</a>
+							<a href="javascript:;" class="btn" ng-click="getSearch();">筛选</a>
+						</div>
+					</div>
 				</div>
-				<div class="row-fluid clearfix mb10">
-					<div class="pull-right">
-						<a class="btn" href="javascript:;" ng-click="getRest();">清除筛选</a>
-						<a href="javascript:;" class="btn" ng-click="getSearch();">筛选</a>
+				<div class="clearfix mb30">
+					<button class="btn pull-right" ng-click="show.highSearch();"><i class="icon-filter"></i>条件筛选</button>
+					<div class="pull-left pr">
+						<div class="pull-left text-center mr20 pr20 border-right">
+							<label>状态操作</label>
+							<div class="form-inline">
+								<select ng-model="model.Status">
+									<option value="" ng-selected="model.Status==undefined">点击选中</option>
+									<option value="attention">关注</option>
+									<option value="followUp">跟进</option>
+									<option value="intention">意向</option>
+								</select>
+								<input type="button"  value="确认" ng-click="model.updateStatus();" class="btn" />
+							</div>
+						</div>
+						<div class="pull-left text-center mr20 pr20 border-right">
+							<label>联系操作</label>
+							<button class="btn" ng-click="show.showMessage();">发送信息</button>
+							<button class="btn">发站内信</button>
+						</div>
+						<div class="pull-left text-center mr20 pr20 border-right">
+							<label>关系操作</label>
+							<button class="btn" ng-click="model.updateStatus('cooperation');">添加为分销商</button>
+						</div>
 					</div>
 				</div>
 			</div>
-			<div class="clearfix mb30">
-				<button class="btn pull-right" ng-click="highSearch();"><i class="icon-filter"></i>条件筛选</button>
-				<div class="pull-left pr">
-					<div class="pull-left text-center mr20 pr20 border-right">
-						<label>状态操作</label>
-						<div class="form-inline">
-							<select ng-model="model.Status">
-								<option value="" ng-selected="model.Status==undefined">点击选中</option>
-								<option value="attention">关注</option>
-								<option value="followUp">跟进</option>
-								<option value="intention">意向</option>
-							</select>
-							<input type="button"  value="确认" ng-click="model.updateStatus();" class="btn" />
-						</div>
-					</div>
-					<div class="pull-left text-center mr20 pr20 border-right">
-						<label>联系操作</label>
-						<button class="btn">发送信息</button>
-						<button class="btn">发站内信</button>
-					</div>
-					<div class="pull-left text-center mr20 pr20 border-right">
-						<label>关系操作</label>
-						<button class="btn">添加为分销商</button>
-					</div>
-				</div>
-			</div>
-			<table class="table table-bordered table-hover ng-table">
+			<send-message ng-if="showMessage"></send-message>
+			<table class="table table-bordered table-hover ng-table" ng-show="showTable">
 				<thead>
 					<!--14 个属性 -->
 					<tr>
@@ -214,27 +238,27 @@
 		                    </label>
 						</th>
 						<th>店铺旺旺</th>
-						<th>30天成交额</th>
-						<th>30天成交量</th>
-						<th>成交均价</th>
+						<th class="sortable" ng-click="getSort($event,'SELL_MONEY');"><div>30天成交额</div></th>
+						<th class="sortable" ng-click="getSort($event,'SELL_AMOUNT');"><div>30天成交量</div></th>
+						<th class="sortable" ng-click="getSort($event,'AVERAGE_PRICE');"><div>成交均价</div></th>
 						<th>
-							<select name="" id="" class="span12">
-								<option value="">店铺类型</option>
-								<option value="">淘宝店</option>
-								<option value="">天猫店</option>
+							<select ng-model="model.parms.shopType" ng-change="change();" class="span12">
+								<option value="" ng-selected="model.parms.shopType==undefined">店铺类型</option>
+								<option value="商城">淘宝店</option>
+								<option value="C店">天猫店</option>
 							</select>
 						</th>
 						<th>店铺等级</th>
-						<th>好评率</th>
-						<th>开店时间</th>
+						<th class="sortable" ng-click="getSort($event,'BUYER_GOOD_RATE');"><div>好评率</div></th>
+						<th class="sortable" ng-click="getSort($event,'SHOP_CREATE_TIME');"><div>开店时间</div></th>
 						<th>店铺所在地</th>
-						<th>是否分销商</th>
+						<th class="sortable" ng-click="getSort($event,'IS_FENXIAO');"><div>是否分销商</div></th>
 						<th>
-							<select name="" id="" class="span12">
-								<option value="">关注</option>
-								<option value="">跟进</option>
-								<option value="">意向</option>
-								<option value="" selected="selected">状态</option>
+							<select ng-model="model.parms.status" ng-change="change();" class="span12">
+								<option value="attention">关注</option>
+								<option value="followUp">跟进</option>
+								<option value="intention">意向</option>
+								<option value="" ng-selected="model.parms.status==undefined">状态</option>
 							</select>
 						</th>
 						<th>操作时间</th>
@@ -244,13 +268,13 @@
 				<tbody>
 					<tr ng-repeat="i in model.list">
 						<td>
-							<label class="checkbox">
+							<label class="checkbox" ng-click="model.selectItem(i);">
 								<input type="checkbox" ng-model="i.select"/>
 								<i class="badge badge-info">{{$index}}</i>
 							</label>
 						</td>
 						<td>
-							<a href="javascript:;">{{i.nick}}</a>
+							<a href="javascript:;" ng-click="getDetail(i);">{{i.nick}}</a>
 						</td>
 						<td>{{i.sellMoney}}</td>
 						<td>{{i.sellAmount}}</td>
@@ -262,7 +286,7 @@
 						<td>{{i.buyerGoodRate!=null?i.buyerGoodRate+'%':'--'}}</td>
 						<td>{{i.shopCreateTime | timer}}</td>
 						<td>{{i.province||'--'}}</td>
-						<td>{{i.isFenxiao}}</td>
+						<td>{{i.isFenxiao=='0'?'否':'是'}}</td>
 						<td>{{i.status | recruitStatus}}</td>
 						<td>{{i.operateTime | timer}}</td>
 						<td>{{i.operater}}</td>						

@@ -393,6 +393,9 @@ dt,dd{
 	white-space: nowrap;
 	text-overflow:ellipsis;
 }
+ul li ul{
+	list-style: none;
+}
 
 /* 结构布局 */
 html,.content,.content .leftBar,.content .contentMain{
@@ -801,6 +804,26 @@ h4 .pull-right{
 }
 .disPrds-info .list{
 	margin-right: 10%;
+}
+
+/*分销招募 选择城市*/
+.location-city-selcet{
+	position: absolute;
+	z-index: 1;
+	background: #fff;
+	top: 30px;
+	left: 0;
+	width: 247px;
+	border: 1px solid #dadada;
+	border-top:none;
+	padding: 10px;
+}
+/*分销招募首页 表格*/
+.recruit-index-table{
+	padding: 10px;
+	position: absolute;
+	margin: 0 !important;
+	background: #fff;
 }
 
 

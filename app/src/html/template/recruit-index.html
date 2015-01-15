@@ -1,70 +1,173 @@
-<div class="row-fluid mt30">
-	<div class="span6">
-		<span class="title">待处理信息</span>
-		<div class="info">
-			<label class="header f15">待联系：</label>
-			<div class="row-fluid f13">
-				<div class="span6">
-					<a href="">预约待联系 <span>（5）</span></a>
-				</div>
-				<div class="span6">
-					<a href="">超过3天未联系<span>(5)</span></a>
+<div>
+	<div ng-show="!trend">
+		<div class="row-fluid mt30">
+			<div class="span6">
+				<span class="title">待处理信息</span>
+				<div class="info">
+					<label class="header f15">待联系：</label>
+					<div class="row-fluid f13">
+						<div class="span6">
+							<a href="javascript:;" ng-click="getTable($event,model.appoint,0);">预约待联系 <span>（{{model.appoint.list.length}}）</span></a>
+						</div>
+						<!-- <div class="span6">
+							<a href="">超过3天未联系<span>(5)</span></a>
+						</div> -->
+					</div>
+					<!-- <div class="row-fluid f13">
+						<div class="span6">
+							<a href="">超过7天未联系 <span>（5）</span></a>
+						</div>
+						<div class="span6">
+							<a href="">超过15天未联系<span>(5)</span></a>
+						</div>
+					</div> -->
+					<label class="header f15">招募概况：</label>
+					<div class="row-fluid f13">
+						<div class="span6">
+							<a href="javascript:;" ng-click="getTable($event,model.needToCheck,1);">分销申请待审核<span>（{{model.needToCheck.list.length}}）</span></a>
+						</div>
+						<div class="span6"></div>
+					</div>
 				</div>
 			</div>
-			<div class="row-fluid f13">
-				<div class="span6">
-					<a href="">超过7天未联系 <span>（5）</span></a>
-				</div>
-				<div class="span6">
-					<a href="">超过15天未联系<span>(5)</span></a>
+			<div class="span6">
+				<span class="title">昨日概况</span>
+				<div class="info">
+					<label class="header f15">招募概况：</label>
+					<div class="row-fluid f13">
+						 <div class="span6">
+							<a href="javascript:;" ng-click="getTable($event,model.addToCooperations,2);">添加为分销商<span>（{{model.addToCooperations.list.length}}）</span></a>
+						</div> 
+						<div class="span6">
+							<a href="">昨日新增申请 <span>（{{model.addRequisitionSize}}）</span></a>
+						</div>
+					</div>
+					<div class="row-fluid f13">
+						<div class="span6">
+							<a href="">昨日通过申请 <span>（{{model.admitRequisitionSize}}）</span></a>
+						</div>
+						<div class="span6"></div>
+					</div> 
+					<label class="header f15">联系概况：</label>
+					<div class="row-fluid f13">
+						<div class="span6">
+							<a href="">新增关注 <span>（{{model.attentionSize}}）</span></a>
+						</div>
+						<div class="span6">
+							<a href="">新增跟进 <span>（{{model.followUpSize}}）</span></a>
+						</div>
+					</div>
+					<div class="row-fluid f13">
+						<div class="span6">
+							<a href="">新增意向 <span>（{{model.intentionSize}}）</span></a>
+						</div>
+						<div class="span6"></div>
+					</div>
 				</div>
 			</div>
-			<label class="header f15">招募概况：</label>
-			<div class="row-fluid f13">
-				<div class="span6">
-					<a href="">分销申请待审核<span>（5）</span></a>
-				</div>
-				<div class="span6"></div>
+		</div>
+		<div class="span4 border recruit-index-table hide">
+			<div class="clearfix">
+				<label class="pull-right close"><i class="fa fa-times"></i></label>
+			</div>
+			<div>
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							<th>序号</th>
+							<th>联系旺旺</th>
+							<th ng-show="tableTag==0">
+								<select ng-model="status" class="span12">
+									<option value="" ng-selected="status==undefined">状态</option>
+									<option value="attention">关注</option>
+									<option value="followUp">跟进</option>
+									<option value="intention">意向</option>
+								</select>
+							</th>
+							<th ng-show="tableTag==1">等级</th>
+							<th ng-show="tableTag==1">消保</th>
+							<th ng-show="tableTag==1">所属类目</th>
+							<th ng-show="tableTag==1">好评率</th>
+							<th ng-show="tableTag==0||tableTag==1">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="i in data">
+							<td>{{$index}}</td>
+							<td>
+								<a href="javascript:;" ng-if="tableTag!=1" ng-click="getDetail(i);">{{i.nick}}</a>
+								<a ng-href="{{i.distShopAddress}}" ng-if="tableTag==1" target="_blank">{{i.nick}}</a>
+							</td>
+							<td ng-if="tableTag==0">{{i.status | recruitStatus}}</td>
+							<td ng-if="tableTag==1"><span ng-class="i.distLevel | shopLevel"></span></td>
+							<td ng-if="tableTag==1">{{i.distIsXiaobao==1?'是':'否'}}</td>
+							<td ng-if="tableTag==1">{{i.distCategoryName}}</td>
+							<td ng-if="tableTag==1">{{i.distAppraise/10 | number:2}}%</td>
+							<td ng-show="tableTag!=2">
+								<div ng-if="tableTag==1">
+									<a href="javascript:;" class="mr10" ng-click="auditRecruit($index,true,i);">通过</a>
+									<a href="javascript:;" ng-click="auditRecruit($index,false,i);">拒绝</a>
+								</div>
+								<div ng-if="tableTag==0">
+									<a href="javascript:;" ng-click="canselRecord($index,i);">取消预约</a>
+								</div>
+							</td>	
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="mt30">
+			<span class="title">操作员数据</span>
+			<div class="info">
+				<table class="table table-bordered table-hover mb0">
+					<thead>
+						<tr>
+							<th>序号</th>
+							<th>操作员</th>
+							<th>关注</th>
+							<th>根进</th>
+							<th>意向</th>
+							<th>合作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="(key,value) in model.gather">
+							<td>{{$index}}</td>
+							<td>
+								<a href="javascript:;" ng-click="getTrend(key,value);">{{key=='all'?'全部':key}}</a>
+							</td>
+							<td>{{value.attention}}</td>
+							<td>{{value.followUp}}</td>
+							<td>{{value.intention}}</td>
+							<td>{{value.cooperation}}</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>
-	<div class="span6">
-		<span class="title">昨日概况</span>
-		<div class="info">
-			<label class="header f15">招募概况：</label>
-			<div class="row-fluid f13">
-				<div class="span6">
-					<a href="">添加为分销商 <span>（5）</span></a>
-				</div>
-				<div class="span6">
-					<a href="">昨日新增申请 <span>（5）</span></a>
-				</div>
-			</div>
-			<div class="row-fluid f13">
-				<div class="span6">
-					<a href="">昨日通过申请 <span>（5）</span></a>
-				</div>
-				<div class="span6">
-					<a href="">昨日拒绝申请 <span>（5）</span></a>
-				</div>
-			</div>
-			<label class="header f15">联系概况：</label>
-			<div class="row-fluid f13">
-				<div class="span6">
-					<a href="">昨日联系 <span>（5）</span></a>
-				</div>
-				<div class="span6">
-					<a href="">新增关注 <span>（5）</span></a>
-				</div>
-			</div>
-			<div class="row-fluid f13">
-				<div class="span6">
-					<a href="">新增跟近 <span>（5）</span></a>
-				</div>
-				<div class="span6">
-					<a href="">新增意向 <span>（5）</span></a>
-				</div>
+	<div class="mt30" ng-if="trend">
+		<div class="clearfix">
+			<button class="btn pull-right" ng-click="hideTrend();"><i class="fa fa-times"></i>返回</button>
+		</div>
+		<div class="highCharts"></div>
+		<div>
+			<span class="title">详情数据</span>
+			<div class="info">
+				<table class="table table-bordered table-hover mb0">
+					<tbody>
+						<tr>
+							<th>上月</th>
+							<td>data</td>
+						</tr>
+						<tr>
+							<th>数量</th>
+							<td>75</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</div>
-</div>	
+</div>

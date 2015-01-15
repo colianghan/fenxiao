@@ -1,0 +1,26 @@
+<form class="form-horizontal">
+	<div class="control-group">
+		<label class="control-label">收信人:</label>
+		<div class="controls">
+			<div class="input-append" ng-if="show.showTable">
+				<input type="text" ng-value="model.nicks" readonly="readonly">
+				<span class="btn"  ng-click="show.showTable();"><i class="fa fa-plus"></i></span>
+			</div>
+			<div ng-if="!show.showTable">
+				<input type="text" ng-value="model.nicks" readonly="readonly">
+			</div>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label">短信内容:</label>
+		<div class="controls">
+			<textarea style="width:400px;height:200px;" ng-model="model.sendContent"></textarea>
+		</div>
+	</div>
+	<div class="control-group">
+		<div class="controls">
+			<button class="btn" ng-click="model.sendMessage();"><i class="fa fa-send"></i>发送</button>
+			<button class="btn" ng-click="show.caselMessage();"><i class="fa fa-ban"></i>取消</button>
+		</div>
+	</div>
+</form>

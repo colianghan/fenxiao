@@ -1,10 +1,14 @@
 <!-- 初始页 -->
-<div ng-if="tagIndex==0">
+<div ng-if="tagIndex==0&&!detail">
 	<recruit-index></recruit-index>
 </div>
 
 <!-- 同类目卖家库 -->
-<div ng-if="tagIndex!=0" class="mt30">
+<div ng-if="tagIndex!=0&&!detail" class="mt30">
 	<recruit-distris></recruit-distris>
 </div>
 
+<!-- 详情页-->
+<div ng-if="detail">
+	<recruit-detail data-tag="detailModel"></recruit-detail>
+</div>

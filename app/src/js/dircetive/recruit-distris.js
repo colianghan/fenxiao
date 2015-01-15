@@ -29,6 +29,7 @@ dm.directive('recruitDistris',['$parse',function($parse){
 		var model = $scope.model = new recruitDistrisModel(status,isSimilarQ);
 		model.getOperaters(); // 获取操作员列表
 		model.getData(null,function(v){
+			$scope.locations = v.locations;
 			initPages($scope,v.totalSize);
 		});
 		//获取分页
@@ -101,6 +102,122 @@ dm.directive('recruitDistris',['$parse',function($parse){
 			$check = $label.find('input[type="checkbox"]');
 			model.selectAll($check.prop('checked'));
 		};
+		//天猫和合作状态
+		$scope.change = function(){
+			model.getData({
+				begin:0
+			},function(v){
+				initPages($scope,v.totalSize);
+			});
+		};
+		//显示操作
+		$scope.showHighSearch=false,$scope.showTable=true,$scope.showMessage=false,$scope.isShowLocation=false;
+		$scope.show = {
+			highSearch:function(){
+				$scope.showHighSearch = !$scope.showHighSearch;
+				$scope.showTable=true;
+				$scope.showMessage=false;
+			},
+			showMessage :function(){
+				$scope.showMessage = !$scope.showMessage;
+				$scope.showTable=false;
+				$scope.showHighSearch = false;
+			},
+			showTable :function(){
+				$scope.showTable = !$scope.showTable;
+			},
+			caselMessage:function(){
+				$scope.showMessage =false;
+				$scope.showTable=true;
+			},
+			showLocation:function(){
+				$scope.isShowLocation=true;
+			},
+			caselLocation:function(){
+				$scope.isShowLocation=false;
+			}
+		};
+		$scope.citys={};
+		//地区
+		$scope.selectPros = function(e,provs){
+			//--疑问 阻止不了事件冒泡 stopPropagation不管用
+			if(e.target.tagName=='INPUT'){
+				var $ele = $(e.target);
+				if($ele.prop('checked')){
+					//选中了
+					var _citys = $scope.locations[provs];
+					_.each(_citys,function(item,index){
+						if($scope.citys[provs]==undefined){
+							$scope.citys[provs] = {};
+						}
+						$scope.citys[provs][index] = item;
+					});
+					$scope.citys[provs].all=true;
+				}else{
+					$scope.citys[provs] = {};
+					$scope.citys[provs].all=false;
+				}
+			}
+		};
+		//选择城市
+		$scope.selectCity = function(e,provs,city,index){
+			//alert('city');
+			if(e.target.tagName=='INPUT'){
+				var $ele = $(e.target);
+				if($ele.prop('checked')){
+					//选中了
+					//var _citys = $scope.locations[provs];
+					if($scope.citys[provs]==undefined){
+						$scope.citys[provs] = {};
+					}
+					$scope.citys[provs][index] = city;
+				}else{
+					delete $scope.citys[provs][index];
+				}
+				var _ciLength = _.values($scope.citys[provs]).length;
+				if('all' in $scope.citys[provs]){
+					_ciLength--;
+				}
+				if(_ciLength==$scope.locations[provs].length){
+					$scope.citys[provs].all = true;
+				}else{
+					$scope.citys[provs].all = false;
+				}
+			}
+		};
+		//确定城市
+		$scope.ensureCity = function(){
+			var _tmp = [];
+			_.each($scope.citys,function(item,key){
+				_.each(item,function(v,key){
+					if(key!='all'){
+						_tmp.push(v);
+					}
+				});
+			});
+			model.parms.city = _tmp.join(',');
+			$scope.show.caselLocation();
+		};
+		//排序
+		$scope.getSort = function(e,sortColumn){
+			var $ele = $(e.currentTarget),sortBy;
+			if($ele.hasClass('sort-desc')){
+				//升序
+				$ele.removeClass('sort-desc').addClass('sort-asc').siblings().removeClass('sort-asc sort-desc');
+				sortBy='up';		
+			}else{
+				//降序
+				$ele.removeClass('sort-asc').addClass('sort-desc').siblings().removeClass('sort-asc sort-desc');
+				sortBy='down';
+			}
+			model.getData({
+				begin:0,
+				sort:sortBy,
+				sortColumn:sortColumn
+			},function(v){
+				initPages($scope,v.totalSize);
+			});
+		};
 	}];
 	return {
 		restrict:'E',
@@ -115,17 +232,19 @@ dm.factory('recruitDistrisModel',['tools',function(tools){
 	var api = {
 		getList:'getRecruitOfDistributors.htm',
 		getOperaters:'getRecruitOfOperaters.htm',
-		updateStatus:'moveRecruitOfDistributors.htm'
+		updateStatus:'moveRecruitOfDistributors.htm',
+		sendMessage:'sendRecruitOfShortMessage.htm'
 	};
 	var action = function(status,isSimilarQ){
 		var self= this;
 		this.count = tools.config.table.count;
 		this.parms = {
-			status:status,
+			contactStatus:status,
 			isSimilarQ:isSimilarQ,
 			begin:0,
 			count:this.count
 		};
+		this.nicks='',this.sids='',this.sendContent = '';//选择的昵称和sids,发送信息的消息
 		this.graders = tools.shopLevels;
 		//获取数据
 		this.getData = function(parm,callback){
@@ -149,9 +268,14 @@ dm.factory('recruitDistrisModel',['tools',function(tools){
 		};
 		//全选
 		this.selectAll = function(bool){
+			var _nick = [],_sids = [];
 			_.each(this.list,function(item,index){
 				item.select = bool;
+				_nick.push(item.nick);
+				_sids.push(item.sid);
 			});
+			this.nicks = _nick.join(',');
+			this.sids = _sids.join(',');
 		};
 		//获取操作员
 		this.getOperaters = function(callback){
@@ -162,11 +286,12 @@ dm.factory('recruitDistrisModel',['tools',function(tools){
 				}
 			});
 		};
-		//状态操作
-		this.updateStatus = function(){
-			console.log(this.Status);
+		//状态操作(当status传参数时，进行的是添加为分销商操作)
+		this.updateStatus = function(status){
+			//console.log(this.Status);
+			var _status = status||this.Status;
 			var sids=[],items=[];
-			if(!this.Status){
+			if(!_status){
 				alert('请选择要移动的状态');
 				return;
 			}
@@ -184,14 +309,75 @@ dm.factory('recruitDistrisModel',['tools',function(tools){
 				url:api.updateStatus,
 				data:{
 					sids:sids.join(','),
-					status:this.Status
+					status:_status
 				},
 				succ:function(resp){
 					if(resp.success){
 						alert('修改成功');
-						_.each(items,function(item){
-							item.status = this.updateStatus;
-						});
+						if(!status){
+							//状态操作
+							_.each(items,function(item){
+								item.status = status;
+							});
+						}else{
+							_.each(items,function(item){
+								item.isFenxiao = 1;
+							});
+						}
+					}
+				}
+			});
+		};
+		this.selectNick = function(){
+			var nicks=[],sids=[];
+			_.each(this.list,function(item){
+				if(item.select){
+					sids.push(item.sid);
+					nicks.push(item.nick);
+				}
+			});
+			return {
+				nicks : nicks.join(','),
+				sids:sids.join(',')
+			}
+		};
+		//为了进行发送消息而进行的交互
+		this.selectItem = function(i){
+			var _nick = [],_sids = [];
+			_.each(this.list,function(item,index){
+				if(item.select){
+					_nick.push(item.nick);
+					_sids.push(item.sid);
+				}
+			});
+			this.nicks = _nick.join(',');
+			this.sids = _sids.join(',');
+		};
+		//发送消息
+		this.sendMessage = function(){
+			if(this.sids==''){
+				alert('请选择要发送的联系人');
+				return;
+			}
+			if(!this.sendContent){
+				alert('请填写要发送的信息内容');
+				return;
+			}
+			tools.http({
+				url:api.sendMessage,
+				data:{
+					sids : this.sids,
+					content:this.sendContent
+				},
+				succ:function(resp){
+					if(resp.success){
+						if(!resp.value.fail.length){
+							alert('发送成功'+resp.value.message);
+						}else{
+							alert('发送失败，建议对单个分销商进行短信发送');
+						}
+					}else{
+						alert('网络异常，请稍后重试');
 					}
 				}
 			});
@@ -228,7 +414,7 @@ dm.filter('recruitStatus',function(){
 });
 dm.filter('timer',function(){
 	return function(v){
-		return v.split(' ')[0];
+		return v==null?'--':v.split(' ')[0];
 	}
 });
 dm.filter('shopLevel',function(tools){
