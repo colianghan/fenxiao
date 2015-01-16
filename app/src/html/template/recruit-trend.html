@@ -1,0 +1,36 @@
+<div>
+	<ul class="nav nav-tabs">
+		<li  ng-repeat="(key,value) in navs" ng-click="setStatus(key);" ng-class="key===status?'active':''" ><a href="javascript:;">{{value}}</a></li>
+	</ul>
+	<div class="box box-border-recruit">
+		<div class="clearfix">
+			<button class="btn pull-right" ng-click="hideTrend();"><i class="fa fa-times"></i>返回</button>
+		</div>
+		<div class="highCharts"></div>
+		<div>
+			<span class="title">详情数据</span>
+			<div class="info">
+				<table class="table table-bordered table-hover mb0 recruit-trend-table">
+					<tbody>
+						<tr>
+							<th>上月</th>
+							<td ng-repeat="i in model.time1">{{i}}</td>
+						</tr>
+						<tr>
+							<th>数量</th>
+							<td ng-repeat="i in model.time1">{{model.objSrc[i]}}</td>
+						</tr>
+						<tr>
+							<th>上月</th>
+							<td ng-repeat="i in model.time2">{{i}}</td>
+						</tr>
+						<tr>
+							<th>数量</th>
+							<td ng-repeat="i in model.time2">{{model.objSrc[i]}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

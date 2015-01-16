@@ -19,19 +19,23 @@ var config ={
 				child:[{
 					href:1,
 					name:'同类目卖家库',
-					parent:'联系中'
+					parent:'联系中',
+					setHref:'#/recruit?banner=0&tag=1'
 				},{
 					href:2,
 					name:'相关类目卖家库',
-					parent:'联系中'
+					parent:'联系中',
+					setHref:'#/recruit?banner=0&tag=2'
 				},{
 					href:3,
 					name:'类目分销商',
-					parent:'未联系'
+					parent:'未联系',
+					setHref:'#/recruit?banner=0&tag=3'
 				},{
 					href:4,
 					name:'其他相关卖家',
-					parent:'未联系'
+					parent:'未联系',
+					setHref:'#/recruit?banner=0&tag=4'
 				}]
 			},
 			manage:{
@@ -43,23 +47,28 @@ var config ={
 				child:[{
 					href:1,
 					name:'运营模型分层',
-					parent:'系统分层'
+					parent:'系统分层',
+					setHref:'#/manage?banner=0&tag=1'
 				},{
 					href:2,
 					name:'能力模型分层',
-					parent:'系统分层'
+					parent:'系统分层',
+					setHref:'#/manage?banner=0&tag=2'
 				},{
 					href:3,
 					name:'潜力模型模式',
-					parent:'系统分层'
+					parent:'系统分层',
+					setHref:'#/manage?banner=0&tag=3'
 				},{
 					href:4,
 					name:'出售中',
-					parent:'已上架产品'
+					parent:'已上架产品',
+					setHref:'#/manage?banner=1&tag=4'
 				},{
 					href:5,
 					name:'仓库',
-					parent:'下架中产品'
+					parent:'下架中产品',
+					setHref:'#/manage?banner=1&tag=5'
 				}]
 			},
 			improve:{
@@ -70,27 +79,33 @@ var config ={
 				child:[{
 					href:1,
 					name:'高流量、高转化关键词TOP50',
-					parent:'黄金关键词'
+					parent:'黄金关键词',
+					setHref:'#/improve?banner=0&tag=1'
 				},{
 					href:2,
 					name:'高展现、高点击关键词TOP50',
-					parent:'黄金关键词'
+					parent:'黄金关键词',
+					setHref:'#/improve?banner=0&tag=2'
 				},{
 					href:3,
 					name:'免费流量',
-					parent:'优质渠道'
+					parent:'优质渠道',
+					setHref:'#/improve?banner=0&tag=3'
 				},{
 					href:4,
 					name:'付费流量',
-					parent:'优质渠道'
+					parent:'优质渠道',
+					setHref:'#/improve?banner=0&tag=4'
 				},{
 					href:5,
 					name:'最佳搭配宝贝',
-					parent:'最佳搭配'
+					parent:'最佳搭配',
+					setHref:'#/improve?banner=0&tag=5'
 				},{
 					href:6,
 					name:'提升工具箱',
-					parent:'提升工具'
+					parent:'提升工具',
+					setHref:'#/improve?banner=0&tag=6'
 				}]
 			},
 			behavior:{
@@ -101,21 +116,34 @@ var config ={
 				child:[{
 					href:1,
 					name:'串货监控',
-					parent:'行为管理'
+					parent:'行为管理',
+					setHref:'#/behavior?banner=0&tag=1'
 				},{
 					href:2,
 					name:'乱价监控',
-					parent:'行为管理'
+					parent:'行为管理',
+					setHref:'#/behavior?banner=0&tag=2'
 				},{
 					href:3,
 					name:'差评监控',
-					parent:'行为管理'
+					parent:'行为管理',
+					setHref:'#/behavior?banner=0&tag=3'
 				}]
 			},
-			compete:{
-				banner:['竞争对手分析'],
-				firstChild:[],
-				child:[]
+			settings:{
+				banner:['系统设置'],
+				firstChild:[
+					['系统设置']
+				],
+				child:[{
+					href:1,
+					name:'快捷设置',
+					parent:'系统设置'
+				},{
+					href:2,
+					name:'新闻管理',
+					parent:'系统设置'
+				}]
 			}
 		},
 		settingManage:[{

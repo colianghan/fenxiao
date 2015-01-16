@@ -50,6 +50,7 @@ dm.directive('recruitIndex',['$parse',function($parse){
 
 		//获取趋势详情
 		$scope.getTrend = function(key,value){
+			$scope.operator = key;
 			$scope.trend = true;
 		};
 		//返回
@@ -74,7 +75,6 @@ dm.factory('recruitIndexModel',['tools',function(tools){
 		getRecruitOfYesterdayRecruitDistributors:tools.promise('getRecruitOfYesterdayRecruitDistributors.htm',true),//三、昨日招募
 		getRecruitOfYesterdayContactDistributors:tools.promise('getRecruitOfYesterdayContactDistributors.htm',true),//四、昨日联系
 		getRecruitOfGatherContactDistributors:tools.promise('getRecruitOfGatherContactDistributors.htm',true),//五、招募统计汇总数据（30天）
-		getRecruitOfTrendContactDistributors:tools.promise('getRecruitOfTrendContactDistributors.htm',true),//六、招募统计趋势数据（30天）
 		updateRecruitOfDistributor:tools.promise('updateRecruitOfDistributor.htm',false),//取消预约
 		auditRecruitOfCooperation:tools.promise('auditRecruitOfCooperation.htm',false)//分销待审核通过 拒绝
 	};
@@ -135,14 +135,6 @@ dm.factory('recruitIndexModel',['tools',function(tools){
 					if(resp.success){
 						console.log(resp.value);
 						self.gather = resp.value;
-					}
-				});
-			//招募统计趋势数据
-			api.
-				getRecruitOfTrendContactDistributors().then(function(resp){
-					if(resp.success){
-						console.log(resp.value);
-						debugger;
 					}
 				});
 		};

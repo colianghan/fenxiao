@@ -1,0 +1,30 @@
+<div class="mt30">
+	<!-- 系统设置 -->
+	<ul class="nav nav-tabs">
+		<li class="active"><a href="javascript:;">{{headNav}}</a></li>
+	</ul>
+	<div class="box container-fluid box-border-recruit">
+		<div ng-show="tagIndex==1">
+			<ul class="nav nav-shortSettings">
+				<li class="nav-shortSettings-li" ng-repeat="(key,value) in linkShorts">
+					<label>{{key | settingsName}}</label>
+					<ul>
+						<li ng-repeat="i in value">
+							<label class="checkbox">
+								<input type="checkbox" ng-true-value="'{{i.setHref}}'" ng-model="shortCurSelected[i.name]">{{i.name}}
+							</label>
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<div>
+				<button class="btn"  ng-click="setShort();"><i></i>保存</button>
+				<!-- <button class="btn"><i></i>返回</button> -->
+			</div>
+		</div>
+		<div ng-if="tagIndex==2">
+			<!-- 新闻管理-->
+			<news-manage></news-manage>
+		</div>
+	</div>
+</div>

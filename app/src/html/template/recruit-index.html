@@ -148,26 +148,6 @@
 		</div>
 	</div>
 	<div class="mt30" ng-if="trend">
-		<div class="clearfix">
-			<button class="btn pull-right" ng-click="hideTrend();"><i class="fa fa-times"></i>返回</button>
-		</div>
-		<div class="highCharts"></div>
-		<div>
-			<span class="title">详情数据</span>
-			<div class="info">
-				<table class="table table-bordered table-hover mb0">
-					<tbody>
-						<tr>
-							<th>上月</th>
-							<td>data</td>
-						</tr>
-						<tr>
-							<th>数量</th>
-							<td>75</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
+		<recruit-trend data-operater="operator"></recruit-trend>
 	</div>
 </div>

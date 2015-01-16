@@ -826,6 +826,19 @@ h4 .pull-right{
 	background: #fff;
 }
 
+.recruit-trend-table td,.recruit-trend-table th{
+	white-space: nowrap;
+	vertical-align: middle;
+	text-align: center;
+	font-size: 12px;
+}
+
+/* 快捷设置 */
+.nav-shortSettings .nav-shortSettings-li{
+	float: left;
+	margin-right: 50px;
+}
+
 
 
 /* 页面编写结束 end */

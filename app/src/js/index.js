@@ -109,7 +109,7 @@ dm.controller('data-preview',['$scope','tools','translate',function($scope,tools
 						    disAmtTrend = d.values,//分销商数据
 						    supAmtTrend = translate(resp.value.supAmtTrend).values;//供应商数据
 						var dates = dateList[0].split(' ')[0].split('-');
-						debugger;
+						//debugger;
 						var options={
 							chart:{
 								type:'line'

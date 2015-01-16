@@ -21,9 +21,9 @@ dm.config(['$routeProvider','$sceDelegateProvider',function($routeProvider,$sceD
 			templateUrl:'../html/behavior.html',
 			controller:'behavior'
 		})
-		.when('/compete',{
-			templateUrl:'../html/compete.html',
-			controller:'compete'
+		.when('/settings',{
+			templateUrl:'../html/settings.html',
+			controller:'settings'
 		})
 		.otherwise({
 			redirectTo:'/index'
@@ -152,6 +152,7 @@ dm.controller('leftBar',['$scope','$rootScope','$element','$compile','grades',fu
 	});
 
 	$scope.$on('onTagChange',function(e,v){
+		//debugger
 		$scope.activeItem=null;
 		$scope.currentParent=null;
 		//debugger;
@@ -169,10 +170,11 @@ dm.controller('leftBar',['$scope','$rootScope','$element','$compile','grades',fu
 	});
 	
 	$scope.animateShow=function(item){
+		//debugger;
 		$scope.currentParent=item;
 	};
 	$scope.$on('add-layers',function(e,v){
-		debugger;
+		//debugger;
 		v.id = v.gradeId;
 		v.parent = '自定义分层';
 		v.href=i+'&gradeId='+v.id;
