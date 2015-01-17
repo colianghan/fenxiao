@@ -12,8 +12,7 @@ dm.directive('distrdetail',['$rootScope','$compile',function($rootScope,$compile
 		});*/
 		console.log($scope.$parent.detail);
 		var distr = $scope.distr = $scope.$parent.detail;
-		//debugger;
-		var parms = $scope.parms = new distrDetail($scope.distr);
+		var parms = $scope.parms = new distrDetail(distr);
 		//返回
 		$scope.return = function(){
 			$rootScope.$broadcast('distri-detail-return',true);
@@ -80,21 +79,45 @@ dm.directive('distrdetail',['$rootScope','$compile',function($rootScope,$compile
 			//$scope.parms.search(newParms);
 			_obj[$scope.curNavIndex]();
 		};
+		//获取等级
 		$scope.setLevel=function(leve){
 			if(isNaN(Number(leve))){
 				return;
 			}
-			$scope.distr.assessmentLevel = leve;
-			$scope.parms.updateDistributorOfInfo();
+			distr.assessmentLevel = leve;
+			$scope.parms.updateDistributorOfInfo({
+				assessmentLevel:distr.assessmentLevel
+			});
 		};
+		//关注
 		$scope.setAttention = function(){
+			//debugger
 			distr.payAttention = !distr.payAttention;
-			$scope.parms.updateDistributorOfInfo();
+			$scope.parms.updateDistributorOfInfo({
+				payAttention:distr.payAttention
+			});
 		};
+		//警告
 		$scope.setWarning =function(){
+			//debugger
 			distr.warning = !distr.warning;
-			$scope.parms.updateDistributorOfInfo();
+			$scope.parms.updateDistributorOfInfo({
+				warning:distr.warning
+			});
 		};
+		//修改预约联系
+		$scope.setOpTime = function(e){
+			debugger
+			var $ele = $('.apponitTime',$element);
+			var _time = $ele.val();
+			if($ele.value!=''){
+				distr.appointmentTime = _time;
+			}
+			$scope.parms.updateDistributorOfInfo({
+				appointmentTime:_time
+			});
+		};
+
 		var _obj = {
 			0:function(){
 				//运营基础数据
@@ -106,7 +129,7 @@ dm.directive('distrdetail',['$rootScope','$compile',function($rootScope,$compile
 					if(v.resultSize){
 						initPages($scope,v.resultSize);
 						distr = $scope.distr = $scope.$parent.detail = v.distributor;//重置了详细页的详情
-						debugger;
+						//debugger;
 					}
 				});
 				$scope.shopAttr = ['ipv','iuv','alipayTradeAmt','alipayAuctionNum','transformationEfficiency',
@@ -199,6 +222,48 @@ dm.directive('distrdetail',['$rootScope','$compile',function($rootScope,$compile
 				$scope.parms.concats.unshift({});
 			}	
 		};
+
+		//获取进店词宝贝详情 关键词中的宝贝列表
+		$scope.fullScreen = false;
+		$scope.getQueryDetail = function(item){
+			$scope.queryName = item.query;
+			parms.getQueryDetail(item,function(v){
+				$scope.fullScreen = true;
+			});
+		};
+		$scope.quitFullS = function(){
+			$scope.fullScreen = false;
+		};
+		//获取流量渠道数据 详情
+		$scope.getSrcDtail = function(item){
+			//debugger;
+			$scope.queryName = item.srcName;
+			parms.getSrcDtail(item,function(v){
+				$scope.fullScreen = true;
+			});
+		};
+		//发送消息
+		$scope.showMessage = false;
+		$scope.show={
+			caselMessage:function(){
+				//隐藏短信页
+				$scope.showMessage = false;
+			},
+			showMessage:function(){
+				$scope.showMessage = true;
+			}
+		};
+		$scope.model={
+			nicks:distr.disNick,
+			sendMessage:$scope.$parent.model.sendMessage,
+			content:''
+		};
+		//移入等级
+		$scope.moveLayers = function(){
+			/*toDo:必须先选择完 才能移入等级中*/
+			debugger;
+			$rootScope.$broadcast('show-layers',distr);
+		};
 	}];
 	var compile = function(element,attrs,link){
 		return function(scope,element,attrs){
@@ -225,6 +290,7 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 		getDistributorQueryEffectsDetailByQuery:'getDistributorQueryEffectsDetailByQuery.htm',/*获取单个详情*/
 		getDistributorDetailOfGatherQueryEffects:'getDistributorDetailOfGatherQueryEffects.htm',/*获取关键词 母店和分销的数据*/
 		getPrudsList:'getProductLineOfDistributorPurchasePriceList.htm',//获取膜分销商的授权产品信息
+		getSrcDtail:'getDistributorPvSrcEffectsDetailByShop.htm',//获取店铺来源详情
 		updatePrice:'updateDisPruchasePriceByPids.htm',//修改分销商的折扣
 		getRecordList:'getDistributorDetailContactInfo.htm', //获取联系记录列表
 		insertRecordList:'addDisContactHistoryRecord.htm', //添加联系记录
@@ -235,6 +301,7 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 	var action = function(item){
 		var self = this;
 		this.tableLength = tools.config.table.count;
+		this.item = item;
 		this.disId = item.disShopId||item.disSid;
 		this.tradeType = item.tradeType;
 		this.operateBasicData = [];//运营基础数据
@@ -280,21 +347,24 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 			});	
 		};
 		/*更新用户状态*/
-		this.updateDistributorOfInfo = function(){
-			console.log(item.warning);
-			console.log(item.assessmentLevel);
+		this.updateDistributorOfInfo = function(item){
+			/*console.log(item.warning);
+			console.log(item.assessmentLevel);*/
+			$.extend(this.item,item);
 			tools.http({
 				url:api.updateDistributorOfInfo,
 				data:{
 					disSid:this.disId,
-					warning:item.warning,
-					payAttention:item.payAttention,
-					assessmentLevel:item.assessmentLevel,
-					appointmentTime:item.appointmentTime
+					warning:this.item.warning,
+					payAttention:this.item.payAttention,
+					assessmentLevel:this.item.assessmentLevel,
+					appointmentTime:this.item.appointmentTime
 				},
 				succ:function(resp){
 					if(resp.success){
 						//alert('修改成功');
+					}else{
+						alert(resp.message);
 					}
 				}
 			});
@@ -363,6 +433,27 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 				}
 			});
 		};
+		//获取单个 关键词详情列表
+		this.getQueryDetail =function(item,callback){
+			var _getAjax =  tools.promise(api.getDistributorQueryEffectsDetailByQuery,true);
+			_getAjax({
+				data:{
+					disSid:this.disId,
+					tradeType:this.tradeType,
+					lowThedate:this.lowThedate,
+					highThedate:this.highThedate,
+					query:item.query
+				}
+			}).then(function(resp){
+				if(resp.success){
+					// query detail list
+					self.queDetList = resp.value;
+					if(callback){
+						callback(resp.value);
+					}
+				}
+			});
+		}
 		/*流量渠道*/
 		this.getDistriDataSrc = function(callback){
 			var getAjax = tools.promise(api.getDistributorDetailPvSrcEffectsByShop,true);
@@ -459,6 +550,30 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 				}
 			});
 		};
+		//获取流量渠道详情
+		this.getSrcDtail = function(item,callback){
+			//debugger;
+			var _getAjax = tools.promise(api.getSrcDtail,true);
+			_getAjax({
+				data:{
+					disSid:this.disId,
+					tradeType:this.tradeType,
+					lowThedate:this.lowThedate,
+					highThedate:this.highThedate,
+					srcId:item.srcId
+				}
+			}).then(function(resp){
+				if(resp.success){
+					//成功
+					self.srcDetList = resp.value;
+					if(callback){
+						callback(resp.value);
+					}
+				}
+			});
+		}
+
+
 		//获取联系记录
 		this.getRecordList = function(callback){
 			var getAjax = tools.promise(api.getRecordList,true);
@@ -585,6 +700,7 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 }]);
 
 
+//初始化table
 dm.factory('initPages',['tools',function(tools){
 	return function($scope,length,count){
 		var maxPages = 0,pages=[];

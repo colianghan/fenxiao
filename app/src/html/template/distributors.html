@@ -237,38 +237,15 @@
 					</div>
 					<div class="pull-left text-center mr20 pr20 border-right">
 						<label>联系操作</label>
-						<button class="btn" ng-click="showNews();">发送信息</button>
+						<button class="btn" ng-click="show.showMessage();">发送信息</button>
 					</div>
 				</div>
 			</div>
 			<div ng-show="!news">
 				<layers></layers>	
 			</div>
-			<div ng-show="news" class="row-fluid">
-				<form class="form-horizontal">
-					<div class="control-group">
-						<label class="control-label">收信人:</label>
-						<div class="controls">
-							<div class="input-append">
-								<input type="text">
-								<span class="add-on" style="cursor:pointer" ng-click="showTable();"><i class="fa fa-plus"></i></span>
-							</div>
-							
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label">短信内容:</label>
-						<div class="controls">
-							<textarea></textarea>
-						</div>
-					</div>
-					<div class="control-group">
-						<div class="controls">
-							<button class="btn"><i class="fa fa-send"></i>发送</button>
-							<button class="btn" ng-click="showNews();"><i class="fa fa-ban"></i>取消</button>
-						</div>
-					</div>
-				</form>
+			<div ng-if="news" class="row-fluid">
+				<send-message></send-message>
 			</div>
 			<div ng-show="!news||addUser">
 				<table class="table table-bordered table-hover table-condensed ng-table">
@@ -291,7 +268,7 @@
 					<tbody>
 						<tr ng-repeat="item in parms.dis">
 							<td>
-								<label class="checkbox">
+								<label class="checkbox" ng-click="model.selectItem(item);">
 									<input type="checkbox" ng-model="item.select" />
 									<i class="badge badge-info">{{$index}}</i>
 								</label>

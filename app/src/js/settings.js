@@ -13,6 +13,7 @@ dm.controller('settings',['$scope','$rootScope','$routeParams','setShortCurts',f
 	});
 
 	setShortCurts.get(function(shortcut){
+		//debugger;
 		$scope.shortCurSelected = shortcut;
 	});
 	$scope.shortCurSelected = {};

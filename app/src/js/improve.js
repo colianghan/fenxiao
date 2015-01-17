@@ -2,7 +2,7 @@ dm.controller('improve',['$rootScope','$scope','$routeParams',function($rootScop
 	var bannerIndex = $routeParams.banner||0;
 		$scope.tagIndex=tagIndex = $routeParams.tag||1;
 	$rootScope.$broadcast('onTagChange',tagIndex);
-	/*内容处理*/
+    $scope.nav = [undefined,'高流量、高转化关键词','高展现、高点击关键词','免费流量','付费流量','最佳搭配宝贝','提升工具箱'][tagIndex];   
 }]);
 
 //皇金关键词
@@ -12,12 +12,12 @@ dm.controller('goldkeywords',['$rootScope','$routeParams','$scope','$filter','to
 	var selectDisWordIntoStores = tools.promise('getDwsAuctionQueryEffectsByType.htm', 'cache');
     $scope.direction=1;
 	if(tagIndex==1){
-		$scope.title = '高流量、高转化关键词TOP50'
+		//$scope.title = '高流量、高转化关键词TOP50'
 		$scope.theads=['点击量','成交量','转化率(%)'];
 		$scope.attrs = ['click','alipayAuctionNum','transformationEfficiency'];
 	}
 	else if(tagIndex==2){
-		$scope.title = '高展现、高点击关键词TOP50'
+		//$scope.title = '高展现、高点击关键词TOP50'
 		$scope.theads=['展现','点击','成交金额'];
 		$scope.attrs=['impression','clickRate','alipayTradeAmt'];
 		type='perCustomerTransaction';
@@ -56,13 +56,13 @@ dm.controller('goldkeywords',['$rootScope','$routeParams','$scope','$filter','to
     $scope.getShops = function (word) {
         //$scope.direction=2;
         $scope.activeKeyword = word;
-        tools.http({
-            url: 'getDwsAuctionQueryEffectsByQuery.htm',
-            data: {
+        var _getAjax = tools.promise('getDwsAuctionQueryEffectsByQuery.htm',true);
+        _getAjax({
+            data:{
                 days: 30,
                 query: word
-            },
-            succ: function (resp) {
+            }
+        }).then(function (resp) {
                 $scope.shops = resp.value;
                 _.each($scope.shops,function (shop) {
                     shop.clickRate = (shop.clickRate * 100).toFixed(2);
@@ -71,22 +71,20 @@ dm.controller('goldkeywords',['$rootScope','$routeParams','$scope','$filter','to
                 //$scope['shopes'].reload();
                 mkTable('shopes',$scope.shops);
                 $scope.direction=2;
-            }
-        });
-        //scope.show('shops');
+            });
     };
-    $scope.getProds=function (shop,disSid) {
-        $scope.activeShopDisSid = disSid;
+    $scope.getProds=function (shop,distr) {
+        $scope.activeShopDisSid = distr.shopId;
+        $scope.activeDirNick = distr.disNick;
         $scope.activeShop = shop;
-        tools.http(
-            {
-                url: 'getQueryEffectsByDisSidAndQuery.htm',
-                data: {
-                    days: 30,
-                    query: $scope.activeKeyword,
-                    disSid: disSid
-                },
-                succ: function (resp) {
+        var _getAjax = tools.promise('getQueryEffectsByDisSidAndQuery.htm',true);
+        _getAjax({
+            data: {
+                days: 30,
+                query: $scope.activeKeyword,
+                disSid: distr.shopId
+            }
+        }).then(function (resp) {
                     if (resp.success) {
                         $scope.prods = resp.value;
                         _.each($scope.prods,function (prod) {
@@ -96,9 +94,7 @@ dm.controller('goldkeywords',['$rootScope','$routeParams','$scope','$filter','to
                          mkTable('prods',$scope.prods);
                         $scope.direction=3;
                     }
-                }
-            }
-        );
+                });
         //scope.show('prods');
     };
     function mkTable(key,value){
@@ -127,10 +123,19 @@ dm.controller('goldkeywords',['$rootScope','$routeParams','$scope','$filter','to
                 }
             });
     };
+    $scope.$watch('direction',function(v,ov){
+        if(v!=undefined){
+            $scope.aList = ['关键词列表','分销商列表'].slice(0,v-1);
+            $scope.title = ['关键词列表',$scope.activeKeyword+'分销商列表',$scope.activeDirNick+'商品列表'][v-1];
+        }
+    });
+    $scope.setDir = function(index){
+        $scope.direction = index+1;
+    };
 }]);
 
 //优质渠道
-dm.controller('good_channel_ctrl',['$scope','$rootScope','$routeParams','$filter','tools','ngTableParams',function($scope,$rootScope,$routeParams,$filter,tools,ngTableParams){
+dm.controller('good_channel_ctrl',['$scope','$rootScope','$routeParams','$filter','tools','goodChannelModel',function($scope,$rootScope,$routeParams,$filter,tools,goodChannelModel){
     function tableReload(){
         if($scope.direction===1){
             $scope['source'].page(1).reload();
@@ -152,10 +157,10 @@ dm.controller('good_channel_ctrl',['$scope','$rootScope','$routeParams','$filter
     var type;  //类型
     $scope.direction=1;
     if(tagIndex==3){
-        $scope.title="免费流量";
+        //$scope.title="免费流量";
         type="srcFree";
     }else if(tagIndex==4){
-        $scope.title="付费流量";
+        //$scope.title="付费流量";
         type="srcPay";
     }
     var _get = tools.promise('getPromotionPvSrcEffects.htm', true);
@@ -178,6 +183,7 @@ dm.controller('good_channel_ctrl',['$scope','$rootScope','$routeParams','$filter
                  begin:begin,
                  count:count
             }).then(function (resp) {
+                        debugger
                         if (resp.success && resp.value.list.length) {
                             $defer.resolve(resp.value.list);
                             resp.value.resultSize && params.total(resp.value.resultSize);
@@ -293,14 +299,101 @@ dm.controller('good_channel_ctrl',['$scope','$rootScope','$routeParams','$filter
                             } else {
                                 $defer.resolve([]);
                                 params.total(0);
-                                $scope.nodata = true;
+                                //$scope.nodata = true;
                             }});
             }
         });
         $scope.direction=3;
     }
+
+    $scope.$watch('direction',function(v,ov){
+        if(v!=undefined){
+            $scope.aList = ['优质渠道列表','分销商列表'].slice(0,v-1);
+        }
+    });
+    $scope.setDir = function(index){
+        debugger;
+        $scope.direction = index+1;
+    };
+    var model = new goodChannelModel(type);
 }]);
 
+
+dm.factory('goodChannelModel',function(tools){
+    var api = {
+        getSrc:'getPromotionPvSrcEffects.htm',
+        getDistr:'getPromotionPvSrcEffectsBySrc.htm',
+        getProd:'getPromotionPcSrcEffectsByDistributor.htm'
+    };
+    var model = function(srcType){
+        var self = this;
+        this.count = tools.config.table.count;
+        this.srcType = srcType;//收费类型
+        this.parms = {
+             days:30,
+             srcType:this.type,
+             lowDisShopLevel:0,
+             highDisShopLevel:20,
+             sort:'down',
+             sortColumn:'IUV',
+             begin:0,
+             count:this.count
+        };
+        //获取渠道列表
+        this.getSrc = function(callback){
+            var _getAjax = tools.promise(api.getSrc,true);
+            _getAjax({
+                data:this.params
+            }).then(function(resp){
+                if(resp.success){
+                    self.srcList = resp.value.list;
+                    if(callback){
+                        callback(resp.value);
+                    }
+                }
+            })
+        };
+        //获取分销商列表
+        this.getDistr = function(item,callback){
+            var _getAjax = tools.promise(api.getDistr,true);
+            $.extend(this.parms,item);
+            _getAjax({
+                data:this.params
+            }).then(function(resp){
+                if(resp.success){
+                    self.disList = resp.value.list;
+                    if(callback){
+                        callback(resp.value);
+                    }
+                }
+            });
+        };
+        //获取产品列表
+        this.getProd = function(callback){
+            var _getAjax = tools.promise(api.getProd,true);
+            $.extend(this.parms,item);
+            _getAjax({
+                data:this.params
+            }).then(function(resp){
+                if(resp.success){
+                    self.prodsList = resp.value.list;
+                    if(callback){
+                        callback(resp.value);
+                    }
+                }
+            })
+        };
+        return this;
+    }
+    return model;
+});
+
+
+
+
+
+
+//最佳搭配
 dm.controller('best_partner_ctrl',['$scope','$rootScope','$routeParams','$filter','tools','ngTableParams',function($scope,$rootScope,$routeParams,$filter,tools,ngTableParams){
     var sortColumn = $scope.sortColumn = 'ASSO_ACCESS_USER_NUM';
     var attr = 'assoAccessUserNum';

@@ -9,7 +9,7 @@ dm.filter('tradeType_filter', function () {
 });
 
 /*行为监控*/
-dm.controller('behavior',['$rootScope','$scope','$routeParams','tools','gradeLayerService',function($rootScope,$scope,$routeParams,tools,gradeLayerService){
+dm.controller('behavior',['$rootScope','$scope','$routeParams','tools','grades',function($rootScope,$scope,$routeParams,tools,grades){
 	/* 进行当前的url 定位*/
 	var bannerIndex = $routeParams.banner||0;
 	var tagIndex = $scope.tagIndex = $routeParams.tag||1;
@@ -22,11 +22,10 @@ dm.controller('behavior',['$rootScope','$scope','$routeParams','tools','gradeLay
         terminateCoor:'terminateCooperation.htm',
         getCooperationIdByNick:'getCooperationIdByNick.htm'
     };
-    var dropDisNick,dropTradeType;
+    var dropDisNick,dropTradeType;//降低等级时 所选的分销商
     $scope.layerType=1;
     var _data={};
     var getData = function(data,callback){
-        debugger;
         tools.http({
             url:api.get,
             data:data,
@@ -43,9 +42,7 @@ dm.controller('behavior',['$rootScope','$scope','$routeParams','tools','gradeLay
             item.selected=false;
             item.disShopLevel  = disShopLevel(item.disShopLevel);
         });
-        debugger;
         $scope.shops=data;
-        console.log(data);
     };
 
     /*查看详情*/
@@ -88,7 +85,8 @@ dm.controller('behavior',['$rootScope','$scope','$routeParams','tools','gradeLay
         $scope.showOther=1; //用此来进行跟关联访问量区别开来
         $ele.addClass('active');
         $('.othersPartner').insertAfter($tr).removeClass('hide');
-        //你额
+        dropDisNick = $scope.shops[index].disNick;
+        dropTradeType = $scope.shops[index].tradeType;
     };
     /*终止合作*/
     var stopTerminal = $scope.stopTerminal =function(e,index){
@@ -100,7 +98,7 @@ dm.controller('behavior',['$rootScope','$scope','$routeParams','tools','gradeLay
         tools.http({
             url:api.terminateCoor,
             data:{
-                disNick: disNicks,
+                disNicks: disNicks,
                 tradeType: tradeTypes
             },
             succ:function(resp){
@@ -114,11 +112,10 @@ dm.controller('behavior',['$rootScope','$scope','$routeParams','tools','gradeLay
         });
     };
     /*确定降低等级*/
+    var parms = $scope.parms = {};
     var enDropLayer = $scope.enDropLayer = function(){
-         debugger;
         var type=$scope.layerType;
-        var layer=$scope.layer;
-
+        var layer=parms.layer;
         var disNicks=[],tradeTypes=[];
         if(!layer){
             alert('请选择要降低的等级');
@@ -136,6 +133,7 @@ dm.controller('behavior',['$rootScope','$scope','$routeParams','tools','gradeLay
             });
             if(!disNicks.length){
                 alert('请选择要分销商');
+                return;
             }
         }
         tools.http({
@@ -158,48 +156,26 @@ dm.controller('behavior',['$rootScope','$scope','$routeParams','tools','gradeLay
     $scope.setType=function(value){
         $scope.layerType=value;
     };
-
-
+    //获取等级
     var gradeLayers = $scope.gradeLayers = [];
-     //debugger;
-     gradeLayerService.get().then(function (resp) {
-     if (resp.success) {
-         data = resp.value;
-         for (var i in data) {
-             var tmp = {};
-             var item = data[i];
-             tmp.gradeLayerId = i;
-             tmp.disNum = item.disNum || 0;
-             tmp.gradeLayerName = item.supGradeInfo.name;
-             tmp.discountName = item.supDiscountInfo ? item.supDiscountInfo.discountName : '';
-             tmp.gradeLayerProdLinesLen = item.supProductCat.length;
-             tmp.gradeLayerProdLines = (function (supProductCat) {
-                 var res = [];
-                 _.each(supProductCat,function (item, index) {
-                    res.push(item.name);
-                });
-                return res.join(',');
-             })(item.supProductCat);
-             tmp.selected = false;
-             tmp.editing = false;
-             $scope.gradeLayers.push(tmp);
-         }
-         // 给其他版块使用
-         $rootScope.$broadcast('gradeLayersDetail', $scope.gradeLayers);
-     }});
+    var layer = new grades();
+    layer.get(function(v){
+        $scope.gradeLayers=v;
+    });
 	/*进行任务*/
-    //debugger;
     switch(Number(tagIndex)){
         case 1:
             /*窜货嫌疑*/
             $scope.title="窜货嫌疑";
             $scope.type="fleeingGoods";
+            $scope.nav = '串货监控';
             getData({type:'fleeingGoods'},setShop);
             break;
         case 2:
             /*乱价嫌疑*/
             $scope.title="乱价嫌疑";
             $scope.type="priceRemind";
+            $scope.nav = '乱价监控';
             getData({
                 type:'priceRemind'
             },setShop);
@@ -208,6 +184,7 @@ dm.controller('behavior',['$rootScope','$scope','$routeParams','tools','gradeLay
             /*差评监控*/
             $scope.type="badRateInfo";
             $scope.showList=true;
+            $scope.nav = '差评监控';
             getData({
                 type:'badRateInfo',
                 days:30
@@ -229,7 +206,6 @@ dm.controller('behavior',['$rootScope','$scope','$routeParams','tools','gradeLay
                 $scope.shops.neutralBadRate = neutralBadRate;
             });
     }
-
     /*获取查询详情*/
     $scope.lookUpSomeDis=function(disNick, result, e){
         var param = {
@@ -247,5 +223,16 @@ dm.controller('behavior',['$rootScope','$scope','$routeParams','tools','gradeLay
             }
             $scope.showList=false;
         });
-    }
+    };
+    //全选
+    $scope.selectAll = function(e){
+        var ele = e.target;
+        if(ele.tagName.toLocaleUpperCase()=="INPUT"){
+            var bool = ele.checked;
+            _.each($scope.shops,function(item){
+                item.selected = bool;
+            });
+        }
+    };
+
 }]);

@@ -1,7 +1,7 @@
 <div>
-	<div>
+	<div ng-show="!showDetail">
 		<div class="pull-right">
-			<button class="btn mb10"><i class="fa fa-plus"></i>新增</button>
+			<button class="btn mb10" ng-click="show();"><i class="fa fa-plus"></i>新增</button>
 		</div>
 		<table class="table table-bordered table-hover">
 			<thead>
@@ -22,36 +22,33 @@
 					<td><a ng-href="{{i.url}}" target="_blank">{{i.url}}</a></td>
 					<td>{{i.date | timer}}</td>
 					<td>
-						<a href="javascript:;">删除</a>
-						<a href="javascript:;">修改</a>
+						<a href="javascript:;" ng-click="model.delet($index,i);">删除</a>
+						<a href="javascript:;" ng-click="show(i);">修改</a>
 					</td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
-	<div>
+	<div ng-if="showDetail">
 		<form class="form-horizontal">
-			<div class="control-group error">
+			<div class="control-group" ng-class="model.addObj.title==''?'error':''">
 				<label class="control-label">标题:</label>
 				<div class="controls">
 					<input type="text" ng-model="model.addObj.title">
-					<span class="help-inline">你好啊</span>
+					<span class="help-inline"><i class="fa fa-asterisk"></i>{{model.addObj.title==''?model.error.title:''}}</span>
 				</div>
 			</div>
-			<div class="control-group">
+			<div class="control-group" ng-class="model.addObj.url==''?'error':''">
 				<label class="control-label">链接:</label>
 				<div class="controls">
-					<div class="input-prepend">
-						<span class="add-on">http://</span>
-						<input type="text" ng-model="model.addObj.url">
-						<span class="help-inline"></span>
-					</div>
+					<input type="text" ng-model="model.addObj.url">
+					<span class="help-inline"><i class="fa fa-asterisk"></i>{{model.addObj.url==''?model.error.url:''}}</span>
 				</div>
 			</div>
 			<div class="control-group">
 				<div class="controls">
-					<button class="btn"><i></i>保存</button>
-					<button class="btn"><i></i>取消</button>
+					<button class="btn" ng-click="save();"><i></i>保存</button>
+					<button class="btn" ng-click="hide();"><i></i>取消</button>
 				</div>
 			</div>
 		</form>

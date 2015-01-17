@@ -272,12 +272,16 @@ dm.controller('hasParams',['$scope','$rootScope','$element','tools',function($sc
 		$scope.hasChecked.push(item);
 	});
 	$scope.$on('manege-remove',function(e,v){
-		if(!v){
+		if(v==undefined){
 			return;
 		}
 		_.each($scope.hasChecked,function(item,index){
 			if(item.index==v){
 				//$scope.hasChecked.splice(index,1);
+				if(item.key==undefined){
+					$scope.hasChecked.splice(index,1);
+					return;
+				}
 				tools.http({
 					url:'deleteDimension.htm',
 					data:{
@@ -576,7 +580,11 @@ dm.directive('layers',function($rootScope){
 			$scope.$on('show-layers',function(e,v){
 				$element.toggle();
 				if(v){
-					select = _.pluck(_.filter(v,function(item){return item.select;}),'disNick');
+					if(_.isArray(v)){
+						select = _.pluck(_.filter(v,function(item){return item.select;}),'disNick');
+					}else{
+						select=[v.disNick];
+					}
 				}
 			});
 			$scope.cansel = function(){

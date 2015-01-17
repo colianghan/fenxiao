@@ -1,371 +1,390 @@
 <!-- 分销提升 -->
-
-<!-- 黄金关键词-->
-<div class="row-fluid mt30" ng-if="tagIndex==1||tagIndex==2">
-	<div class="span12" ng-controller="goldkeywords">
-		<h3>{{title}}</h3>
-		<div ng-if="direction==1">
-			<table class="table table-hover table-bordered" ng-table="keywords">
-				<tbody>
+<ul class="nav nav-tabs mt30">
+  <li class="active"><a href="javascript:;">{{nav}}</a></li>
+</ul>
+<div class="box box-border-recruit">
+	<!-- 黄金关键词-->
+	<div class="row-fluid" ng-if="tagIndex==1||tagIndex==2">
+		<div class="span12" ng-controller="goldkeywords">
+			<h4 class="clearfix pr">
+				<div>{{title}}</div>
+				<div class="pull-right improve-direction" ng-show="direction!=1">
+					<span>返回到：</span>
+					<a href="javascript:;" ng-repeat="i in aList" ng-click="setDir($index);">{{i}}</a>
+				</div>
+			</h4>
+			<div ng-if="direction==1">
+				<table class="table table-hover table-bordered" ng-table="keywords">
+					<tbody>
+						<tr ng-repeat="item in $data">
+							<td data-title="'序号'">
+								<span class="badge badge-info">{{$index}}</span>
+							</td>
+							<td data-title="'关键词'">
+								<a href="javascript:;" ng-click="getShops(item.query)">{{item.query}}</a>
+							</td>
+							<td data-title="theads[0]" sortable="'attr[0]'">{{item[attrs[0]]}}</td>
+							<td data-title="theads[1]" sortable="'attr[1]'">{{item[attrs[1]]}}</td>
+							<td data-title="theads[2]" sortable="'attr[2]'">{{item[attrs[2]]}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div ng-if="direction==2">
+				<table class="table table-hover table-bordered" ng-table="shopes">
 					<tr ng-repeat="item in $data">
 						<td data-title="'序号'">
 							<span class="badge badge-info">{{$index}}</span>
 						</td>
 						<td data-title="'关键词'">
-							<a href="javascript:;" ng-click="getShops(item.query)">{{item.query}}</a>
+							<a href="javascript:;" ng-click="getProds(item.query,item);">{{item.disNick}}</a>
 						</td>
 						<td data-title="theads[0]" sortable="'attr[0]'">{{item[attrs[0]]}}</td>
 						<td data-title="theads[1]" sortable="'attr[1]'">{{item[attrs[1]]}}</td>
 						<td data-title="theads[2]" sortable="'attr[2]'">{{item[attrs[2]]}}</td>
 					</tr>
-				</tbody>
-			</table>
-		</div>
-		<div ng-if="direction==2">
-			<table class="table table-hover table-bordered" ng-table="shopes">
-				<tr ng-repeat="item in $data">
-					<td data-title="'序号'">
-						<span class="badge badge-info">{{$index}}</span>
-					</td>
-					<td data-title="'关键词'">
-						<a href="javascript:;" ng-click="getProds(item.query,item.shopId);">{{item.query}}</a>
-					</td>
-					<td data-title="theads[0]" sortable="'attr[0]'">{{item[attrs[0]]}}</td>
-					<td data-title="theads[1]" sortable="'attr[1]'">{{item[attrs[1]]}}</td>
-					<td data-title="theads[2]" sortable="'attr[2]'">{{item[attrs[2]]}}</td>
-				</tr>
-			</table>
-		</div>
-		<div ng-if="direction==3">
-			<table class="table table-hover table-bordered"  ng-table="prods">
-				<tr ng-repeat="item in $data">
-					<td data-title="'序号'">
-						<span class="badge badge-info">{{$index}}</span>
-					</td>
-					<td data-title="'宝贝'">
-						<img ng-src="{{item.picUrl}}_40x40.jpg" alt="图片" class="img-circle">
-					</td>
-					<td data-title="'标题'">
-						<a href="javascript:;" target="_blank">{{item.title}}</a>
-					</td>
-					<td data-title="theads[0]" sortable="'attr[0]'">{{item[attrs[0]]}}</td>
-					<td data-title="theads[1]" sortable="'attr[1]'">{{item[attrs[1]]}}</td>
-					<td data-title="theads[2]" sortable="'attr[2]'">{{item[attrs[2]]}}</td>
-				</tr>
-			</table>
-		</div>
-	</div>
-</div>
-<!-- 优质渠道-->
-<div class="row-fluid mt30" ng-if="tagIndex==3||tagIndex==4">
-	<div class="span12" ng-controller="good_channel_ctrl">
-		<div class="row-fluid">
-			<h3>{{title}}</h3>
-			<div class="clearfix">
-				<div class="pull-left">
-					<h4 class="inline-block">统计天数：</h4>
-					<label class="radio-inline">
-						<input type="radio" value="7" name="day" ng-model="day">
-						7天
-					</label>
-					<label class="radio-inline">
-						<input type="radio" value="15" name="day" ng-model="day">
-						15天
-					</label>
-					<label class="radio-inline">
-						<input type="radio" value="30" name="day" ng-model="day">
-						30天
-					</label>
-				</div>
-				<div class="pull-right">
-					<h4 class="inline-block">店铺等级：</h4>
-					<label class="radio-inline">
-						<input type="radio" value="1" name="layer" ng-model="layer">
-						心钻
-					</label>
-					<label class="radio-inline">
-						<input type="radio" value="2" name="layer" ng-model="layer">
-						钻级
-					</label>
-					<label class="radio-inline">
-						<input type="radio" value="3" name="layer" ng-model="layer">
-						冠级
-					</label>
-					<label class="radio-inline">
-						<input type="radio" value="0" name="layer" ng-model="layer">
-						综合
-					</label>
-				</div>
+				</table>
+			</div>
+			<div ng-if="direction==3">
+				<table class="table table-hover table-bordered"  ng-table="prods">
+					<tr ng-repeat="item in $data">
+						<td data-title="'序号'">
+							<span class="badge badge-info">{{$index}}</span>
+						</td>
+						<td data-title="'宝贝'">
+							<img ng-src="{{item.picUrl}}_40x40.jpg" alt="图片" class="img-circle">
+						</td>
+						<td data-title="'标题'">
+							<a href="javascript:;" target="_blank">{{item.title}}</a>
+						</td>
+						<td data-title="theads[0]" sortable="'attr[0]'">{{item[attrs[0]]}}</td>
+						<td data-title="theads[1]" sortable="'attr[1]'">{{item[attrs[1]]}}</td>
+						<td data-title="theads[2]" sortable="'attr[2]'">{{item[attrs[2]]}}</td>
+					</tr>
+				</table>
 			</div>
 		</div>
-		<h3 class="text-center"></h3>
-		<div ng-if="direction==1">
+	</div>
+	<!-- 优质渠道-->
+	<div class="row-fluid" ng-if="tagIndex==3||tagIndex==4">
+		<div class="span12" ng-controller="good_channel_ctrl">
+			<div class="row-fluid">
+				<h4 class="clearfix pr">
+					<div>{{title}}</div>
+					<div class="pull-right improve-direction" ng-show="direction!=1">
+						<span>返回到：</span>
+						<a href="javascript:;" ng-repeat="i in aList" ng-click="setDir($index);">{{i}}</a>
+					</div>
+				</h4>
+				<div class="clearfix mb10">
+					<div class="pull-left">
+						<form class="form-inline mb0">
+							<h4 class="inline-block">统计天数：</h4>
+							<label class="radio mr5">
+								<input type="radio" value="7" name="day" ng-model="day">
+								7天
+							</label>
+							<label class="radio mr5">
+								<input type="radio" value="15" name="day" ng-model="day">
+								15天
+							</label>
+							<label class="radio mr5">
+								<input type="radio" value="30" name="day" ng-model="day">
+								30天
+							</label>
+						</form>
+					</div>
+					<div class="pull-right">
+						<form class="form-inline mb0">
+							<h4 class="inline-block">店铺等级：</h4>
+							<label class="radio-inline">
+								<input type="radio" value="1" name="layer" ng-model="layer">
+								心钻
+							</label>
+							<label class="radio-inline">
+								<input type="radio" value="2" name="layer" ng-model="layer">
+								钻级
+							</label>
+							<label class="radio-inline">
+								<input type="radio" value="3" name="layer" ng-model="layer">
+								冠级
+							</label>
+							<label class="radio-inline">
+								<input type="radio" value="0" name="layer" ng-model="layer">
+								综合
+							</label>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div ng-if="direction==1">
+				<table class="table table-hover table-bordered">
+					<thead>
+						<tr>
+							<th>序号</th>
+							<th>渠道名称</th>
+							<th class="sortable sort-asc" ng-click="getSort($event,'IUV');"><div>独立访客数</div></th>
+							<th class="sortable" ng-click="getSort($event,'ALIPAY_TRADE_AMT');"><div>成交金额</div></th>
+							<th class="sortable" ng-click="getSort($event,'ALIPAY_AUCTION_NUM');"><div>成交量</div></th>
+							<th class="sortable" ng-click="getSort($event,'ALIPAY_WINNER_NUM/IUV');"><div>转化率</div></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="item in model.srcList">
+							<td>
+								<span class="badge badge-info">{{$index}}</span>
+							</td>
+							<td>
+								<a href="javascript:;" ng-click="getShops(item.srcId,item.srcName);">{{item.srcName}}</a>
+							</td>
+							<td>{{item.iuv}}</td>
+							<td>{{item.alipayTradeAmt}}</td>
+							<td>{{item.alipayAuctionNum}}</td>
+							<td>{{item.transformationEfficiency * 100 | number:2}}</td>
+						</tr>
+					</tbody>
+				</table>
+				<pages></pages>
+			</div>
+			<div ng-if="direction==2">
+				<table class="table table-hover table-bordered" ng-table="shops">
+					<thead>
+						<tr>
+							<th>序号</th>
+							<th>分销商名称</th>
+							<th class="sortable sort-asc" ng-click="getSort($event,'IUV');"><div>独立访客数</div></th>
+							<th class="sortable" ng-click="getSort($event,'ALIPAY_TRADE_AMT');"><div>成交金额</div></th>
+							<th class="sortable" ng-click="getSort($event,'ALIPAY_AUCTION_NUM');"><div>成交量</div></th>
+							<th class="sortable" ng-click="getSort($event,'ALIPAY_WINNER_NUM/IUV');"><div>转化率</div></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="item in model.disList">
+							<td>
+								<span class="badge badge-info">{{$index}}</span>
+							</td>
+							<td>
+								<a href="javascript:;" ng-click="getProds(item.shopId,item.disNick);">{{item.disNick}}</a>
+							</td>
+							<td>{{item.iuv}}</td>
+							<td>{{item.alipayTradeAmt}}</td>
+							<td>{{item.alipayAuctionNum}}</td>
+							<td>{{item.transformationEfficiency * 100 | number:2}}</td>
+						</tr>
+					</tbody>
+				</table>
+				<h1 ng-click="setDir(2);">2</h1>
+			</div>
+			<div ng-if="direction==3">
+				<table class="table table-hover table-bordered" ng-table="prods">
+					<thead>
+						<tr>
+							<th>序号</th>
+							<th>宝贝图片</th>
+							<th>宝贝标题</th>
+							<th class="sortable sort-asc" ng-click="getSort($event,'IUV');"><div>独立访客数</div></th>
+							<th class="sortable" ng-click="getSort($event,'ALIPAY_TRADE_AMT');"><div>成交金额</div></th>
+							<th class="sortable" ng-click="getSort($event,'ALIPAY_AUCTION_NUM');"><div>成交量</div></th>
+							<th class="sortable" ng-click="getSort($event,'ALIPAY_WINNER_NUM/IUV');"><div>转化率</div></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="item in model.prodsList">
+							<td>
+								<span class="badge badge-info">{{$index}}</span>
+							</td>
+							<td>
+								<img ng-src="{{item.picUrl}}_40x40.jpg" alt="图片" class="img-circle">
+							</td>
+							<td>
+								<a href="javascript:;">{{item.title}}</a>
+							</td>
+							<td>{{item.iuv}}</td>
+							<td>{{item.alipayTradeAmt}}</td>
+							<td>{{item.alipayAuctionNum}}</td>
+							<td>{{item.transformationEfficiency * 100 | number:2}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<!--黄金搭档-->
+	<div class="row-fluid" ng-if="tagIndex==5">
+		<div class="span12" ng-controller="best_partner_ctrl">
+			<div class="clearfix mb10">
+				<div class="pull-left">
+					<form class="form-inline mb0">
+						<h4 class="inline-block">数据类型：</h4>
+						<label class="radio mr5">
+							<input type="radio" value="ASSO_ACCESS_USER_NUM" name="sortColumn" ng-model="sortColumn">
+							关联访问TOP20
+						</label>
+						<label class="radio mr5">
+							<input type="radio" value="TRANSFORMATION_EFFICIENCY" name="sortColumn" ng-model="sortColumn">
+							关联访问转换率TOP20
+						</label>
+						<label class="radio mr5">
+							<input type="radio" value="ASSO_ALIPAY_AMT" name="sortColumn" ng-model="sortColumn">
+							关联访问成交额TOP20
+						</label>
+					</form>
+				</div>
+				<div class="pull-right">
+					<form class="form-inline mb0">
+						<h4 class="inline-block">统计天数：</h4>
+						<label class="radio mr5">
+							<input type="radio" value="7" name="days" ng-model="day">
+							7天
+						</label>
+						<label class="radio mr5">
+							<input type="radio" value="15" name="days" ng-model="day">
+							15天
+						</label>
+						<label class="radio mr5">
+							<input type="radio" value="30" name="days" ng-model="day">
+							30天
+						</label>
+					</form>
+				</div>
+			</div>
 			<table class="table table-hover table-bordered" ng-table="source">
 				<thead>
 					<tr>
 						<th>序号</th>
-						<th>渠道名称</th>
-						<th class="sortable sort-asc" ng-click="getSort($event,'IUV');"><div>独立访客数</div></th>
-						<th class="sortable" ng-click="getSort($event,'ALIPAY_TRADE_AMT');"><div>成交金额</div></th>
-						<th class="sortable" ng-click="getSort($event,'ALIPAY_AUCTION_NUM');"><div>成交量</div></th>
-						<th class="sortable" ng-click="getSort($event,'ALIPAY_WINNER_NUM/IUV');"><div>转化率</div></th>
+						<th colspan="2">产品一(点击查看与其他宝贝的关联数据)</th>
+						<th colspan="2">产品二</th>
+						<th>{{dataTitle}}</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="item in $data">
+					<tr ng-repeat="i in $data">
 						<td>
 							<span class="badge badge-info">{{$index}}</span>
 						</td>
 						<td>
-							<a href="javascript:;" ng-click="getShops(item.srcId,item.srcName);">{{item.srcName}}</a>
+							 <img ng-src = "{{i.picUrl1}}" class="img-circle" />
 						</td>
-						<td>{{item.iuv}}</td>
-						<td>{{item.alipayTradeAmt}}</td>
-						<td>{{item.alipayAuctionNum}}</td>
-						<td>{{item.transformationEfficiency * 100 | number:2}}</td>
+						<td>
+							<a href="javascript:;" ng-click="getOthers($event,i.pid1,i.pid2);">{{i.title1}}</a>
+						</td>
+						<td>
+							<img ng-src = "{{i.picUrl2}}" class="img-circle" />
+						</td>
+						<td>
+							<a href="javascript:;">{{i.title2}}</a>
+						</td>
+						<td>
+							<a href="javascript:;" ng-click="getOthersData($event,i.pid1,i.pid2);">{{i.sortValue}}</a>
+						</td>
 					</tr>
-				</tbody>
-			</table>
-		</div>
-		<div ng-if="direction==2">
-			<table class="table table-hover table-bordered" ng-table="shops">
-				<thead>
-					<tr>
-						<th>序号</th>
-						<th>分销商名称</th>
-						<th class="sortable sort-asc" ng-click="getSort($event,'IUV');"><div>独立访客数</div></th>
-						<th class="sortable" ng-click="getSort($event,'ALIPAY_TRADE_AMT');"><div>成交金额</div></th>
-						<th class="sortable" ng-click="getSort($event,'ALIPAY_AUCTION_NUM');"><div>成交量</div></th>
-						<th class="sortable" ng-click="getSort($event,'ALIPAY_WINNER_NUM/IUV');"><div>转化率</div></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="item in $data">
-						<td>
-							<span class="badge badge-info">{{$index}}</span>
+					<tr class="othersPartner hide">
+						<td colspan="6">
+							<div ng-if="showOther==1">
+								<table class="table table-hover table-bordered table-condensed">
+									<tbody>
+										<tr>
+											<td>序号</td>
+											<td>宝贝</td>
+											<td>标题</td>
+											<td>分销商</td>
+											<td>{{dataTitle}}</td>
+										</tr>
+										<tr ng-repeat="item in otherPartners">
+											<td>
+												<span class="badge badge-info">{{$index}}</span>
+											</td>
+											<td>
+												<img  ng-src = "{{item.picUrl2}}"/>
+											</td>
+											<td>
+												<a href="javascript:;">{{item.title2}}</a>
+											</td>
+											<td>{{item.disNick}}</td>
+											<td>{{item.sortValue}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+							<div ng-if="showOther==2">
+								<table class="table table-hover table-bordered table-condensed">
+									<tbody>
+										<tr>
+											<td>序号</td>
+											<td>分销商</td>
+											<td>{{dataTitle}}</td>
+											<td>成交量</td>
+										</tr>
+										<tr ng-repeat="item in shopAssocialData">
+											<td>
+												<span class="badge badge-info">{{$index}}</span>
+											</td>
+											<td>
+												{{item.disNick}}
+											</td>
+											<td>
+												{{item.sortValue}}
+											</td>
+											<td>{{item.assoAlipayAuctionNum}}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
 						</td>
-						<td>
-							<a href="javascript:;" ng-click="getProds(item.shopId,item.disNick);">{{item.disNick}}</a>
-						</td>
-						<td>{{item.iuv}}</td>
-						<td>{{item.alipayTradeAmt}}</td>
-						<td>{{item.alipayAuctionNum}}</td>
-						<td>{{item.transformationEfficiency * 100 | number:2}}</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
-		<div ng-if="direction==3">
-			<table class="table table-hover table-bordered" ng-table="prods">
-				<thead>
-					<tr>
-						<th>序号</th>
-						<th>宝贝图片</th>
-						<th>宝贝标题</th>
-						<th class="sortable sort-asc" ng-click="getSort($event,'IUV');"><div>独立访客数</div></th>
-						<th class="sortable" ng-click="getSort($event,'ALIPAY_TRADE_AMT');"><div>成交金额</div></th>
-						<th class="sortable" ng-click="getSort($event,'ALIPAY_AUCTION_NUM');"><div>成交量</div></th>
-						<th class="sortable" ng-click="getSort($event,'ALIPAY_WINNER_NUM/IUV');"><div>转化率</div></th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr ng-repeat="item in $data">
-						<td>
-							<span class="badge badge-info">{{$index}}</span>
-						</td>
-						<td>
-							<img ng-src="{{item.picUrl}}_40x40.jpg" alt="图片" class="img-circle">
-						</td>
-						<td>
-							<a href="javascript:;">{{item.title}}</a>
-						</td>
-						<td>{{item.iuv}}</td>
-						<td>{{item.alipayTradeAmt}}</td>
-						<td>{{item.alipayAuctionNum}}</td>
-						<td>{{item.transformationEfficiency * 100 | number:2}}</td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
 	</div>
-</div>
-<!--黄金搭档-->
-<div class="row-fluid mt30" ng-if="tagIndex==5">
-	<div class="span12" ng-controller="best_partner_ctrl">
-		<h3>最佳搭配宝贝</h3>
-		<div class="clearfix mb10">
-			<div class="pull-left">
-				<h4 class="inline-block">数据类型：</h4>
-				<label class="radio-inline">
-					<input type="radio" value="ASSO_ACCESS_USER_NUM" name="sortColumn" ng-model="sortColumn">
-					关联访问TOP20
-				</label>
-				<label class="radio-inline">
-					<input type="radio" value="TRANSFORMATION_EFFICIENCY" name="sortColumn" ng-model="sortColumn">
-					关联访问转换率TOP20
-				</label>
-				<label class="radio-inline">
-					<input type="radio" value="ASSO_ALIPAY_AMT" name="sortColumn" ng-model="sortColumn">
-					关联访问成交额TOP20
-				</label>
-				<!-- <div class="btn-group">
-					<button class="btn active">关联访问TOP20</button>
-					<button class="btn">关联访问转换率TOP20</button>
-					<button class="btn">关联访问成交额TOP20</button>
-				</div> -->
+	<!--订购链接 -->
+	<div class="row-fluid" ng-if="tagIndex==6">
+		<div class="span12">
+			<div class="clearfix improve-urls">
+				<img src="http://alicdn.trend-data.cn/distributor-manager/prod/images/soft_0.png" class="img-rounded pull-left" />
+				<div class="pull-left  urls-content ml10">
+					<a href="http://tb.cn/rNCpIey" target="_blank">订购链接:http://tb.cn/rNCpIey</a>
+					<p>
+			            说明：爆款打造机免费提供给分销商使用，将链接发给分销商之后进入付款环节，请点击代付，
+			            代付支付宝帐号为：2391135836@qq.com
+			            孙然，将会有专员进行支付，支付之后进入店铺卖家中心后台即可点击使用
+					</p>
+				</div>
 			</div>
-			<div class="pull-right">
-				<h4 class="inline-block">统计天数：</h4>
-				<label class="radio-inline">
-					<input type="radio" value="7" name="days" ng-model="day">
-					7天
-				</label>
-				<label class="radio-inline">
-					<input type="radio" value="15" name="days" ng-model="day">
-					15天
-				</label>
-				<label class="radio-inline">
-					<input type="radio" value="30" name="days" ng-model="day">
-					30天
-				</label>
+			<div class="clearfix improve-urls">
+				<img src="http://alicdn.trend-data.cn/distributor-manager/prod/images/soft_1.png" class="img-rounded pull-left" />
+				<div class="pull-left  urls-content ml10">
+					<a href="http://tb.cn/rNCpIey" target="_blank">订购链接:http://tb.cn/eRWb7ey</a>
+					<p>
+			            简化直通车开车复杂操纵，从0开始教学，帮您走上开车的阳光大道。多渠道的词来源，不用再到处翻页找词。 独创的查排名功能， 让您的宝贝精准地到达指定位置。
+					</p>
+				</div>
 			</div>
-		</div>
-		<table class="table table-hover table-bordered" ng-table="source">
-			<thead>
-				<tr>
-					<th>序号</th>
-					<th colspan="2">产品一(点击查看与其他宝贝的关联数据)</th>
-					<th colspan="2">产品二</th>
-					<th>{{dataTitle}}</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="i in $data">
-					<td>
-						<span class="badge badge-info">{{$index}}</span>
-					</td>
-					<td>
-						 <img ng-src = "{{i.picUrl1}}" class="img-circle" />
-					</td>
-					<td>
-						<a href="javascript:;" ng-click="getOthers($event,i.pid1,i.pid2);">{{i.title1}}</a>
-					</td>
-					<td>
-						<img ng-src = "{{i.picUrl2}}" class="img-circle" />
-					</td>
-					<td>
-						<a href="javascript:;">{{i.title2}}</a>
-					</td>
-					<td>
-						<a href="javascript:;" ng-click="getOthersData($event,i.pid1,i.pid2);">{{i.sortValue}}</a>
-					</td>
-				</tr>
-				<tr class="othersPartner hide">
-					<td colspan="6">
-						<div ng-if="showOther==1">
-							<table class="table table-hover table-bordered table-condensed">
-								<tbody>
-									<tr>
-										<td>序号</td>
-										<td>宝贝</td>
-										<td>标题</td>
-										<td>分销商</td>
-										<td>{{dataTitle}}</td>
-									</tr>
-									<tr ng-repeat="item in otherPartners">
-										<td>
-											<span class="badge badge-info">{{$index}}</span>
-										</td>
-										<td>
-											<img  ng-src = "{{item.picUrl2}}"/>
-										</td>
-										<td>
-											<a href="javascript:;">{{item.title2}}</a>
-										</td>
-										<td>{{item.disNick}}</td>
-										<td>{{item.sortValue}}</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-						<div ng-if="showOther==2">
-							<table class="table table-hover table-bordered table-condensed">
-								<tbody>
-									<tr>
-										<td>序号</td>
-										<td>分销商</td>
-										<td>{{dataTitle}}</td>
-										<td>成交量</td>
-									</tr>
-									<tr ng-repeat="item in shopAssocialData">
-										<td>
-											<span class="badge badge-info">{{$index}}</span>
-										</td>
-										<td>
-											{{item.disNick}}
-										</td>
-										<td>
-											{{item.sortValue}}
-										</td>
-										<td>{{item.assoAlipayAuctionNum}}</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-</div>
-<!--订购链接 -->
-<div class="row-fluid mt30" ng-if="tagIndex==6">
-	<div class="span12">
-		<div class="clearfix improve-urls">
-			<img src="http://alicdn.trend-data.cn/distributor-manager/prod/images/soft_0.png" class="img-rounded pull-left" />
-			<div class="pull-left  urls-content ml10">
-				<a href="http://tb.cn/rNCpIey" target="_blank">订购链接:http://tb.cn/rNCpIey</a>
-				<p>
-		            说明：爆款打造机免费提供给分销商使用，将链接发给分销商之后进入付款环节，请点击代付，
-		            代付支付宝帐号为：2391135836@qq.com
-		            孙然，将会有专员进行支付，支付之后进入店铺卖家中心后台即可点击使用
-				</p>
+			<div class="clearfix improve-urls">
+				<img src="http://alicdn.trend-data.cn/distributor-manager/prod/images/soft_2.png" class="img-rounded pull-left" />
+				<div class="pull-left  urls-content ml10">
+					<a href="http://fuwu.taobao.com/ser/detail.htm?spm=a1z13.2196609.2196609.21.7ACmAc&amp;service_code=FW_GOODS-1911103&amp;tracelog=other_serv" target="_blank">订购链接:点击订购</a>
+					<p>
+			            微淘最好玩的打折工具。帮助淘宝店家在微淘上开展营销活动。通过趣味游戏，根据获得游戏成绩不同得到不同的折扣。 以达到吸引流量，提高销量的目的。 微淘打折，就上微折！
+					</p>
+				</div>
 			</div>
-		</div>
-		<div class="clearfix improve-urls">
-			<img src="http://alicdn.trend-data.cn/distributor-manager/prod/images/soft_1.png" class="img-rounded pull-left" />
-			<div class="pull-left  urls-content ml10">
-				<a href="http://tb.cn/rNCpIey" target="_blank">订购链接:http://tb.cn/eRWb7ey</a>
-				<p>
-		            简化直通车开车复杂操纵，从0开始教学，帮您走上开车的阳光大道。多渠道的词来源，不用再到处翻页找词。 独创的查排名功能， 让您的宝贝精准地到达指定位置。
-				</p>
+			<div class="clearfix improve-urls">
+				<img src="http://alicdn.trend-data.cn/distributor-manager/prod/images/soft_3.jpg" class="img-rounded pull-left" />
+				<div class="pull-left  urls-content ml10">
+					<a href="http://fuwu.taobao.com/ser/detail.htm?spm=a1z13.2196609.2196609.21.7ACmAc&amp;service_code=FW_GOODS-1911103&amp;tracelog=other_serv" target="_blank">订购链接:点击订购</a>
+					<p>
+			            微淘最好玩的打折工具。帮助淘宝店家在微淘上开展营销活动。通过趣味游戏，根据获得游戏成绩不同得到不同的折扣。 以达到吸引流量，提高销量的目的。 微淘打折，就上微折！
+					</p>
+				</div>
 			</div>
-		</div>
-		<div class="clearfix improve-urls">
-			<img src="http://alicdn.trend-data.cn/distributor-manager/prod/images/soft_2.png" class="img-rounded pull-left" />
-			<div class="pull-left  urls-content ml10">
-				<a href="http://fuwu.taobao.com/ser/detail.htm?spm=a1z13.2196609.2196609.21.7ACmAc&amp;service_code=FW_GOODS-1911103&amp;tracelog=other_serv" target="_blank">订购链接:点击订购</a>
-				<p>
-		            微淘最好玩的打折工具。帮助淘宝店家在微淘上开展营销活动。通过趣味游戏，根据获得游戏成绩不同得到不同的折扣。 以达到吸引流量，提高销量的目的。 微淘打折，就上微折！
-				</p>
-			</div>
-		</div>
-		<div class="clearfix improve-urls">
-			<img src="http://alicdn.trend-data.cn/distributor-manager/prod/images/soft_3.jpg" class="img-rounded pull-left" />
-			<div class="pull-left  urls-content ml10">
-				<a href="http://fuwu.taobao.com/ser/detail.htm?spm=a1z13.2196609.2196609.21.7ACmAc&amp;service_code=FW_GOODS-1911103&amp;tracelog=other_serv" target="_blank">订购链接:点击订购</a>
-				<p>
-		            微淘最好玩的打折工具。帮助淘宝店家在微淘上开展营销活动。通过趣味游戏，根据获得游戏成绩不同得到不同的折扣。 以达到吸引流量，提高销量的目的。 微淘打折，就上微折！
-				</p>
-			</div>
-		</div>
-		<div class="clearfix improve-urls">
-			<img src="http://alicdn.trend-data.cn/distributor-manager/prod/images/soft_4.png" class="img-rounded pull-left" />
-			<div class="pull-left  urls-content ml10">
-				<a href="http://fuwu.taobao.com/ser/detail.htm?spm=a1z13.2196609.2196609.21.7ACmAc&amp;service_code=FW_GOODS-1911103&amp;tracelog=other_serv" target="_blank">订购链接:点击订购</a>
-				<p>
-		            微淘最好玩的打折工具。帮助淘宝店家在微淘上开展营销活动。通过趣味游戏，根据获得游戏成绩不同得到不同的折扣。 以达到吸引流量，提高销量的目的。 微淘打折，就上微折！
-				</p>
+			<div class="clearfix improve-urls">
+				<img src="http://alicdn.trend-data.cn/distributor-manager/prod/images/soft_4.png" class="img-rounded pull-left" />
+				<div class="pull-left  urls-content ml10">
+					<a href="http://fuwu.taobao.com/ser/detail.htm?spm=a1z13.2196609.2196609.21.7ACmAc&amp;service_code=FW_GOODS-1911103&amp;tracelog=other_serv" target="_blank">订购链接:点击订购</a>
+					<p>
+			            微淘最好玩的打折工具。帮助淘宝店家在微淘上开展营销活动。通过趣味游戏，根据获得游戏成绩不同得到不同的折扣。 以达到吸引流量，提高销量的目的。 微淘打折，就上微折！
+					</p>
+				</div>
 			</div>
 		</div>
 	</div>

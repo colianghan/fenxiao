@@ -839,6 +839,20 @@ h4 .pull-right{
 	margin-right: 50px;
 }
 
+/* 分销提升 */
+.improve-direction a{
+	margin-right: 5px;
+}
+.improve-direction a:after{
+	content: '|';
+	display: inline-block;
+	margin-left: 5px;
+	color: #666;
+}
+.improve-direction a:last-child:after{
+	content: '';
+}
+
 
 
 /* 页面编写结束 end */

@@ -13,21 +13,25 @@ dm.directive('distributors',['$compile','$routeParams',function($compile,$routeP
 		$scope.parms = {}; // 所有的操作
 
 		//发送消息 bgin
-		$scope.news = false; 
-		$scope.addUser = false;
-		$scope.showNews = function(){
-			$scope.news = !$scope.news;
-			$scope.addUser = false;
-		}
-		$scope.showTable = function(){
-			$scope.addUser = !$scope.addUser;
-		}
-
+		$scope.news = false,$scope.addUser = false;
+		$scope.show={
+			caselMessage:function(){
+				//隐藏短信页
+				$scope.news = false;
+			},
+			showMessage:function(){
+				$scope.news = true;
+				$scope.addUser = false;
+			},
+			showTable:function(){
+				$scope.addUser = !$scope.addUser;
+			}
+		};
 		//
 		var gradeId = $routeParams.gradeId;
 		if(gradeId){
 			$scope.gradeId = gradeId;
-			$scope.parms = new distriAction({gradeId:$scope.gradeId});
+			$scope.model = $scope.parms = new distriAction({gradeId:$scope.gradeId});
 			$scope.parms.getData(function(v){
 				if(v.pageSize){
 					var length = v.pageSize;
@@ -117,11 +121,14 @@ dm.directive('distributors',['$compile','$routeParams',function($compile,$routeP
 		templateUrl:'../html/template/distributors.html',
 		scope:true,
 		compile:compile,
-		controller:controller
+		controller:controller 
 	}
 }]);
 
 dm.factory('distriAction',['tools',function(tools){
+	var api = {
+		sendMessage:'sendDistributorOfShortMessage.htm'//发送消息
+	};
 	var getUrl = tools.promise('getCooperationDistributors.htm',true);
 	var action = function(data){
 		var self = this,
@@ -134,6 +141,7 @@ dm.factory('distriAction',['tools',function(tools){
 		}
 		this.parms  = data;
 		this.count = tools.config.table.count;
+		this.nicks='',this.sids='',this.sendContent = '';//选择的昵称和sids,发送信息的消息
 		//获取数据
 		this.getData = function(callback){
 			this.dis = [];
@@ -157,12 +165,12 @@ dm.factory('distriAction',['tools',function(tools){
 			});
 		};
 		//终止合作
-		this.stop = function(){
+		this.stop = function(item){
 			if(!confirm('是否要终止合作')){
 				return;
 			}
 			var hasSelected = [];
-			hasSelected = _.filter(this.dis,function(item){return item.select});
+			hasSelected =item ? [item] : _.filter(this.dis,function(item){return item.select});
 			var disNicks=_.pluck(hasSelected,'disNick');
 			//debugger;
 			if(!hasSelected.length){
@@ -176,7 +184,19 @@ dm.factory('distriAction',['tools',function(tools){
 				},
 				succ:function(resp){
 					//self.dis.splice(); //移出
-					self.dis = _.difference(self.dis,hasSelected);
+					var tmp = hasSelected;
+					if(item){
+						alert('终止合作成功');
+						tmp = [];
+						_.each(disNicks,function(nick){
+							_.each(self.dis,function(item,index){
+								if(item.disNick==nick){
+									tmp.push(item);
+								}
+							})
+						});
+					}
+					self.dis = _.difference(self.dis,tmp);
 				}
 			});
 		};
@@ -197,10 +217,57 @@ dm.factory('distriAction',['tools',function(tools){
 			var $ele = $(e.currentTarget),
 				value = $ele.prop('checked');
 			//debugger;
+			var _nick = [],_sids = [];
 			_.each(this.dis,function(item){
 				item.select = value;
+				_nick.push(item.disNick);
+				/*_sids.push(item.sid);*/
 			});
+			this.nicks = _nick.join(',');
+			this.sids = _sids.join(',');
 		};
+		//为了进行发送消息而进行的交互
+		this.selectItem = function(i){
+			/*todo  方法执行了两遍  因为冒泡的原因*/
+			var _nick = [],_sids = [];
+			_.each(this.dis,function(item,index){
+				if(item.select){
+					_nick.push(item.disNick);
+					/*_sids.push(item.sid);*/
+				}
+			});
+			this.nicks = _nick.join(',');
+			this.sids = _sids.join(',');
+		};
+		//发送消息
+		this.sendMessage = function(){
+			if(this.nicks==''){
+				alert('请选择要发送的联系人');
+				return;
+			}
+			if(!this.sendContent){
+				alert('请填写要发送的信息内容');
+				return;
+			}
+			tools.http({
+				url:api.sendMessage,
+				data:{
+					disNicks : this.nicks,
+					content:this.sendContent
+				},
+				succ:function(resp){
+					if(resp.success){
+						if(!resp.value.fail.length){
+							alert('发送成功'+resp.value.message);
+						}else{
+							alert('发送失败，建议对单个分销商进行短信发送');
+						}
+					}else{
+						alert('网络异常，请稍后重试');
+					}
+				}
+			});
+		}
 		return this;
 	};
 	return action;
