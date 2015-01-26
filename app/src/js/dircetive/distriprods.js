@@ -88,7 +88,9 @@ dm.directive('distriprods',['$rootScope','distriProdModel',function($rootScope,d
 			$scope.detailDistr = item || {};
 			$scope.show = 2;
 		};
-
+		$scope.$on('distri-detail-return',function(e,v){
+			$scope.show = 2;
+		});
 	}];
 	return {
 		restrict:'E',

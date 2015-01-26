@@ -1,0 +1,31 @@
+<div class="span2 leftBar">
+	<ul class="nav nav-child mt30 text-center leftBar-ul-container" ng-if="contr!='index'" bar>
+		<li ng-repeat="item in linkList" ng-click="animateShow(item);">
+			<label class="head">{{item}} <i class="icon-plus pull-right plus" graders ng-if="item==='自定义分层'"></i></label>
+			<ul class="nav nav-list" ng-show="currentParent==item">
+				<li ng-repeat="a in child[item]" ng-class="activeItem==a.name?'active':''">
+					<a ng-href="{{prehref+a.href}}">{{a.name}}</a>
+				</li>
+			</ul>
+		</li>
+	</ul>
+	<ul class="nav nav-list mt30 text-center leftBar-ul-container" ng-if="contr=='index'">
+		<li>
+			<label class="text-left mb15">快捷方式：</label>
+		</li>
+		<li ng-repeat='(key,value) in quickLinks'>
+			<label class="well">
+				<a ng-href="{{value}}">{{key}}</a>
+			</label>
+		</li>
+	</ul>
+	<div class="footer span2">
+		<p class="text-center">备案许可证号：<br />
+		浙ICP备11044383号 <br />
+		©Copyright 2010 - 2014 <br/>
+		trenddata <br/>	
+		Co.,Ltd All Rights Reserved. <br/>
+		杭州趋数网络科技有限公司 <br/>
+		版权所有</p>
+	</div>
+</div>

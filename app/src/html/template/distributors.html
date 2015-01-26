@@ -90,12 +90,12 @@
 											<label class="control-label">分销转化率:</label>
 											<div class="controls">
 												<div class="input-append">
-													<input type="text" class="input-small" ng-model="parms.parms.lowDisTransformationEfficiency">
+													<input type="text" class="input-small lowDisTransformationEfficiency" ng-value="parms.parms.lowDisTransformationEfficiency*100||''">
 													<span class="add-on">%</span>
 												</div>
 												<span>~</span>
 												<div class="input-append">
-													<input type="text" class="input-small" ng-model="parms.parms.highDisTransformationEfficiency">
+													<input type="text" class="input-small highDisTransformationEfficiency" ng-value="parms.parms.highDisTransformationEfficiency*100||''">
 													<span class="add-on">%</span>
 												</div>
 											</div>
@@ -104,12 +104,12 @@
 											<label class="control-label">全店转化率:</label>
 											<div class="controls">
 												<div class="input-append">
-													<input type="text" class="input-small" ng-model="parms.parms.lowInAllTransformationEfficiency">
+													<input type="text" class="input-small lowInAllTransformationEfficiency" ng-value="parms.parms.lowInAllTransformationEfficiency*100||''">
 													<span class="add-on">%</span>
 												</div>
 												<span>~</span>
 												<div class="input-append">
-													<input type="text" class="input-small" ng-model="parms.parms.highInAllTransformationEfficiency">
+													<input type="text" class="input-small highInAllTransformationEfficiency" ng-value="parms.parms.highInAllTransformationEfficiency*100||''">
 													<span class="add-on">%</span>
 												</div>
 											</div>
@@ -118,12 +118,12 @@
 											<label class="control-label">成交金额占比:</label>
 											<div class="controls">
 												<div class="input-append">
-													<input type="text" class="input-small" ng-model="parms.parms.lowSellMoneyPercent">
+													<input type="text" class="input-small lowSellMoneyPercent" ng-value="parms.parms.lowSellMoneyPercent*100||''">
 													<span class="add-on">%</span>
 												</div>
 												<span>~</span>
 												<div class="input-append">
-													<input type="text" class="input-small" ng-model="parms.parms.highSellMoneyPercent">
+													<input type="text" class="input-small highSellMoneyPercent" ng-value="parms.parms.highSellMoneyPercent||''">
 													<span class="add-on">%</span>
 												</div>
 											</div>
@@ -132,12 +132,12 @@
 											<label class="control-label">成交量占比:</label>
 											<div class="controls">
 												<div class="input-append">
-													<input type="text" class="input-small" ng-model="parms.parms.lowDisSellAmount">
+													<input type="text" class="input-small lowSellAmountPercent" ng-value="parms.parms.lowSellAmountPercent*100||''">
 													<span class="add-on">%</span>
 												</div>
 												<span>~</span>
 												<div class="input-append">
-													<input type="text" class="input-small" ng-model="parms.parms.highDisSellAmount">
+													<input type="text" class="input-small highSellAmountPercent" ng-value="parms.parms.highSellAmountPercent*100||''">
 													<span class="add-on">%</span>
 												</div>
 											</div>
@@ -168,10 +168,10 @@
 											<label class="control-label">店铺类型:</label>
 											<div class="controls">
 												<label class="radio-inline">
-													<input type="radio" name="store" ng-model="parms.parms.disShopType" value="商城">淘宝店
+													<input type="radio" name="store" ng-model="parms.parms.disShopType" value="商城">天猫店
 												</label>
 												<label class="radio-inline">
-													<input type="radio" name="store" ng-model="parms.parms.disShopType" value="C店">天猫店
+													<input type="radio" name="store" ng-model="parms.parms.disShopType" value="C店">淘宝店
 												</label>
 												<label class="radio-inline">
 													<input type="radio" name="store" ng-model="parms.parms.disShopType" value="">全部
@@ -182,12 +182,12 @@
 											<label class="control-label">好评率:</label>
 											<div class="controls controls-row">
 												<div class="input-append">
-													<input type="text" class="input-small" ng-model="parms.parms.lowDisBuyerGoodRate">
+													<input type="text" class="input-small lowDisBuyerGoodRate" ng-model="parms.parms.lowDisBuyerGoodRate">
 													<span class="add-on">%</span>
 												</div>
 												<span>~</span>
 												<div class="input-append">
-													<input type="text" class="input-small"  ng-model="parms.parms.highDisBuyerGoodRate">
+													<input type="text" class="input-small highDisBuyerGoodRate"  ng-model="parms.parms.highDisBuyerGoodRate">
 													<span class="add-on">%</span>
 												</div>
 											</div>
@@ -222,7 +222,7 @@
 				</div>
 				<div class="row-fluid clearfix mb10">
 					<div class="pull-right">
-						<a class="btn" href="javascript:;" ng-click="parms.clear();">清除筛选</a>
+						<a class="btn" href="javascript:;" ng-click="clearSearch();">清除筛选</a>
 						<a href="javascript:;" class="btn" ng-click="search();">筛选</a>
 					</div>
 				</div>
@@ -288,6 +288,13 @@
 							<td>{{item.disShopType | shopType}}</td>
 							<td>{{item.disBuyerGoodRate | abs}}</td>
 							<td>{{item.disShopCreateTime}}</td>					
+						</tr>
+						<tr ng-if="!parms.dis.length">
+							<td colspan="14">
+								<div class="no-data">
+									暂无数据,正在努力打造中↖(^ω^)↗
+								</div>
+							</td>
 						</tr>
 					</tbody>
 				</table>

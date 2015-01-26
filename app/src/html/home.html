@@ -2,19 +2,19 @@
 <div class="row-fluid">
 	<div class="span7" ng-controller="data-preview">
 		<h4 class="alert alert-info clearfix pr">
-			数据概览
+			<i class="fa fa-bookmark mr5"></i>数据概览
 			<div class="pull-right">
 				<div class="nav nav-tabs">
-					<li>
+					<li ng-class="sort==1?'active':''">
 						<a href="javascript:;" ng-click="sort=1">总体概况</a>
 					</li>
-					<li>
+					<li ng-class="sort==2?'active':''">
 						<a href="javascript:;" ng-click="sort=2">母店概况</a>
 					</li>
-					<li>
+					<li ng-class="sort==3?'active':''">
 						<a href="javascript:;" ng-click="sort=3">分销概况</a>
 					</li>
-					<li>
+					<li ng-class="sort==4?'active':''">
 						<a href="javascript:;" ng-click="sort=4">分销宝贝</a>
 					</li>
 				</div>
@@ -28,8 +28,8 @@
 					<div class="scroll-content">
 						<div class="row-fluid mt15" ng-repeat="item in dataList">
 							<!-- <div class="span2" style="white-space:nowrap;overflow:hidden;text-overflow: ellipsis;">{{ item.title}}</div> -->
-							<div class="progress span9">
-								<a class="bar bar-success" ng-style="{width:item.width+'%'}" ng-href="{{item.picUrl}}" target="_blank"></a>
+							<div class="progress span9" tip="{{item}}">
+								<a class="bar bar-info" ng-style="{width:item.width+'%'}" ng-href="{{item.url}}" target="_blank" title="{{item.title}}"></a>
 								<span style="position:relative;">{{item[fieldName]}}</span>
 							</div>
 							<div class="span2"></div>
@@ -63,11 +63,11 @@
 		</div>
 	</div>
 	<div class="span5">
-		<h4 class="alert alert-info">账号信息</h4>
+		<h4 class="alert alert-info"><i class="fa fa-male mr5"></i>账号信息</h4>
 		<div class="box box-noborder">
 			<div class="row-fluid">
 				<div class="span3 mt10">
-					<img src="{{generaData.picUrl}}" alt="" class="img-circle mt30">
+					<img ng-src="{{generaData.picUrl}}"  class="img-circle mt30">
 				</div>
 				<div class="span9 text-center">
 					<h5 class="alert alert-success text-center">{{generaData.nick}}</h5>
@@ -78,7 +78,7 @@
 								<li>分销商数量:<span class="ml5">{{generaData.coopDistributorNum}}</span></li>
 								<li>活跃占比:<span class="ml5">{{generaData.distributorSalePercent}}%</span></li>
 								<li>
-									<i class="fa" ng-class="generaData.saleActionDistributorTrendClass"></i>
+									<i class="fa" ng-if="generaData.saleActionDistributorTrendAbs!=0" ng-class="generaData.saleActionDistributorTrendClass"></i>
 									<span class="ml5">{{generaData.saleActionDistributorTrendAbs | abs}}</span>
 								</li>
 							</ul>
@@ -89,7 +89,7 @@
 								<li>分销产品量:<span class="ml5">{{generaData.onLineProductNum}}</span></li>
 								<li>动销率:<span class="ml5">{{generaData.auctionSalePercent}}%</span></li>
 								<li>
-									<i class="fa" ng-class="generaData.saleAuctionProductTrendClass"></i>
+									<i class="fa" ng-if="generaData.saleAuctionProductTrendAbs!=0" ng-class="generaData.saleAuctionProductTrendClass"></i>
 									<span class="ml5">{{generaData.saleAuctionProductTrendAbs | abs}}</span>
 								</li>
 							</ul>
@@ -104,7 +104,7 @@
 <div class="row-fluid">
 	<div class="span7">
 		<h4 class="alert alert-info clearfix pr">
-			<i class="icon-list mr5"></i>渠道概况
+			<i class="fa fa-list mr5"></i>渠道概况
 			<div class="pull-right f15">
 				<span>日期：</span>
 				<input type="text" class="input-small date" ng-model="begin" date-time>
@@ -125,12 +125,18 @@
 				<tbody>
 					<tr ng-repeat="item in ths">
 						<td>{{item}}</td>
-						<td>{{ActionData.supData[$index]}}</td>
+						<td>
+							<span ng-if="item=='转化率'">{{ActionData.supData[$index]*100 | number:2}}</span>
+							<span ng-if="'转化率'!=item">{{ActionData.supData[$index]}}</span>
+						</td>
 						<td trend="{{ActionData.supTrend[$index]}}">
 							<i class="fa" ng-class="ActionData.supTrend[$index]>=0?'fa-arrow-up':'fa-arrow-down'"></i>
 							<span class="ml10">{{ActionData.supTrend[$index] | abs}}</span>
 						</td>
-						<td>{{ActionData.disData[$index]}}</td>
+						<td>
+							<span ng-if="item=='转化率'">{{ActionData.disData[$index]*100 | number:2}}</span>
+							<span ng-if="'转化率'!=item">{{ActionData.disData[$index]}}</span>
+						</td>
 						<td trend="{{ActionData.disTrend[$index]}}">
 							<i class="fa" ng-class="ActionData.disTrend[$index]>=0?'fa-arrow-up':'fa-arrow-down'"></i>
 							<span class="ml10">{{ActionData.disTrend[$index] | abs}}</span>
@@ -141,7 +147,7 @@
 		</div>
 	</div>
 	<div class="span5">
-		<h4 class="alert alert-info">最新动态</h4>
+		<h4 class="alert alert-info"><i class="fa fa-tags mr5"></i>最新动态</h4>
 		<div class="box box-over-hidden">
 			<ul class="nav nav-basic">
 				<li class="border-bottom clearfix" ng-repeat="i in newList">

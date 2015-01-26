@@ -52,7 +52,7 @@
 							<label>预约联系</label>
 							<div class="input-append input-prepend">
 								<span class="add-on"><i class="fa fa-calendar"></i></span>
-								<input type="text" date-time class="input-medium mb0 apponitTime" ng-value="distr.appointmentTime | timer" placeholder="年-月-日">
+								<input type="text" date-time class="input-medium mb0 apponitTime" ng-value="distr.appointmentTime" placeholder="年-月-日">
 								<span class="btn" ng-click="setOpTime();">确定</span>
 							</div>
 							
@@ -71,12 +71,12 @@
 					<li class="pull-right">
 						<span>统计周期:</span>
 						<div class="input-append mb0">
-							<input type="text" data-model="lowThedate" date-time class="input-small lowThedate">
+							<input type="text" ng-value="lowThedate" date-time class="input-small lowThedate">
 							<span class="add-on"><i class="fa fa-calendar"></i></span>
 						</div>
 						<span>~</span>
 						<div class="input-append mb0">
-							<input type="text" data-model="highThedate" date-time class="input-small highThedate">
+							<input type="text" ng-value="highThedate" date-time class="input-small highThedate">
 							<span class="add-on"><i class="fa fa-calendar"></i></span>
 						</div>
 						<button class="btn btn-link" ng-click="getData();">确定</button>
@@ -118,7 +118,7 @@
 								<tr>
 									<td><b>整店环比</b></td>
 									<td ng-repeat="item in [0,1,2,3,4,5,6,7,8]">
-										<i class="fa" ng-class="parms.shopData.inAllComparison[$index]>=0?'fa-arrow-up':'fa-arrow-down'"></i>
+										<i class="fa" ng-if="parms.shopData.inAllComparison[$index]!=0" ng-class="parms.shopData.inAllComparison[$index]>0?'fa-arrow-up':'fa-arrow-down'"></i>
 										{{parms.shopData.inAllComparison[$index] | abs}}
 									</td>
 								</tr>
@@ -131,7 +131,7 @@
 								<tr>
 									<td><b>分销环比</b></td>
 									<td ng-repeat="item in [0,1,2,3,4,5,6,7,8]">
-										<i class="fa" ng-class="parms.shopData.disComparison[$index]>=0?'fa-arrow-up':'fa-arrow-down'"></i>
+										<i class="fa" ng-if="parms.shopData.disComparison[$index]!=0" ng-class="parms.shopData.disComparison[$index]>=0?'fa-arrow-up':'fa-arrow-down'"></i>
 										{{parms.shopData.disComparison[$index] | abs}}
 									</td>
 								</tr>
@@ -180,7 +180,6 @@
 										<span ng-if="attr=='transformationEfficiency'">
 											{{parms.keyword.shop.disGatherQueryEffect[attr]*100 | number:2}}%
 										</span>
-										
 									</td>
 								</tr>
 							</tbody>
@@ -203,13 +202,14 @@
 							</thead>
 							<tbody>
 								<tr ng-repeat="item in data">
-									<td><span class="badge badge-info">{{$index}}</span></td>
+									<td><span class="badge badge-info">{{$index+1}}</span></td>
 									<td ng-repeat = "i in thead[curNavIndex]">
-										<span ng-if="'query'!=i.key&&'clickRate'!=i.key&&'transformationEfficiency'!=i.key&&'lossRate'!=i.key">{{item[i.key]}}</span>
+										<span ng-if="'title'!=i.key&&'query'!=i.key&&'clickRate'!=i.key&&'transformationEfficiency'!=i.key&&'lossRate'!=i.key">{{item[i.key]}}</span>
 										<span ng-if="'clickRate'==i.key||'transformationEfficiency'==i.key||'lossRate'==i.key">{{item[i.key]*100 | number:2}}%</span>
 										<span ng-if="'query'==i.key">
 											<a href="javascript:;" ng-click="getQueryDetail(item);">{{item[i.key]}}</a>
 										</span>
+										<a target="_blank" ng-href="{{'http://item.taobao.com/item.htm?id='+item.auctionId}}" tip="{{item}}" pos="top" ng-if="'title'==i.key" >{{item.title}}</a>
 									</td>
 								</tr>
 								<tr ng-if="!data.length">
@@ -240,7 +240,15 @@
 									<td ng-if="!!item.parentName" rowspan="{{item.childLength}}">{{item.parentName}}</td>
 									<td><a href="javascript:;" ng-click="getSrcDtail(item);">{{item.srcName}}</a></td>
 									<td ng-repeat="i in thead[curNavIndex]">
-										{{item[i.key]}}
+										<span ng-if="'transformationEfficiency'!=i.key">{{item[i.key]}}</span>
+										<span ng-if="'transformationEfficiency'==i.key">{{item[i.key]*100 | number:2}}%</span>
+									</td>
+								</tr>
+								<tr ng-if="!parms.distriDataSrc.length">
+									<td colspan="{{thead[curNavIndex].length+2}}">
+										<div class="no-data">
+											暂无数据,正在努力打造中↖(^ω^)↗
+										</div>
 									</td>
 								</tr>
 							</tbody>
@@ -263,9 +271,9 @@
 							</thead>
 							<tbody>
 								<tr ng-repeat="i in parms.prods">
-									<td><span class="badge badge-info">{{$index}}</span></td>
-									<td>
-										<img ng-src="{{i.picUrl}}_70x70.jpg" alt="{{i.title}}">
+									<td><span class="badge badge-info">{{$index+1}}</span></td>
+									<td class="imgTd">
+										<img ng-src="{{i.picUrl}}_40x40.jpg" alt="{{i.title}}">
 									</td>
 									<td>{{i.title}}</td>
 									<td>{{parms.productLines[i.productCatId].name}}</td>
@@ -284,6 +292,13 @@
 	                                <td>{{i.agentCostPrice | number:2}}</td>
 	                                <td>{{i.standardPrice-i.discountPrice | number:2}}</td>
 	                                <td>{{i.alipayAuctionNum}}</td>
+								</tr>
+								<tr ng-if="!parms.prods.length">
+									<td colspan="9">
+										<div class="no-data">
+											暂无数据,正在努力打造中↖(^ω^)↗
+										</div>
+									</td>
 								</tr>
 							</tbody>
 						</table>
@@ -368,7 +383,7 @@
 					</thead>
 					<tbody>
 						<tr ng-repeat="i in parms.queDetList">
-							<td><span class="badge badge-info">{{$index}}</span></td>
+							<td><span class="badge badge-info">{{$index+1}}</span></td>
 							<td><img ng-src="{{i.picUrl+'_40x40.jpg'}}"></td>
 							<td>
 	                            <a href="javascript:;">{{i.title}}</a>
@@ -380,6 +395,13 @@
 	                        <td>{{i.transformationEfficiency}}</td>
 	                        <td>{{i.impression}}</td>
 	                        <td>{{i.click}}</td>
+						</tr>
+						<tr ng-if="!parms.queDetList.length">
+							<td colspan="10">
+								<div class="no-data">
+									暂无数据,正在努力打造中↖(^ω^)↗
+								</div>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -401,7 +423,7 @@
 					<tbody>
 						<tr ng-repeat = "i in parms.srcDetList">
 	                        <td>
-	                            <span class = "badge badge-info">{{$index}}</span>
+	                            <span class = "badge badge-info">{{$index+1}}</span>
 	                        </td>
 	                        <td>
 	                            <img class = "br100" ng-src = "{{i.picUrl+'_40x40.jpg'}}"/>
@@ -417,6 +439,13 @@
 	                        <td class = 'tipTd' name = "转化率">{{i.transformationEfficiency * 100 | number:2}}%</td>
 	                        <td class = 'tipTd' name = "客单价">{{i.perCustomerTransaction}}</td>
 	                    </tr>
+	                    <tr ng-if="!parms.srcDetList.length">
+							<td colspan="10">
+								<div class="no-data">
+									暂无数据,正在努力打造中↖(^ω^)↗
+								</div>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>

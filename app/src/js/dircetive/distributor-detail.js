@@ -10,7 +10,15 @@ dm.directive('distrdetail',['$rootScope','$compile',function($rootScope,$compile
 			//$scope.options = new distrDetail($scope.distr);
 			//console.log($scope.options);
 		});*/
-		console.log($scope.$parent.detail);
+		//时间操作 begin 
+		var day = new Date();
+		var dMothAgo = new Date();
+		var dYesterDay = new Date(day.getFullYear(),day.getMonth(),day.getDate());
+		var iYesterDay = dYesterDay.setTime(dYesterDay.getTime()-1*24*60*60*1000); 
+		var imothAgo = dMothAgo.setTime(iYesterDay-30*24*60*60*1000);
+		$scope.lowThedate=dMothAgo.getFullYear()+'-'+(dMothAgo.getMonth()+1)+'-'+dMothAgo.getDate();
+		$scope.highThedate=dYesterDay.getFullYear()+'-'+(dYesterDay.getMonth()+1)+'-'+dYesterDay.getDate();
+		//时间操作 end
 		var distr = $scope.distr = $scope.$parent.detail;
 		var parms = $scope.parms = new distrDetail(distr);
 		//返回
@@ -107,7 +115,7 @@ dm.directive('distrdetail',['$rootScope','$compile',function($rootScope,$compile
 		};
 		//修改预约联系
 		$scope.setOpTime = function(e){
-			debugger
+			//debugger
 			var $ele = $('.apponitTime',$element);
 			var _time = $ele.val();
 			if($ele.value!=''){
@@ -122,8 +130,8 @@ dm.directive('distrdetail',['$rootScope','$compile',function($rootScope,$compile
 			0:function(){
 				//运营基础数据
 				//debugger;
-				$scope.parms.lowThedate = $('.lowThedate').val()||'2014-11-29';
-				$scope.parms.highThedate = $('.highThedate').val()||'2014-12-19';
+				$scope.parms.lowThedate = $('.lowThedate').val();
+				$scope.parms.highThedate = $('.highThedate').val();
 				$scope.parms.getOperateBasicData(function(v){
 					$scope.data = $scope.parms.operateBasicData;
 					if(v.resultSize){
@@ -138,22 +146,18 @@ dm.directive('distrdetail',['$rootScope','$compile',function($rootScope,$compile
 			},
 			1:function(){
 				$scope.shopAttr = ['click','uv','alipayTradeAmt','alipayAuctionNum','transformationEfficiency'];
-				$scope.parms.lowThedate = $('.lowThedate').val()||'2014-11-29';
-				$scope.parms.highThedate = $('.highThedate').val()||'2014-12-19';
+				$scope.parms.lowThedate = $('.lowThedate').val();
+				$scope.parms.highThedate = $('.highThedate').val();
 				$scope.parms.getKeyWordInfo();
 				$scope.parms.getKeyWordList(function(v){
 					$scope.data = $scope.parms.keyword.list;
 					if(v.resultSize){
 						initPages($scope,v.resultSize);
 					}
-					console.log($scope.parms.keyword);
 				});
 			},
 			2:function(){
-				$scope.parms.getDistriDataSrc(function(resp){
-					//debugger;
-					console.log($scope.parms.distriDataSrc);
-				});
+				$scope.parms.getDistriDataSrc();
 			},
 			3:function(){
 				//产品授权及折扣
@@ -202,12 +206,23 @@ dm.directive('distrdetail',['$rootScope','$compile',function($rootScope,$compile
 			},
 			6:function(){
 				$scope.parms.shopUrl || $scope.parms.getRecordList();
-				console.log($scope.parms.shopUrl);
-				console.log('店铺基本信息');
 			}
 		};
 		_obj[$scope.curNavIndex]();
+		//根据统计周期  获取时间
 		$scope.getData = function(){
+			var begin = $('.lowThedate')[0].value||$scope.lowThedate;
+			var end = $('.highThedate')[0].value||$scope.highThedate;
+			var obeginDate = new Date(begin.replace('-','/')).getTime();
+			var oendDate = new Date(end.replace('-','/')).getTime();
+			if((obeginDate<imothAgo||obeginDate>iYesterDay)||(oendDate<imothAgo||oendDate>iYesterDay)){
+				alert('选择超出界限');
+				return;
+			}
+			if(obeginDate>oendDate){
+				alert('启示时间大于结束时间');
+				return;
+			}
 			_obj[$scope.curNavIndex]();
 		};
 		$scope.editCount = function(i){
@@ -261,13 +276,12 @@ dm.directive('distrdetail',['$rootScope','$compile',function($rootScope,$compile
 		//移入等级
 		$scope.moveLayers = function(){
 			/*toDo:必须先选择完 才能移入等级中*/
-			debugger;
+			//debugger;
 			$rootScope.$broadcast('show-layers',distr);
 		};
 	}];
 	var compile = function(element,attrs,link){
 		return function(scope,element,attrs){
-			console.log('distributo-detail');
 		}
 	};
 	return {
@@ -374,12 +388,13 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 			var getAjax = tools.promise(api.getDistributorDetailOfGatherQueryEffects,true);
 			getAjax({
 				data:{
-					disSid:this.disId
+					disSid:this.disId,
+					lowThedate:this.lowThedate,
+					highThedate:this.highThedate
 				}
 			}).then(function(resp){
 				if(resp.success){
 					self.keyword.shop = resp.value;
-					//debugger;
 					if(callback){
 						callback(resp.value);
 					}
@@ -471,7 +486,6 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 			}).then(function(resp){
 				if(resp.success){
 					//成功
-					console.log(resp);
 					var _arry = _.filter(resp.value,function(item){return item.srcLevel<=2});//清除2级目录下的其他东东..
                     var pil = _.indexBy(_arry,function(item){return item.srcParentId===0});
 					var _arryTmp = _.filter(_arry,function(item){return item.srcParentId===0});//进行循环的数组
@@ -508,7 +522,6 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 			}).then(function(resp){
 				if(resp.success){
 					//debugger;
-					console.log(resp.value);
 					self.productLines =  _.indexBy(resp.value.productLines,'productLineId');
 					self.prods = resp.value.list;
 					if(callback){
@@ -702,16 +715,74 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 
 //初始化table
 dm.factory('initPages',['tools',function(tools){
+	 var generatePagesArray = function (currentPage, totalItems, pageSize) {
+            var maxBlocks, maxPage, maxPivotPages, minPage, numPages, pages;
+            maxBlocks = 11;
+            pages = [];
+            numPages = Math.ceil(totalItems / pageSize);
+            if (numPages > 1) {
+                pages.push({
+                    type: 'prev',
+                    number: Math.max(1, currentPage - 1),
+                    active: currentPage > 1
+                });
+                pages.push({
+                    type: 'first',
+                    number: 1,
+                    active: currentPage > 1
+                });
+                maxPivotPages = Math.round((maxBlocks - 5) / 2);
+                minPage = Math.max(2, currentPage - maxPivotPages);
+                maxPage = Math.min(numPages - 1, currentPage + maxPivotPages * 2 - (currentPage - minPage));
+                minPage = Math.max(2, minPage - (maxPivotPages * 2 - (maxPage - minPage)));
+                var i = minPage;
+                while (i <= maxPage) {
+                    if ((i === minPage && i !== 2) || (i === maxPage && i !== numPages - 1)) {
+                        pages.push({
+                            type: 'more',
+                            active: false
+                        });
+                    } else {
+                        pages.push({
+                            type: 'page',
+                            number: i,
+                            active: currentPage !== i
+                        });
+                    }
+                    i++;
+                }
+                pages.push({
+                    type: 'last',
+                    number: numPages,
+                    active: currentPage !== numPages
+                });
+                pages.push({
+                    type: 'next',
+                    number: Math.min(numPages, currentPage + 1),
+                    active: currentPage < numPages
+                });
+            }
+            return pages;
+        };
 	return function($scope,length,count){
-		var maxPages = 0,pages=[];
+		/*var maxPages = 0,pages=[];
 		var count = count || tools.config.table.count;
 		if(length>=count){
 			maxPages = length%count==0?(length/count):(length/count+1);	
 		}
 		for(var i=0,j=Math.floor(maxPages);i<j&&j!=1;i++){
 			pages.push(i);
-		}
+		}*/
+		//debugger
+		var count = count || tools.config.table.count;
+		var pages = generatePagesArray(1,length,count);
 		$scope.pages=pages;
 		$scope.now=1;
+		$scope.$watch('now',function(v,ov){
+			if(v===ov){
+				return;
+			}
+			$scope.pages = generatePagesArray(v,length,count);
+		});
 	}
 }]);

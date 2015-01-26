@@ -11,10 +11,13 @@
     <script src = "http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <script src = "http://bestiejs.github.io/json3/lib/json3.js"></script>
     <![endif]-->
-    <link rel="stylesheet" href="../../built/css/theme.css" />
-    <link rel="stylesheet" href="../css/theme.css" />
-    <link rel="stylesheet" href="../css/animate.css" />
+    <!--<link rel="stylesheet" href="http://alicdn.trend-data.cn/distributor-manager/newProd/css/all.css"/>-->
+    <link rel="stylesheet" href="/built/css/all.css">
     <script src="http://localhost:9000/livereload.js" type="text/javascript" charset="utf-8"></script>
+	<!--<link rel="stylesheet" href="/built/css/theme.css" />
+	<link rel="stylesheet" href="../css/theme.css" />
+	<link rel="stylesheet" href="../css/animate.css" />
+	<script src="http://localhost:9000/livereload.js" type="text/javascript" charset="utf-8"></script>-->
 </head>
 <body ng-controller="layout">
 	<!--[if lt IE 9]>
@@ -22,10 +25,7 @@
 	    <a class="close" data-dismiss="alert" href="#">×</a>
 	    你的浏览器<strong>版本太旧</strong>，无法正常启动云销天下，请升级到新版浏览器再访问 &#8594; <a target="_blank" class="alert-link" href="http://browsehappy.com">立即升级</a>
 	</div>
-	<![endif]-->
-	<script type="text/ng-template" id="ngTable-page">
-		
-	</script>	
+	<![endif]-->	
 	<header ng-controller="head">
 	    <div class="navbar navbar-fixed-top navbar-inverse">
 	        <div class="navbar-inner">
@@ -48,30 +48,25 @@
 	                    <li class="dropdown">
 	                    	<a href="javascript:;" class="hover-toggle">
 	                    		<i class="icon-user icon-white"></i>
-	                    		云销天下
+	                    		{{user.nick}}
 	                    		<i class="caret"></i>
 	                    	</a>
-	                    	<div class="userInfo hide">
+	                    	<!-- <div class="userInfo hide">
 	                    		<div class="row-fluid mt15">
-	                    			<img src="http://img.taobaocdn.com/sns_logo/T1SrWwXphlXXb1upjX.jpg" alt="" class="img-circle span4">
+	                    			<img ng-src="{{user.picUrl}}" alt="" class="img-circle span4">
 	                    			<div class="span8 mt15">
-	                    				<p class="f15">宝贝运营旗舰店</p>
-		                    			<p class="f13">
-		                    				<a href="javascript:;">
-		                    				<i class="icon-plus"></i>
-		                    				子账号管理</a>
-		                    				<a href="javascript:;">
-		                    				<i class="icon-cog"></i>
-		                    				设置</a>
-		                    			</p>
+	                    				<p class="f15">{{user.nick}}</p>
+	                    			                    			<p class="f13">
+	                    			                    				<a ng-href="#/settings"><i class="icon-cog"></i>设置</a>
+	                    			                    			</p>
 	                    			</div>
 	                    		</div>
 	                    		<div class="hr"></div>
 	                    		<p class="text-right">上次登录：<span class="f13">2014-11-02  21:32:18</span></p>
-	                    	</div>
+	                    	</div> -->
 	                    </li>
 	                    <li>
-	                    	<a href="">
+	                    	<a href="javascript:;" ng-click="quitSys();">
 	                    		<i class="icon-off icon-white"></i>
 	                    		退出
 	                    	</a>
@@ -91,185 +86,22 @@
 		</div>
 	</div>
 	<div class="row-fluid content">
-		<div class="span2 leftBar" ng-controller="leftBar">
-			<ul class="nav nav-child mt30 text-center" ng-if="contr!='index'" bar>
-				<li ng-repeat="item in linkList" ng-click="animateShow(item);">
-					<label class="head">{{item}} <i class="icon-plus pull-right plus" graders ng-if="item==='自定义分层'"></i></label>
-					<ul class="nav nav-list" ng-show="currentParent==item">
-						<li ng-repeat="a in child[item]" ng-class="activeItem==a.name?'active':''">
-							<a ng-href="{{prehref+a.href}}">{{a.name}}</a>
-						</li>
-					</ul>
-				</li>
-			</ul>
-			<ul class="nav nav-list mt30 text-center" ng-if="contr=='index'">
-				<li>
-					<label class="text-left mb15">快捷方式：</label>
-				</li>
-				<li ng-repeat='item in quickLinks'>
-					<label class="well">
-						{{item}}
-					</label>
-				</li>
-			</ul>
-			<!-- <ul class="nav nav-child mt30 text-center" ng-if="contr=='compete'">
-				<li>
-					<label class="head">
-						系统设置
-					</label>
-					<ul class="nav nav-list">
-						<li ng-repeat="item in [2,4,1,3]">
-							<a href="">{{item}}</a>
-						</li>
-					</ul>
-				</li>
-			</ul> -->
-			<div class="footer span2">
-				<p class="text-center">备案许可证号：<br />
-				浙ICP备11044383号 <br />
-				©Copyright 2010 - 2014 <br/>
-				trenddata <br/>	
-				Co.,Ltd All Rights Reserved. <br/>
-				杭州趋数网络科技有限公司 <br/>
-				版权所有</p>
-			</div>
-		</div>
-		<div class="span10 contentMain" ng-view>
-			<div class="row-fluid mt30">
-				<div class="span6">
-					<span class="title">待处理信息</span>
-					<div class="info">
-						<label class="header f15">招募概况</label>
-						<div class="row-fluid f13">
-							<div class="span6">
-								<a href="">分销申请待审核 <span>（5）</span></a>
-							</div>
-							<div class="span6">
-								<a href="">分销申请待审核 <span>（5）</span></a>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="span6">
-					<span class="title">招商一览</span>
-					<div class="info">
-						<label class="header f15">招募概况</label>
-						<div class="row-fluid f13">
-							<div class="span6">
-								<a href="">分销申请待审核 <span>（5）</span></a>
-							</div>
-							<div class="span6">
-								<a href="">分销申请待审核 <span>（5）</span></a>
-							</div>
-						</div>
-						<div class="row-fluid f13">
-							<div class="span6">
-								<a href="">分销申请待审核 <span>（5）</span></a>
-							</div>
-							<div class="span6">
-								<a href="">分销申请待审核 <span>（5）</span></a>
-							</div>
-						</div>
-						<label class="header f15">分销订单管理概况</label>
-						<div class="row-fluid f13">
-							<div class="span6">
-								<a href="">分销申请待审核 <span>（5）</span></a>
-							</div>
-							<div class="span6">
-								<a href="">分销申请待审核 <span>（5）</span></a>
-							</div>
-						</div>
-						<div class="row-fluid f13">
-							<div class="span6">
-								<a href="">分销申请待审核 <span>（5）</span></a>
-							</div>
-							<div class="span6">
-								<a href="">分销申请待审核 <span>（5）</span></a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row-fluid mt30">
-				<div class="span6">
-					<span class="title">待处理信息</span>
-					<div class="info">
-						<label class="header f15">招募概况</label>
-						<div class="row-fluid f13">
-							<div class="span6">
-								<a href="">分销申请待审核 <span>（5）</span></a>
-							</div>
-							<div class="span6">
-								<a href="">分销申请待审核 <span>（5）</span></a>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="span6">
-					<span class="title">招商一览</span>
-					<div class="info">
-						<label class="header f15">招募概况</label>
-						<div class="row-fluid f13">
-							<div class="span6">
-								<a href="">分销申请待审核 <span>（5）</span></a>
-							</div>
-							<div class="span6">
-								<a href="">分销申请待审核 <span>（5）</span></a>
-							</div>
-						</div>
-						<div class="row-fluid f13">
-							<div class="span6">
-								<a href="">分销申请待审核 <span>（5）</span></a>
-							</div>
-							<div class="span6">
-								<a href="">分销申请待审核 <span>（5）</span></a>
-							</div>
-						</div>
-						<label class="header f15">分销订单管理概况</label>
-						<div class="row-fluid f13">
-							<div class="span6">
-								<a href="">分销申请待审核 <span>（5）</span></a>
-							</div>
-							<div class="span6">
-								<a href="">分销申请待审核 <span>（5）</span></a>
-							</div>
-						</div>
-						<div class="row-fluid f13">
-							<div class="span6">
-								<a href="">分销申请待审核 <span>（5）</span></a>
-							</div>
-							<div class="span6">
-								<a href="">分销申请待审核 <span>（5）</span></a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
+		<left-bar></left-bar>
+		<div class="span10 contentMain" ng-view></div>
 	</div>
-	<script src="../../built/js/vendor.js"></script>
+	<script src="http://alicdn.trend-data.cn/distributor-manager/newProd/vendor.min.js"></script>
 	<script src = "http://alicdn.trend-data.cn/distributor-manager/lib/DatePicker/WdatePicker.js"></script>
-	<script src="../../built/js/plugin.min.js"></script>
-	<script src="../js/config.js"></script>
-	<script src="../js/main.js"></script>
-	<script src="../js/service.js"></script>
-	<script src="../js/layers.js"></script>
-	<script src="../js/index.js"></script>
-	<script src="../js/recruit.js"></script>
-	<script src="../js/manage.js"></script>
-	<script src="../js/improve.js"></script>
-	<script src="../js/behavior.js"></script>
-	<script src="../js/settings.js"></script>
-	<script src="../js/dircetive/distributors.js"></script>
-	<script src="../js/dircetive/distributor-detail.js"></script>
-	<script src="../js/dircetive/contact.js"></script>
-	<script src="../js/dircetive/distriprods.js"></script>
-	<script src="../js/dircetive/distriList.js"></script>
-	<script src="../js/dircetive/recruit-distris.js"></script>
-	<script src="../js/dircetive/recruit-index.js"></script>
-	<script src="../js/dircetive/send-message.js"></script>
-	<script src="../js/dircetive/recruit-detail.js"></script>
-	<script src="../js/dircetive/recruit-trend.js"></script>
-	<script src="../js/dircetive/news-manage.js"></script>
+	<script src="http://alicdn.trend-data.cn/distributor-manager/newProd/plugin.min.js"></script>
+	<!--<script src="http://alicdn.trend-data.cn/distributor-manager/newProd/template.js"></script>-->
+	<script src="/built/js/template.js"></script>
+	<script>
+		/*! browser-sync-demo 2015-01-18 */
+var config={route:{index:{banner:["概况预览"],firstChild:[],child:[]},recruit:{banner:["招商"],firstChild:[["联系中","未联系"]],child:[{href:1,name:"同类目卖家库",parent:"联系中",setHref:"#/recruit?banner=0&tag=1"},{href:2,name:"相关类目卖家库",parent:"联系中",setHref:"#/recruit?banner=0&tag=2"},{href:3,name:"类目分销商",parent:"未联系",setHref:"#/recruit?banner=0&tag=3"},{href:4,name:"其他相关卖家",parent:"未联系",setHref:"#/recruit?banner=0&tag=4"}]},manage:{banner:["分销商管理","分销商品管理"],firstChild:[["系统分层","自定义分层"],["已上架产品","下架中产品"]],child:[{href:1,name:"运营模型分层",parent:"系统分层",setHref:"#/manage?banner=0&tag=1"},{href:2,name:"能力模型分层",parent:"系统分层",setHref:"#/manage?banner=0&tag=2"},{href:3,name:"潜力模型模式",parent:"系统分层",setHref:"#/manage?banner=0&tag=3"},{href:4,name:"出售中",parent:"已上架产品",setHref:"#/manage?banner=1&tag=4"},{href:5,name:"仓库",parent:"下架中产品",setHref:"#/manage?banner=1&tag=5"}]},improve:{banner:["分销提升"],firstChild:[["黄金关键词","优质渠道","最佳搭配","提升工具"]],child:[{href:1,name:"高流量、高转化关键词TOP50",parent:"黄金关键词",setHref:"#/improve?banner=0&tag=1"},{href:2,name:"高展现、高点击关键词TOP50",parent:"黄金关键词",setHref:"#/improve?banner=0&tag=2"},{href:3,name:"免费流量",parent:"优质渠道",setHref:"#/improve?banner=0&tag=3"},{href:4,name:"付费流量",parent:"优质渠道",setHref:"#/improve?banner=0&tag=4"},{href:5,name:"最佳搭配宝贝",parent:"最佳搭配",setHref:"#/improve?banner=0&tag=5"},{href:6,name:"提升工具箱",parent:"提升工具",setHref:"#/improve?banner=0&tag=6"}]},behavior:{banner:["行为管理"],firstChild:[["行为管理"]],child:[{href:1,name:"串货监控",parent:"行为管理",setHref:"#/behavior?banner=0&tag=1"},{href:2,name:"乱价监控",parent:"行为管理",setHref:"#/behavior?banner=0&tag=2"},{href:3,name:"差评监控",parent:"行为管理",setHref:"#/behavior?banner=0&tag=3"}]},settings:{banner:["系统设置"],firstChild:[["系统设置"]],child:[{href:1,name:"快捷设置",parent:"系统设置"},{href:2,name:"新闻管理",parent:"系统设置"}]}},settingManage:[{name:"disPv",des:"分销流量",type:"int",unit:"人"},{name:"inAllPv",des:"全店流量",type:"int",unit:"人"},{name:"disUv",des:"分销访客数",type:"int",unit:"人"},{name:"inAllUv",des:"全店访客数",type:"int",unit:"人"},{name:"disSellMoney",des:"分销销售额",type:"dor",unit:"元"},{name:"inAllSellMoney",des:"全店销售额",type:"dor",unit:"元"},{name:"disPayPersons",des:"分销支付人数",type:"int",unit:"人"},{name:"inAllPayPersons",des:"全店支付人数",type:"int",unit:"人"},{name:"disSellAmount",des:"分销销量",type:"int",unit:"个"},{name:"inAllSellAmount",des:"全店销量",type:"int",unit:"个"},{name:"disTransformationEfficiency",des:"分销转化率",type:"dor",unit:"%"},{name:"inAllTransformationEfficiency",des:"全店转化率",type:"dor",unit:"%"},{name:"disPerCustomerTransaction",des:"分销客单价",type:"dor",unit:"元"},{name:"inAllPerCustomerTransaction",des:"全店客单价",type:"dor",unit:"元"},{name:"disOrderNum",des:"分销订单数",type:"int",unit:"个"},{name:"inAllOrderNum",des:"全店订单数",type:"int",unit:"个"},{name:"sellAmountPercent",des:"分销成交量占比",type:"dor",unit:"%"},{name:"sellMoneyPercent",des:"分销成交额占比",type:"dor",unit:"%"},{name:"payPvPercent",des:"支付流量占比",type:"dor",unit:"%"},{name:"searchPvPercent",des:"搜索流量占比",type:"dor",unit:"%"},{name:"sellingProductsAmountPercent",des:"分销动销产品占比",type:"dor",unit:"%"},{name:"disShopCreateTime",des:"开店时间",type:"date",unit:'<i class="fa fa-calendar"></i>'},{name:"disBuyerGoodRate",des:"好评率",type:"dor",unit:"%"},{name:"disShopLevel",des:"店铺等级",type:"int",unit:"级"}],model:{1:["忠诚分销商","冲刺分销商","服务型分销商"],2:["高流量分销商","高销量分销商","高转化分销商","高成交额分销商"],3:["潜力分销商"]}};
+	</script>
+	<script>
+		var dm = angular.module('distributManager',['ngTable','ngRoute','ngAnimate','ngSanitize','distributManagerTemplate']);
+	</script>
+	<!--<script src="http://alicdn.trend-data.cn/distributor-manager/newProd/all.js"></script>-->
+	<script src="/built/js/all.js"></script>
 </body>
 </html>

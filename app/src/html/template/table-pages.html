@@ -1,18 +1,36 @@
-<div class="clearfix">
+<!-- <div class="clearfix">
 	<div class="pagination pull-right">
 		<ul>
 			<li ng-if="pages.length" ng-class="now===1?'disabled':''">
 				<a href="javascript:;" ng-click="getPage(1);">&laquo;</a>
 			</li>
-			<li ng-repeat="page in pages" ng-class="now===(page+1)?'disabled':''">
+			<li ng-if="now>=6">
+				<a href="javascript:;">&#8230;</a>
+			</li>
+			<li ng-repeat="page in pages" ng-class="now===(page+1)?'disabled':''" ng-if="page!=pages.length-1">
 				<a href="javascript:;" ng-click="getPage(page+1)">{{page+1}}</a>
 			</li>
-			<!-- <li ng-if="">
-				<a href="">&#8230;</a>
-			</li> -->
+			<li ng-if="pages.length>7">
+				<a href="javascript:;">&#8230;</a>
+			</li>
+			<li><a href="javascript:;">{{pages.length}}</a></li>
 			<li ng-if="pages.length" ng-class="now===pages.length?'disabled':''">
 				<a href="javascript:;" ng-click="getPage(pages.length);">&raquo;</a>
 			</li>
 		</ul>		
 	</div>
-</div>
+</div> -->
+<div class="clearfix">
+	<div class="pagination pull-right">
+		<ul>
+			 <li ng-class="now===page.number?'disabled':''" ng-repeat="page in pages" ng-switch="page.type">
+			 	 <a ng-switch-when="prev"  ng-click="getPage(page.number);" href="javascript:;">&laquo;</a> 
+			 	 <a ng-switch-when="first" ng-click="getPage(page.number);" href="javascript:;"><span ng-bind="page.number"></span></a>
+			 	 <a ng-switch-when="page" ng-click="getPage(page.number)" href="javascript:;"><span ng-bind="page.number"></span></a> 
+			 	 <a ng-switch-when="more" href="javascript:;">&#8230;</a>
+			 	 <a ng-switch-when="last" ng-click="getPage(page.number)" href="javascript:;"><span ng-bind="page.number"></span></a>
+			 	 <a ng-switch-when="next" ng-click="getPage(page.number)" href="javascript:;">&raquo;</a> 
+			 </li> 
+		</ul>
+	</div>
+</div> 

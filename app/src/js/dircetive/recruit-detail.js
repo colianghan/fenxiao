@@ -1,14 +1,15 @@
 dm.directive('recruitDetail',[function(){
 	var compile = function(element,attrs,link){
 		return function(scope,ele,attrs){
-			console.log('recruitDetail');
+			//console.log('recruitDetail');
 		}
 	};
 	var controller = ['$scope','$parse','$attrs','$element','recruitDetailModel',function($scope,$parse,$attrs,$element,recruitDetailModel){
+		//debugger;
 		var tag = $attrs.tag
-			,item = $parse(tag)($scope);
-		console.log(item);
-		$scope.item = item;
+			,item = $scope.item = $parse(tag)($scope);
+		//console.log(item);
+		//$scope.item = item;
 		$scope.navs = ['联系人信息','联系记录','店铺基本信息'];
 		$scope.setNav = function(index){
 			$scope.curNavIndex = index;
@@ -17,7 +18,6 @@ dm.directive('recruitDetail',[function(){
 		var parms = $scope.parms = new recruitDetailModel(item,status);
 		$scope.curNavIndex=0;
 		parms.getRecordList();
-
 		//联系人信息
 		$scope.addConcat =function(){
 			var item = $scope.parms.concats[0];
@@ -76,6 +76,16 @@ dm.directive('recruitDetail',[function(){
 		}
 		//预约联系
 		//todo: 预约联系接口操作
+		$scope.setOpTime = function(e){
+			//debugger
+			var $ele = $('.apponitTime',$element);
+			var _time = $ele.val();
+			if(_time==''||_time=='--'){
+				return;
+			}
+			item.appointTime = _time;
+			parms.updateTime(_time);
+		};
 	}];
 	return {
 		restrict:'E',
@@ -95,16 +105,19 @@ dm.factory('recruitDetailModel',['tools',function(tools){
 		delet:'deleteRecruitOfLinkManInfo.htm',
 		addRecord:'addRecruitOfContactHistoryRecord.htm',
 		updateStatus:'moveRecruitOfDistributors.htm',
-		sendMessage:'sendRecruitOfShortMessage.htm'
+		sendMessage:'sendRecruitOfShortMessage.htm',
+		updateOpTime:'updateRecruitOfDistributor.htm'//联系时间
 	};
 	var model = function(item,status){
 		var self = this;
 		this.Dis = item;
 		this.disSid=item.sid;
 		this.status = status;
+		this.pulling = false;
 		//获取联系记录
 		this.getRecordList = function(callback){
 			var getAjax = tools.promise(api.get,true);
+			this.pulling = true;
 			getAjax({
 				data:{
 					sid:this.disSid,
@@ -115,6 +128,7 @@ dm.factory('recruitDetailModel',['tools',function(tools){
 					//
 					self.concats = resp.value.disLinkManInfos;
 					self.records = resp.value.disContactHistoryRecords;
+					self.pulling = false;
 					//self.shopUrl = resp.value.disRateUrl;
 					if(callback){
 						callback(resp.value);
@@ -175,7 +189,7 @@ dm.factory('recruitDetailModel',['tools',function(tools){
 				succ:function(resp){
 					if(resp.success){
 						alert('删除成功..');
-						debugger;
+						//debugger;
 						self.concats =_.reject(self.concats,function(i){
 							return i.id==item.id
 						});
@@ -281,7 +295,25 @@ dm.factory('recruitDetailModel',['tools',function(tools){
 					}
 				}
 			});
-		}
+		};
+		//修改联系记录
+		this.updateTime = function(time){
+			if(time==''){
+				return;
+			}
+			tools.http({
+				url:api.updateOpTime,
+				data:{
+					sid:this.disSid,
+					appointTime:time
+				},
+				succ:function(resp){
+					if(resp.success){
+						alert('修改成功');
+					}
+				}
+			});
+		};
 		return this;
 	};
 	return model;

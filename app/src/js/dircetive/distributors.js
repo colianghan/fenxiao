@@ -4,7 +4,7 @@ dm.directive('distributors',['$compile','$routeParams',function($compile,$routeP
 			console.log('distributors');
 		}
 	}
-	var controller = ['$rootScope','$scope','$element','tools','distriAction',function($rootScope,$scope,$element,tools,distriAction){
+	var controller = ['$rootScope','$scope','$element','tools','distriAction','initPages',function($rootScope,$scope,$element,tools,distriAction,initPages){
 		/*----------------------自定义分层设置--------------------------------------*/
 		$scope.showHighSearch=false;
 		$scope.highSearch=function(){
@@ -27,26 +27,17 @@ dm.directive('distributors',['$compile','$routeParams',function($compile,$routeP
 				$scope.addUser = !$scope.addUser;
 			}
 		};
-		//
-		var gradeId = $routeParams.gradeId;
-		if(gradeId){
-			$scope.gradeId = gradeId;
-			$scope.model = $scope.parms = new distriAction({gradeId:$scope.gradeId});
-			$scope.parms.getData(function(v){
-				if(v.pageSize){
-					var length = v.pageSize;
-					var maxPages = 0,pages=[];
-					if(length>=tools.config.table.count){
-						maxPages = length%tools.config.table.count==0?(length/tools.config.table.count):(length/tools.config.table.count+1);	
-					}
-					for(var i=0,j=Math.floor(maxPages);i<j&&j!=1;i++){
-						pages.push(i);
-					}
-					$scope.pages=pages;
-					$scope.now=1;
-				}
-			});
-		}
+		var gradeId = $routeParams.gradeId||'',
+			transf = ['lowDisTransformationEfficiency','highDisTransformationEfficiency','lowInAllTransformationEfficiency',
+				'highInAllTransformationEfficiency','lowSellMoneyPercent','highSellMoneyPercent','lowSellAmountPercent','highSellAmountPercent'
+			];
+		$scope.gradeId = gradeId;
+		$scope.model = $scope.parms = new distriAction({gradeId:$scope.gradeId});
+		$scope.parms.getData({},function(v){
+			if(v.pageSize){
+				initPages($scope,v.pageSize);
+			}
+		});
 		$scope.thead=[
 			{name:'店铺旺旺',sortable:false},{name:'UV',sortable:'DIS_UV'},{name:'PV',sortable:'DIS_PV'},
 			{name:'成交额',sortable:'DIS_SELL_MONEY'},{name:'成交量',sortable:'DIS_SELL_AMOUNT'},{name:'客单价',sortable:'DIS_PER_CUSTOMER_TRANSACTION'},
@@ -71,9 +62,15 @@ dm.directive('distributors',['$compile','$routeParams',function($compile,$routeP
 			var oldPrams = $scope.parms.parms;
 			var newParms = $.extend(oldPrams,{
 				sortColumn:item.sortable,
-				sort:sortBy
+				sort:sortBy,
+				begin:0
 			});
-			$scope.parms.search(newParms);
+			$scope.parms.search(newParms,function(v){
+				if(v.pageSize){
+					initPages($scope,v.pageSize);
+				}
+			});
+			$scope.now=1;
 		};
 		$scope.getPage =function(page){
 			if($scope.now == page){
@@ -96,8 +93,35 @@ dm.directive('distributors',['$compile','$routeParams',function($compile,$routeP
 			if(value!=''){
 				$scope.parms.parms.lowDisShopCreateTime = value; 				
 			}
-			$scope.parms.getData();
+			var _arry = transf;//进行转化率的计算
+			var _obj = {begin:0};
+			_.each(_arry,function(item){
+				var _tmp = $('.'+item,$element).val();
+				if(_tmp!=''){
+					_obj[item] = _tmp/100;
+				}
+			});
+			$scope.parms.getData(_obj,function(v){
+				if(v.pageSize){
+					initPages($scope,v.pageSize);
+				}
+			});
+			$scope.now=1;
 		};
+		//清除筛选
+		$scope.clearSearch = function(){
+			var _arry = transf;//进行转化率的计算
+			_.each(_arry,function(item){
+				$('.'+item,$element).val('');
+			});
+			$scope.parms.clear();
+			$scope.parms.getData({},function(v){
+				if(v.pageSize){
+					initPages($scope,v.pageSize);
+				}
+			});
+			$scope.now=1;
+		}
 		$scope.moveLayers = function(){
 			/*toDo:必须先选择完 才能移入等级中*/
 			$rootScope.$broadcast('show-layers',$scope.parms.dis);
@@ -143,8 +167,9 @@ dm.factory('distriAction',['tools',function(tools){
 		this.count = tools.config.table.count;
 		this.nicks='',this.sids='',this.sendContent = '';//选择的昵称和sids,发送信息的消息
 		//获取数据
-		this.getData = function(callback){
+		this.getData = function(item,callback){
 			this.dis = [];
+			$.extend(this.parms,item);
 			getUrl({
 				data:this.parms
 			}).then(function(resp){
@@ -201,15 +226,16 @@ dm.factory('distriAction',['tools',function(tools){
 			});
 		};
 		//筛选 （排序时使用到了）
-		this.search = function(parms){
+		this.search = function(parms,callback){
 			this.parms = parms;
-			this.getData();
+			this.getData(callback);
 		};
 		//清除筛选
 		this.clear = function(){
 			this.parms = {
 				gradeId:this.parms.gradeId,
-				end:this.parms.end
+				end:this.parms.end,
+				begin:0
 			}
 		};
 		//全选
@@ -273,6 +299,55 @@ dm.factory('distriAction',['tools',function(tools){
 	return action;
 }]);
 dm.directive('page',function(){
+	var getPages = function(currentPage, totalItems, pageSize){
+		var maxBlocks, maxPage, maxPivotPages, minPage, numPages, pages;
+            maxBlocks = 11;
+            pages = [];
+            numPages = Math.ceil(totalItems / pageSize);
+            if (numPages > 1) {
+                pages.push({
+                    type: 'prev',
+                    number: Math.max(1, currentPage - 1),
+                    active: currentPage > 1
+                });
+                pages.push({
+                    type: 'first',
+                    number: 1,
+                    active: currentPage > 1
+                });
+                maxPivotPages = Math.round((maxBlocks - 5) / 2);
+                minPage = Math.max(2, currentPage - maxPivotPages);
+                maxPage = Math.min(numPages - 1, currentPage + maxPivotPages * 2 - (currentPage - minPage));
+                minPage = Math.max(2, minPage - (maxPivotPages * 2 - (maxPage - minPage)));
+                var i = minPage;
+                while (i <= maxPage) {
+                    if ((i === minPage && i !== 2) || (i === maxPage && i !== numPages - 1)) {
+                        pages.push({
+                            type: 'more',
+                            active: false
+                        });
+                    } else {
+                        pages.push({
+                            type: 'page',
+                            number: i,
+                            active: currentPage !== i
+                        });
+                    }
+                    i++;
+                }
+                pages.push({
+                    type: 'last',
+                    number: numPages,
+                    active: currentPage !== numPages
+                });
+                pages.push({
+                    type: 'next',
+                    number: Math.min(numPages, currentPage + 1),
+                    active: currentPage < numPages
+                });
+            }
+            return pages;
+	};
 	return {
 		templateUrl:'../html/template/table-pages.html',
 		restrict:'E',
@@ -285,8 +360,8 @@ dm.directive('page',function(){
 dm.filter('shopType',function(){
 	return function(v){
 		if(v=='商城'){
-			return '淘宝';
+			return '天猫';
 		}
-		return '天猫';
+		return '淘宝';
 	}
 });

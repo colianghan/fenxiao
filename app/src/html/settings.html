@@ -11,7 +11,7 @@
 					<ul>
 						<li ng-repeat="i in value">
 							<label class="checkbox">
-								<input type="checkbox" ng-true-value="'{{i.setHref}}'" ng-model="shortCurSelected[i.name]">{{i.name}}
+								<input type="checkbox" ng-true-value="'{{i.setHref}}'" ng-false-value="''" ng-model="shortCurSelected[i.name]">{{i.name}}
 							</label>
 						</li>
 					</ul>

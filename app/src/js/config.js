@@ -228,18 +228,13 @@ var config ={
 			type:'int',
 			unit:'个'
 		},{
-			name:'inAllSellAmount',
-			des:'全店销量',
-			type:'int',
-			unit:'个'
-		},{
 			name:'sellAmountPercent',
 			des:'分销成交量占比',
 			type:'dor',
 			unit:'%'
 		},{
 			name:'sellMoneyPercent',
-			des:'分销曾叫额占比',
+			des:'分销成交额占比',
 			type:'dor',
 			unit:'%'
 		},{
@@ -269,9 +264,9 @@ var config ={
 			unit:'%'
 		},{
 			name:'disShopLevel',
-			des:'店铺信誉',
+			des:'店铺等级',
 			type:'int',
-			unit:'个'
+			unit:'级'
 		}],
 		model:{
 			1:['忠诚分销商','冲刺分销商','服务型分销商'],

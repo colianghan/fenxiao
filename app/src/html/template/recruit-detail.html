@@ -1,13 +1,15 @@
 <div class="row-fluid">
 	<div ng-show="!showMessage">
-		<h5 class="alert alert-info clearfix mb0">
+		<h5 class="alert alert-info clearfix mb0" ng-init="statusShow=true;">
 			<span class="pull-left">店铺名称：<b>{{item.nick}}</b></span>
 			<div class="pull-right">
-				<a href="javascript:;" class="mr10"><i class="fa fa-angle-up mr5"></i>展开</a>
+				<a href="javascript:;" class="mr10" ng-click="statusShow=!statusShow">
+					<i class="fa mr5" ng-class="statusShow?'fa-angle-up':'fa-angle-down'"></i>{{statusShow?'收起':'打开'}}
+				</a>
 				<a href="javascript:;" ng-click="hideDetail();"><i class="fa fa-power-off mr5"></i>返回</a>
 			</div>
 		</h5>
-		<div class="clearfix nav detail-distributor-status">
+		<div class="clearfix nav detail-distributor-status" ng-show="statusShow">
 			<div class="pull-left text-center mr20 pr20 border-right pr">
 				<label>状态操作</label>
 				<table class="table mb0">
@@ -38,7 +40,6 @@
 					<div class="pull-left text-center mr20 pr20 border-right">
 						<label>联系操作</label>
 						<button class="btn" ng-click="show.showMessage();">发送信息</button>
-						<button class="btn" ng-click="show.showMessage();">发站内信</button>
 					</div>
 					<div class="pull-left text-center mr20 pr20 border-right">
 						<label>合作关系</label>
@@ -46,68 +47,73 @@
 					</div>
 					<div class="pull-left text-center mr20 pr20 border-right">
 						<label>预约联系</label>
-						<input type="text" date-time class="input-medium mb0" placeholder="年-月-日">
+						<span class="add-on"><i class="fa fa-calendar"></i></span>
+						<input type="text" date-time class="input-medium mb0 apponitTime" ng-value="item.appointTime" placeholder="年-月-日">
+						<span class="btn" ng-click="setOpTime();">确定</span>
 					</div>
 				</div>
 			</div>
 		</div>
-		<div>
+		<div class="mt20">
 			<ul class="nav nav-tabs clearfix">
 				<li ng-repeat="item in navs" ng-class="$index == curNavIndex?'active':''">
 					<a href="javascript:;" ng-click="setNav($index);">{{item}}</a>
 				</li>
 			</ul>
 			<div class="box container-fluid box-border-recruit">
-				<div ng-show="curNavIndex==0">
-					<button class="btn" ng-click="addConcat();"><i class="fa fa-plus"></i>添加记录</button>
-					<div class="DisLink clearfix mt30">
-						<concat ng-repeat="item in parms.concats" a="item"></concat>
+				<div ng-show="!parms.pulling">
+					<div ng-show="curNavIndex==0">
+						<button class="btn" ng-click="addConcat();"><i class="fa fa-plus"></i>添加记录</button>
+						<div class="DisLink clearfix mt30">
+							<concat ng-repeat="item in parms.concats" a="item"></concat>
+						</div>
+					</div>
+					<div ng-show="curNavIndex==1">
+						<button class="btn pull-right mb10" ng-click="showAdd=!showAdd;"><i class="fa fa-plus"></i>添加记录</button>
+						<table class="table table-hover table-bordered mt30">
+							<thead>
+								<tr>
+									<th>时间</th>
+									<th>联系旺旺</th>
+									<th>联系人</th>
+									<th>联系结果</th>
+									<th>备注</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-if="showAdd">
+									<td><input type="text" class="contactTime" date-time></td>
+									<td><select ng-model="record.aliNick">
+											<option ng-value="{{i.aliNick}}" ng-repeat="i in parms.concats" ng-if="i.id">{{i.aliNick}}</option>
+										</select>
+									</td>
+									<td><input type="text" ng-model="record.name"></td>
+									<td><input type="text" ng-model="record.contactResult"></td>
+									<td>
+										<input type="text" ng-model="record.remark">
+										<a href="javascript:;" ng-click="addRecord();"><i class="fa fa-plus"></i>添加</a>
+									</td>
+								</tr>
+								<tr ng-repeat="i in parms.records">
+									<td>{{i.contactTime | timer}}</td>
+									<td>{{i.aliNick}}</td>
+									<td>{{i.name}}</td>
+									<td>{{i.contactResult}}</td>
+									<td>{{i.remark}}</td>
+								</tr>
+								<tr ng-if="!parms.records.length">
+									<td colspan="5">
+										<div class="no-data">暂无联系记录哦..</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div ng-if="curNavIndex==2">
+						<iframe ng-src="{{shopUrl}}" style="height:1000px;width:100%;" name="shopUrl" frameborder="0"></iframe>
 					</div>
 				</div>
-				<div ng-show="curNavIndex==1">
-					<button class="btn pull-right mb10" ng-click="showAdd=!showAdd;"><i class="fa fa-plus"></i>添加记录</button>
-					<table class="table table-hover table-bordered mt30">
-						<thead>
-							<tr>
-								<th>时间</th>
-								<th>联系旺旺</th>
-								<th>联系人</th>
-								<th>联系结果</th>
-								<th>备注</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr ng-if="showAdd">
-								<td><input type="text" class="contactTime" date-time></td>
-								<td><select ng-model="record.aliNick">
-										<option ng-value="{{i.aliNick}}" ng-repeat="i in parms.concats" ng-if="i.id">{{i.aliNick}}</option>
-									</select>
-								</td>
-								<td><input type="text" ng-model="record.name"></td>
-								<td><input type="text" ng-model="record.contactResult"></td>
-								<td>
-									<input type="text" ng-model="record.remark">
-									<a href="javascript:;" ng-click="addRecord();"><i class="fa fa-plus"></i>添加</a>
-								</td>
-							</tr>
-							<tr ng-repeat="i in parms.records">
-								<td>{{i.contactTime | timer}}</td>
-								<td>{{i.aliNick}}</td>
-								<td>{{i.name}}</td>
-								<td>{{i.contactResult}}</td>
-								<td>{{i.remark}}</td>
-							</tr>
-							<tr ng-if="!parms.records.length">
-								<td colspan="5">
-									<div class="no-data">暂无联系记录哦..</div>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-				<div ng-if="curNavIndex==2">
-					<iframe ng-src="{{shopUrl}}" style="height:1000px;width:100%;" name="shopUrl" frameborder="0"></iframe>
-				</div>
+				<div ng-show="parms.pulling" class="text-center"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></div>
 			</div>
 		</div>
 	</div>

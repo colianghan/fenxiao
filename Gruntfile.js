@@ -57,21 +57,21 @@ var configureGrunt = function(grunt){
         watch:{
             js:{
                 files:['<%= paths.srcDir %>/js/**/*.js'],
-                tasks:['copy:prod'],
+                tasks:['concat:init'],
                 options:{
                     livereload:9000
                 }
             },
             css:{
                 files:['<%= paths.srcDir %>/css/*.css'],
-                tasks:['cssmin:dev','copy:prod'],
+                tasks:['cssmin:dev','concat:css','uglify:css'],
                 options:{
                     livereload:9000
                 }
             },
             html:{
                 files:['<%= paths.srcDir %>/html/**/*.html'],
-                tasks:[],
+                tasks:['html2js:directive'],
                 options:{
                     livereload:9000
                 }
@@ -91,13 +91,16 @@ var configureGrunt = function(grunt){
                     banner:'/*!\n<%= commonBanner %>\n@des:vendor css file\n*/',
                 },
                 src:[
-                    'public/components/bootstrap/docs/assets/css/bootstrap.css',
-                    'public/components/bootstrap/docs/assets/css/bootstrap-responsive.css',
-                    'public/components/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css',
-                    'public/components/ng-table/ng-table.css'
-                    /*'app/src/css/index.css'*/
+                   '<%= paths.builtDir %>/css/all.css'
                 ],
-                dest:'<%= paths.builtDir %>/css/vendor.css'
+                dest:'<%= paths.builtDir %>/css/all.min.css'
+            },
+            pub:{
+                options:{
+                    banner:'/*\n<%= commonuBanner %>\n@des: main css file\n*/'
+                },
+                src:['<%= paths.builtDir %>/css/all.css'],
+                dest:'<%= paths.builtDir %>/css/all.min.css'
             }
         },
         copy:{
@@ -145,6 +148,9 @@ var configureGrunt = function(grunt){
                         'public/components/ng-table/ng-table.js',
                         'public/components/highCharts/highCharts.js',
                         'public/components/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.js'
+                    ],
+                    '<%= paths.builtDir %>/js/all.js':[
+                        'app/src/js/**/**.js','!app/src/js/config.js','!app/src/js/login.js'
                     ]
                 }
             },
@@ -156,6 +162,10 @@ var configureGrunt = function(grunt){
                         'public/components/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css',
                         'public/components/ng-table/ng-table.css',
                         'public/components/font-awesome/css/font-awesome.css'
+                    ],
+                    '<%= paths.builtDir %>/css/all.css':[
+                         '<%= paths.builtDir %>/css/theme.css',
+                        '<%= paths.srcDir %>/css/main.css'
                     ]
                 }
             }
@@ -168,6 +178,16 @@ var configureGrunt = function(grunt){
                 files:{
                     '<%= paths.builtDir %>/js/vendor.min.js':'<%= paths.builtDir %>/js/vendor.js',
                     '<%= paths.builtDir %>/js/plugin.min.js':'<%= paths.builtDir %>/js/plugin.js',
+                    '<%= paths.builtDir %>/js/all.min.js':'<%= paths.builtDir %>/js/all.js',
+                    '<%= paths.srcDir %>/js/config.min.js':'<%= paths.srcDir %>/js/config.js'
+                }
+            },
+            css:{
+                 options:{
+                    banner:'/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+                },
+                files:{
+                    '<%= paths.builtDir %>/css/all.min.css':'<%= paths.builtDir %>/css/all.css'
                 }
             }
         },
@@ -177,6 +197,22 @@ var configureGrunt = function(grunt){
             },
             start:{
                 command:'node app'
+            }
+        },
+        html2js:{
+            options:{
+                rename:function(moduleName){
+                    if(/template/.test(moduleName)){
+                        return '../html/template/'+moduleName.replace('../app/src/html/template/','');
+                    }else{
+                        return '../html/'+moduleName.replace('../app/src/html/','');
+                    }
+                },
+                module:'distributManagerTemplate'
+            },
+            directive: {
+                src: ['app/src/html/**/*.html','!app/src/html/index.html','!app/src/html/demo.html'],
+                dest: 'app/built/js/template.js'
             }
         }
     };
@@ -189,7 +225,7 @@ var configureGrunt = function(grunt){
             'concat:css',
             'concat:init',
             'uglify:prod',
-            'copy:prod'
+            'html2js:directive'
     ]);
     //grunt.registerTask('connect',['connect:server'])
     // grunt.registerTask('watch',['watch']);

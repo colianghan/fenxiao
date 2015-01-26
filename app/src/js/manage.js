@@ -1,8 +1,8 @@
-dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter','tools','ngTableParams','grades',function($rootScope,$scope,$routeParams,$animate,$filter,tools,ngTableParams,grades){
+dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter','tools','ngTableParams','grades','initPages',function($rootScope,$scope,$routeParams,$animate,$filter,tools,ngTableParams,grades,initPages){
 	var gradeId,bannerIndex = $routeParams.banner||0,
-		tagIndex = $scope.tagIndex = $routeParams.tag||1;
+		tagIndex = $scope.tagIndex = $routeParams.tag||0;
 		//debugger;
-		if (tagIndex==1 && bannerIndex!=0){
+		if (tagIndex==0 && bannerIndex!=0){
 			tagIndex = $scope.tagIndex = 4;
 		}
 		//debugger;
@@ -78,19 +78,12 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 				$scope.Dis=value;
 				$scope.getDis = $scope.Dis.slice(0,tools.config.table.count);
 				var length = value.length;
-				var maxPages = 0,pages=[];
-				if(length>=tools.config.table.count){
-					maxPages = length%tools.config.table.count==0?(length/tools.config.table.count):(length/tools.config.table.count+1);	
-				}
-				for(var i=0,j=Math.floor(maxPages);i<j&&j!=1;i++){
-					pages.push(i);
-				}
-				$scope.pages=pages;
-				$scope.now=1;
+				initPages($scope,length);
 			}
 		});
 	});
 	getDis();
+	//获取维度
 	var getDimensions = function(){
 		tools.http({
 			url:'getDimensions.htm',
@@ -107,7 +100,6 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 							}
 						});
 					});
-					//debugger;
 					$scope.dimensions=dimensions;
 					//getDis(dimensions);
 					if(!resp.value.modeName){
@@ -126,6 +118,7 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 		//debugger;
 		$scope.curModeName = item;
 		getDimensions();
+		getDis();
 	};
     /*table begin*/
 	/*获取分页*/
@@ -184,7 +177,11 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 		}
 	});
 	/*获得柱形图*/
-	$scope.getTrend = function(e,item,v){
+	$scope.getTrend = function(e,item,v,index){
+		if(index===3){
+			//综合潜力值
+			return;
+		}
 		var _src = $scope.trend[item.disSid] || {},
 			_dataSrc = _src[v.nick],
 			$container = $('.pop-charts').length?$('.pop-charts'):$('<div>',{'class':'pop-charts'}),
@@ -199,7 +196,6 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 			$ele.addClass('active').siblings('.active').removeClass('active');
 		}
 		//$ele.append($container);
-		debugger;
 		var dates = _.keys(_dataSrc).sort()[0].split(' ')[0].split('-'),
 			data = _.values(_dataSrc);
 		var options={
@@ -253,7 +249,6 @@ dm.controller('hasParams',['$scope','$rootScope','$element','tools',function($sc
 	var parms = $scope.parms = config.settingManage;
 	var hasChecked = $scope.hasChecked =[];
 	$scope.$on('mange-checked',function(e,v){
-		//debugger;
 		if( typeof v == 'undefined'){
 			return;
 		}else if (typeof v == 'object'){
@@ -298,7 +293,6 @@ dm.controller('hasParams',['$scope','$rootScope','$element','tools',function($sc
 		});
 	});
 	$scope.addDim=function(index,e){
-		//debugger;
 		var  parentTr = $(e.currentTarget).parents('tr'),
 			 low = $('.low-input',parentTr).val(),
 			 high= $('.high-input',parentTr).val(),
@@ -427,7 +421,6 @@ dm.directive('parmsToChecked',['$compile','$parse',function($compile,$parse){
 			$element.html(html);		
 			return function($scope,$element,$attrs){
 				//debugger;
-				console.log('parmsToChecked');
 			}
 		},
 		controller:['$rootScope','$scope','$element',function($rootScope,$scope,$element){
@@ -452,14 +445,16 @@ dm.directive('parmsToChecked',['$compile','$parse',function($compile,$parse){
 			$scope.$on('remove-checked',function(e,v){
 				$element.find('input[type="checkbox"]').eq(v).prop('checked',false);
 			});
+			//开始时进行设置,同时触发生成
 			$scope.$on('setDimensions',function(e,v){
 				//debugger;
 				var models = [];
 				$scope.modelName = v.modeName;
+				$('input:checkbox:checked',$element).prop('checked',false);
 				_.each(v.dimensions,function(item){
 					var $input = $('input[value="'+item.dimension+'"]',$element),
 						index = $('input:checkbox',$element).index($input);
-					console.log(index);
+					//console.log(index);
 					var model = $.extend({},config.settingManage[index]);
 					model.low=item.low;
 					model.high= item.high;
@@ -513,7 +508,6 @@ dm.directive('dimensions',function($compile){
 			var html = com(dimensions);
 			$element.parents('tr').append($(html));
 			return function($scope,$element,$attrs){
-				console.log($scope.dimensions);
 				$scope.$watch('$attrs.dimensions',function(v){
 					if(v!=undefined){
 						var html = com(dimensions);
@@ -563,7 +557,6 @@ dm.directive('layers',function($rootScope){
 		templateUrl:'../html/template/add-layers.html',
 		compile:function(element,attrs,link){
 			return function(scope,element,attrs){
-				console.log('layers');
 			}
 		},
 		controller:function($scope,$element,tools,grades){
@@ -574,7 +567,6 @@ dm.directive('layers',function($rootScope){
 					item.select=false;
 				});
 				$scope.lay=v;
-				console.log(v);
 			});
 			$scope.data={id:''};
 			$scope.$on('show-layers',function(e,v){
@@ -666,7 +658,6 @@ dm.directive('weight',function(){
 		scope:true,
 		compile:function(element,attrs,link){
 			return function(scope,element,attrs){
-				console.log('weight');
 			}
 		},
 		controller:function($rootScope,$scope,tools){

@@ -1,13 +1,13 @@
 dm.directive('recruitDistris',['$parse',function($parse){
 	var compile  = function(element,attrs,link){
 		return function($scope,$element,$attrs){
-			console.log('recruitindex');
+			//console.log('recruitindex');
 		}
 	};
 	var controller = ['$scope','$element','$attrs','initPages','recruitDistrisModel',function($scope,$element,$attrs,initPages,recruitDistrisModel){
 		//debugger;
 		var tagIndex = $scope.$parent.tagIndex,status,isSimilarQ;
-		console.log(tagIndex);
+		//console.log(tagIndex);
 		switch(Number(tagIndex)){
 			case 1:
 				status = 'contact';
@@ -42,7 +42,7 @@ dm.directive('recruitDistris',['$parse',function($parse){
 			var count = $scope.model.count,
 				begin = (page-1)*count,
 				end = page*count-1;
-			$scope.getData({
+			model.getData({
 				begin:begin
 			});
 		};
@@ -57,7 +57,7 @@ dm.directive('recruitDistris',['$parse',function($parse){
 			var lowShopCreateTime = $('.creat-time-low',$element).val();//开店时间
 			var highShopCreateTime = $('.creat-time-high',$element).val();
 			//好评率
-			var lowBuyerGoodRate ='',highBuyerGoodRate='';
+			/*var lowBuyerGoodRate ='',highBuyerGoodRate='';
 			var _lowBuyerGoodRate = Number($('.low-buyer-rate',$element).val()||'s');
 			if(!isNaN(_lowBuyerGoodRate)){
 				lowBuyerGoodRate = (_lowBuyerGoodRate/100).toFixed(2);
@@ -65,15 +65,13 @@ dm.directive('recruitDistris',['$parse',function($parse){
 			var _highBuyerGoodRate = Number($('.high-buyer-rate',$element).val()||'s');
 			if(!isNaN(_highBuyerGoodRate)){
 				highBuyerGoodRate = (_highBuyerGoodRate/100).toFixed(2);
-			}
+			}*/
 			model.getData({
 				begin:0,
 				lowOperateTime:lowOperateTime,
 				highOperateTime:highOperateTime,
 				lowShopCreateTime:lowShopCreateTime,
-				highShopCreateTime:highShopCreateTime,
-				lowBuyerGoodRate:lowBuyerGoodRate,
-				highBuyerGoodRate:highBuyerGoodRate
+				highShopCreateTime:highShopCreateTime
 			},function(v){
 				initPages($scope,v.totalSize);
 			});
@@ -84,11 +82,9 @@ dm.directive('recruitDistris',['$parse',function($parse){
 			$('.high',$element).val('');
 			$('.creat-time-low',$element).val('');
 			$('.creat-time-high',$element).val('');
-			$('.low-buyer-rate',$element).val('');
-			$('.high-buyer-rate',$element).val('');
 			var oldPrams = $scope.model.parms;
 			var tmpObj = {
-				status:oldPrams.status,
+				contactStatus:oldPrams.contactStatus,
 				isSimilarQ:oldPrams.isSimilarQ,
 				begin:0,
 				count:oldPrams.count
@@ -238,6 +234,7 @@ dm.factory('recruitDistrisModel',['tools',function(tools){
 	var action = function(status,isSimilarQ){
 		var self= this;
 		this.count = tools.config.table.count;
+		this.pulling = false; //正在获取数据
 		this.parms = {
 			contactStatus:status,
 			isSimilarQ:isSimilarQ,
@@ -250,16 +247,19 @@ dm.factory('recruitDistrisModel',['tools',function(tools){
 		this.getData = function(parm,callback){
 			$.extend(this.parms,parm);
 			var getAjax = tools.promise(api.getList,true);
+			this.pulling = true;
+			var oldList = this.list;
+			this.list = [];
 			getAjax({
 				data:this.parms
 			}).then(function(resp){
 				if(resp.success){
-					console.log(resp.value);
 					_.each(resp.value.recruitDistributors,function(item){
 						item.select = false;
 					});
 					self.list = resp.value.recruitDistributors;
 					self.city = resp.value.locations;
+					self.pulling = false;
 					if(callback){
 						callback(resp.value);
 					}

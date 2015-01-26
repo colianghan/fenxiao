@@ -43,7 +43,7 @@
 							</label>
 						</td>
 						<td>{{item.gradeName}}</td>
-						<td ng-repeat = "v in potential" ng-click="getTrend($event,item,v);" style="cursor:pointer;">
+						<td ng-repeat = "v in potential" ng-click="getTrend($event,item,v,$index);" style="cursor:pointer;">
 							<span ng-if="$index==0||$index==3">
 								{{trend[item.disSid][v.id]}}
 							</span>
@@ -61,6 +61,13 @@
 							<div class="pop-charts"></div>
 						</td>
 					</tr>
+					<tr ng-if="!getDis.length">
+						<td colspan="{{2+potential.length+dimensions.length}}">
+							<div class="no-data">
+								暂无数据,正在努力打造中↖(^ω^)↗
+							</div>
+						</td>
+					</tr>
 				</tbody>
 			</table>
 			<page></page>
@@ -71,7 +78,7 @@
 	<h5>备注：此处是对运营模式的计算参数进行设置，设置结果仅对运营模式有效，不会改变其他模式的设置！
 		<button class="btn btn-small pull-right" ng-click="showSetting=false;"><i class="icon-off"></i>返回</button>
 	</h5>
-	<h3>忠诚分销商</h3>
+	<h3>{{curModeName}}</h3>
 	<div class="row-fluid">
 		<div class="span5">
 			<h4 class="alert alert-info">可选参数</h4>
@@ -88,7 +95,7 @@
 				</div>
 				<table class="table table-striped setting-table">
 					<tbody>
-						<tr ng-repeat=" i in hasChecked" data-key="{{i.key}}">
+						<tr ng-repeat=" i in hasChecked track by $index" data-key="{{i.key}}">
 							<th>{{i.des}}</th>
 							<td>指标</td>
 							<td>范围</td>
@@ -121,6 +128,6 @@
 <div ng-if="tagIndex>3&&tagIndex<6">
 	<distriprods data-tag="tagIndex"></distriprods>
 </div>
-<div ng-if="tagIndex>=6">
+<div ng-if="tagIndex>=6||tagIndex==0">
 	<distributors ng-show="true"></distributors>
 </div>

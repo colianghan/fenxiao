@@ -1,4 +1,4 @@
-var dm = angular.module('distributManager',['ngTable','ngRoute','ngAnimate','ngSanitize']);
+/*var dm = angular.module('distributManager',['ngTable','ngRoute','ngAnimate','ngSanitize','distributManagerTemplate']);*/
 dm.config(['$routeProvider','$sceDelegateProvider',function($routeProvider,$sceDelegateProvider){
 	$routeProvider
 		.when('/index',{
@@ -50,7 +50,7 @@ dm.controller('layout',['$rootScope','$scope','$route','$location',function($roo
 	/**/
 }]);
 
-dm.controller('head',['$scope',function($scope){
+dm.controller('head',['$scope','tools',function($scope,tools){
 	$userLi = $('.dropdown');
 	$userA=$userLi.find('.hover-toggle');
 	$userDIV =$userLi.find('.userInfo');
@@ -75,8 +75,7 @@ dm.controller('head',['$scope',function($scope){
 		$(this)
 			.addClass('active')
 			.siblings('.active').removeClass('active');
-	})
-
+	});
 	/*监听路由的改变 进行样式设置*/
 	$scope.$on('onChangeBanner',function(e,v){
 		var controller,params,configer;
@@ -85,6 +84,22 @@ dm.controller('head',['$scope',function($scope){
 			.addClass('active')
 			.siblings('.active').removeClass('active');
 	});
+	$scope.$on('userInfo',function(e,v){
+		if(v!=undefined){
+			$scope.user = v;
+		}
+	});
+	//退出系统
+	$scope.quitSys = function(){
+		tools.http({
+			url:'clearSession.htm',
+			succ:function(resp){
+				if(resp.success){
+					window.location.href = '/distributor-manager/html/login.html';
+				}
+			}
+		});
+	};
 }]);
 dm.controller('banner',['$scope','$element',function($scope,$element){
 	$scope.$on('onChangeBanner',function(e,v){
@@ -100,7 +115,7 @@ dm.controller('banner',['$scope','$element',function($scope,$element){
 	//$scope.$on()
 }]);
 
-dm.controller('leftBar',['$scope','$rootScope','$element','$compile','grades',function($scope,$rootScope,$element,$compile,grades){
+dm.controller('leftBar',['$scope','$rootScope','$element','$compile','grades','setShortCurts',function($scope,$rootScope,$element,$compile,grades,setShortCurts){
 
 	var configer,layers;
 	$scope.$on('onChangeBanner',function(e,v){
@@ -123,7 +138,10 @@ dm.controller('leftBar',['$scope','$rootScope','$element','$compile','grades',fu
 		}
 		/*首页*/
 		if (controller==='index') {
-			$scope.quickLinks =['商品录入','创建活动','订单管理'];
+			//$scope.quickLinks =['商品录入','创建活动','订单管理'];
+			setShortCurts.get(function(v){
+				$scope.quickLinks = v;
+			});
 		};
 		if (controller==='compete') {
 			/*ajax 请求 获取 竞争对手列表*/
@@ -206,7 +224,6 @@ dm.directive('graders',['$rootScope','$compile','grades',function($rootScope,$co
 		var html='<li class="addGrades"><span>名称:</span><input type="text" class="gradName input-small mb0 ml10 mr5" placeholder="五字内" /><input type="button" value="确定" class="btn addGrades btn-mini" /></li>';
 	    return function($scope,$element){
 	    	$element.click(function(){
-	    		debugger;
 	    		$scope.$apply(function(){
 	    			var $ul = $element.parent().next();
 	    			var $li = $ul.find('li:first'),
@@ -218,7 +235,6 @@ dm.directive('graders',['$rootScope','$compile','grades',function($rootScope,$co
 	    			$ul.prepend($(html));
 	    			$ul.off('click','.btn');
 	    			$ul.on('click','.btn',function(){
-						debugger;
 						var name = $('.gradName',$ul).val();
 						var length = $.trim(name).replace(/[\u4e00-\u9fa5]/g, 'xx').length;
 						if(!length){
@@ -231,7 +247,7 @@ dm.directive('graders',['$rootScope','$compile','grades',function($rootScope,$co
 						}
 					    var grade = new  grades();
 					    grade.add(name,function(v){
-					    	console.log(v);
+					    	//console.log(v);
 					    });
 					});
 	    		});

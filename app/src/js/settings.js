@@ -13,15 +13,22 @@ dm.controller('settings',['$scope','$rootScope','$routeParams','setShortCurts',f
 	});
 
 	setShortCurts.get(function(shortcut){
-		//debugger;
 		$scope.shortCurSelected = shortcut;
 	});
 	$scope.shortCurSelected = {};
 	/*设置快捷*/
 	$scope.setShort = function(){
-		var tmp =  _.keys($scope.shortCurSelected);
-		if(tmp.length){
-			setShortCurts.set(JSON.stringify($scope.shortCurSelected));
+		var _sele = {},_bool=false;
+		_.each($scope.shortCurSelected,function(v,k){
+			if(v!=false&&v!=''){
+				_sele[k]=v;
+				_bool=true;
+			}
+		});
+		if(_bool){
+			setShortCurts.set(JSON.stringify(_sele),function(v){
+				$rootScope.$broadcast('update-sortCut',v);
+			});
 		}
 	};
 	$scope.headNav = $scope.tagIndex==1?'快捷设置':'新闻管理';
@@ -45,8 +52,9 @@ dm.factory('setShortCurts',['tools',function(tools){
 		updateShortcut:'updateShortcut.htm'
 	};
 	return {
+		shortcut:'',
 		get:function(callback){
-			var _getAjax = tools.promise(api.getShortcut,true);
+			var _getAjax = tools.promise(api.getShortcut,false);
 			_getAjax().then(function(resp){
 				if(resp.success){
 					var shortcut = JSON.parse(resp.value.shortcut)||{}; //对象
@@ -58,7 +66,7 @@ dm.factory('setShortCurts',['tools',function(tools){
 				}
 			});
 		},
-		set:function(shortcut){
+		set:function(shortcut,callback){
 			tools.http({
 				url:api.updateShortcut,
 				data:{
@@ -67,6 +75,7 @@ dm.factory('setShortCurts',['tools',function(tools){
 				succ:function(resp){
 					if(resp.success){
 						alert('修改成功');
+						callback(JSON.parse(shortcut));
 					}else{
 						alert(resp.message);
 					}

@@ -2,7 +2,7 @@
 	<div class="pull-right"><button class="btn" ng-click="back();"><i class="fa fa-times"></i>返回</button></div>
 	<div class="clearfix disPrds-info">
 		<div class="pull-left clearfix mr30 list">
-			<img ng-src="{{item.picUrl}}_70x70.jpg" class="pull-left">
+			<img ng-src="{{item.picUrl}}_70x70.jpg" class="pull-left mr5">
 			<div class="pull-right disNick">
 				<a href="javascript:;">{{item.title}}</a>
 				<p class="mt10"><span>商品编码:</span><b>{{item.outerId}}</b></p>
@@ -54,7 +54,7 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="i in model.list">
-				<td><span class="badge badge-info">{{$index}}</span></td>
+				<td><span class="badge badge-info">{{$index+1}}</span></td>
 				<td>
 					<a href="javascript:;" ng-click="showDetail(i);">{{i.disNick}}</a>
 				</td>
@@ -84,6 +84,13 @@
 					</div>
 				</td>
 				<td>{{model.gradeList[i.gradeId].name}}</td>
+			</tr>
+			<tr ng-if="!model.list.length">
+				<td colspan="8">
+					<div class="no-data">
+						暂无数据,正在努力打造中↖(^ω^)↗
+					</div>
+				</td>
 			</tr>
 		</tbody>
 	</table>

@@ -48,6 +48,7 @@
                         <a href="javascript:;" class="mr10" ng-click="stopTerminal($event,$index);">终止合作</a>
                     </td>
                 </tr>
+                <tr ng-if="!shops.length"><td colspan="10"><div class="no-data">暂无数据，正在努力统计中O(∩_∩)O~</div></td></tr>
                 <tr class="hide othersPartner">
                   <td colspan="10">
                     <table class="table table-bordered table-hover table-condensed" ng-if="tagIndex==1&&!showLayers">

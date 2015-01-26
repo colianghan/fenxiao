@@ -21,7 +21,7 @@ dm.factory('tools', function ($q, $http, $rootScope) {
                 }
             }).success(function (resp) {
                 if (resp.value == "session expire") {
-                    return window.location.href = window.location.href.replace('home', 'login');
+                    return window.location.href =  '/distributor-manager/html/login.html';
                 }
                 if (resp.success != undefined && !resp.success) {
                     param.fail && param.fail(resp);

@@ -1,4 +1,4 @@
-dm.controller('index',['$scope','$routeParams','tools',function($scope,$routeParams,tools){
+dm.controller('index',['$scope','$rootScope','$routeParams','tools',function($scope,$rootScope,$routeParams,tools){
 	//$scope.tag = $routeParams.tag||1;
 	var api={
 		'getHomePageNews':'getHomePageNews.htm',
@@ -25,7 +25,6 @@ dm.controller('index',['$scope','$routeParams','tools',function($scope,$routePar
 	tools.http({
 		url:api.getHomePageGeneralData,
 		succ:function(resp){
-			console.log(resp.value);
 			if(resp.success){
 				var value = resp.value||{};
 				if(value.saleActionDistributorTrend!==undefined){
@@ -37,7 +36,8 @@ dm.controller('index',['$scope','$routeParams','tools',function($scope,$routePar
 					value.saleAuctionProductTrendClass=value.saleAuctionProductTrend>=0?'fa-arrow-up':'fa-arrow-down';
 				}
 				//value.abs=Math.abs(value.saleActionDistributorTrend);
-				$scope.generaData=resp.value
+				$scope.generaData=resp.value;
+				$rootScope.$broadcast('userInfo',$scope.generaData);
 			}else{
 				alert(resp.message);
 			}
@@ -49,14 +49,12 @@ dm.controller('index',['$scope','$routeParams','tools',function($scope,$routePar
 	var dYesterDay = new Date(day.getFullYear(),day.getMonth(),day.getDate());
 	var iYesterDay = dYesterDay.setTime(dYesterDay.getTime()-1*24*60*60*1000); 
 	var imothAgo = dMothAgo.setTime(iYesterDay-30*24*60*60*1000);
-	console.log(dYesterDay+'\n'+dMothAgo);
 	$scope.begin=dMothAgo.getFullYear()+'-'+(dMothAgo.getMonth()+1)+'-'+dMothAgo.getDate();
 	$scope.end=dYesterDay.getFullYear()+'-'+(dYesterDay.getMonth()+1)+'-'+dYesterDay.getDate();
 	$scope.ths=['成交金额','转化率','店铺UV','客单价','订单数'];
 	var frsh = $scope.refresh=function(){
 		var begin = $('.date')[0].value||$scope.begin;
 		var end = $('.date')[1].value||$scope.end;
-		//debugger;
 		var obeginDate = new Date(begin.replace('-','/')).getTime();
 		var oendDate = new Date(end.replace('-','/')).getTime();
 		if((obeginDate<imothAgo||obeginDate>iYesterDay)||(oendDate<imothAgo||oendDate>iYesterDay)){
@@ -109,7 +107,6 @@ dm.controller('data-preview',['$scope','tools','translate',function($scope,tools
 						    disAmtTrend = d.values,//分销商数据
 						    supAmtTrend = translate(resp.value.supAmtTrend).values;//供应商数据
 						var dates = dateList[0].split(' ')[0].split('-');
-						//debugger;
 						var options={
 							chart:{
 								type:'line'
@@ -165,7 +162,7 @@ dm.controller('data-preview',['$scope','tools','translate',function($scope,tools
 		}
 	} 
 	/*------------------母店概况--------------------*/
-	$scope.fieldName = 'alipayTradeAmt';
+	//$scope.fieldName = 'alipayTradeAmt';
 	var _obj={
 		 datas:{
 		 	sup:{},
@@ -178,7 +175,7 @@ dm.controller('data-preview',['$scope','tools','translate',function($scope,tools
 		 	if(!type){
 		 		return;
 		 	}
-		 	var data  = type[fieldName]||[];
+		 	var data  = _obj.datas[type][fieldName]||[];
 		 	if(data.length){
 		 		//有值
 		 		this.render(data);
@@ -188,8 +185,6 @@ dm.controller('data-preview',['$scope','tools','translate',function($scope,tools
 		 		url:this.api[type],
 		 		data:{fieldName:fieldName},
 		 		succ:function(resp){
-		 			console.log(resp);
-		 			debugger;
 		 			if(resp.success){
 		 				var _tmp = fieldName=='rise'?'alipayTradeAmt':fieldName;
 		 				var baseNum = resp.value[0][_tmp];
@@ -197,13 +192,17 @@ dm.controller('data-preview',['$scope','tools','translate',function($scope,tools
 		 					if(baseNum==0){
 		 						item.width=0;
 		 					}else{
-		 						//debugger;
 			 					item.width=
 			 						((item[_tmp]/baseNum)*100).toFixed(0);
 			 				}
 			 				item.rise=item['alipayTradeAmt'];
 			 				if(item['transformationEfficiency']){
-				 				item['transformationEfficiency']=item['transformationEfficiency']+'%';
+				 				item['transformationEfficiency']=(item['transformationEfficiency']*100).toFixed(2)+'%';
+				 			}
+				 			if(item.auctionId){
+				 				item.url='http://item.taobao.com/item.htm?id='+item.auctionId;
+				 			}else if(item.disSid){
+				 				item.url= 'http://shop'+item.disSid+'.taobao.com';
 				 			}
 		 				});
 		 				_obj.datas[type][fieldName]=resp.value;
@@ -224,7 +223,6 @@ dm.controller('data-preview',['$scope','tools','translate',function($scope,tools
 		 }
 	}
 	$scope.$watch('fieldName',function(v){
-		debugger;
 		if($scope.sort!==1){
 			$scope.fieldName=v;
 			_obj.getDate();
@@ -234,7 +232,12 @@ dm.controller('data-preview',['$scope','tools','translate',function($scope,tools
 		if(v==1){
 			getAllData();
 		}else{
-			_obj.getDate();
+			var _tmp = $scope.fieldName;
+			$scope.fieldName = 'alipayTradeAmt';
+			//当fieldName不遍时 获取数据
+			if(_tmp===$scope.fieldName){
+				_obj.getDate();
+			}
 		}
 	});
 }]);
@@ -323,3 +326,33 @@ dm.filter('abs',function(){
 		}
 	}
 });*/
+
+//对首页趋势 显示昵称和大图
+dm.directive('tip',function(){
+	return {
+		restrict:'A',
+		scope:{tip:'@',pos:'@'},
+		link:function(scope,element,attrs){
+			var tip = JSON.parse(scope.tip),
+				pos = scope.pos||'bottom';
+			if(tip.picUrl){
+				element.popover({
+					title:tip.title,
+					content:'<img src="'+tip.picUrl+'" />',//_80x80.jpg
+					trigger:'hover',
+					html:true,
+					placement:pos,
+					container:'body'
+				});
+			}else {
+				element.popover({
+					content:tip.disNick,
+					trigger:'hover',
+					placement:'bottom',
+					container:'body'
+				});
+			}
+			
+		}
+	}
+});

@@ -507,6 +507,11 @@ header .navbar{
 	left:0;
 	margin: 0;
 }
+.leftBar-ul-container{
+	max-height: 70%;
+	overflow: visible;
+	overflow-x:hidden;
+}
 
 /* 左侧导航级联 一级导航 */
 .leftBar .nav-child li{
@@ -818,6 +823,11 @@ h4 .pull-right{
 	border-top:none;
 	padding: 10px;
 }
+.location-city-selcet ul{
+	max-height: 300px;
+	overflow: visible;
+	overflow-x:hidden;
+}
 /*分销招募首页 表格*/
 .recruit-index-table{
 	padding: 10px;
@@ -854,6 +864,17 @@ h4 .pull-right{
 }
 
 
+/* 首页 */
+.alert .nav-tabs{
+	margin-top: -4px;
+	border: none;
+}
+
+
+/* 表格整体风格 */
+.table .imgTd{
+	width: 40px !important;
+}
 
 /* 页面编写结束 end */
 .pagination.ng-table-pagination li{
