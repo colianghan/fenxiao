@@ -170,12 +170,12 @@ var config ={
 		},{
 			name:'disSellMoney',
 			des:'分销销售额',
-			type:'dor',
+			type:'num',
 			unit:'元'
 		},{
 			name:'inAllSellMoney',
 			des:'全店销售额',
-			type:'dor',
+			type:'num',
 			unit:'元'
 		},{
 			name:'disPayPersons',
@@ -210,12 +210,12 @@ var config ={
 		},{
 			name:'disPerCustomerTransaction',
 			des:'分销客单价',
-			type:'dor',
+			type:'num',
 			unit:'元'
 		},{
 			name:'inAllPerCustomerTransaction',
 			des:'全店客单价',
-			type:'dor',
+			type:'num',
 			unit:'元'
 		},{
 			name:'disOrderNum',
@@ -260,7 +260,7 @@ var config ={
 		},{
 			name:'disBuyerGoodRate',
 			des:'好评率',
-			type:'dor',
+			type:'num',
 			unit:'%'
 		},{
 			name:'disShopLevel',

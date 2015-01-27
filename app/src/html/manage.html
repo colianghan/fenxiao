@@ -64,7 +64,8 @@
 					<tr ng-if="!getDis.length">
 						<td colspan="{{2+potential.length+dimensions.length}}">
 							<div class="no-data">
-								暂无数据,正在努力打造中↖(^ω^)↗
+								<span ng-if="!pulling">暂无数据</span>
+								<span ng-if="pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
 							</div>
 						</td>
 					</tr>
@@ -76,7 +77,7 @@
 </div>
 <div class="mt30" ng-show="showSetting">
 	<h5>备注：此处是对运营模式的计算参数进行设置，设置结果仅对运营模式有效，不会改变其他模式的设置！
-		<button class="btn btn-small pull-right" ng-click="showSetting=false;"><i class="icon-off"></i>返回</button>
+		<button class="btn btn-small pull-right" ng-click="returnFresh();"><i class="icon-off"></i>返回</button>
 	</h5>
 	<h3>{{curModeName}}</h3>
 	<div class="row-fluid">

@@ -36,17 +36,20 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 	$scope.curModeName = $scope.curModeName ||!model||model[0];
 	$scope.dimensions = [];//维度列表
 	$scope.getDis=[];$scope.Dis=[];//分销商列表
+	$scope.pulling = false;//获取数据时的 转圈标志
 	var getDis = (function(callback){
 		var modelName = $scope.curModeName,getDistr,data;
 		if(tagIndex==3){
 			getDistr = tools.promise('getPotentialDistributors.htm',false);
 			data = {};
 		}else{
-			getDistr = tools.promise('getModeOfDistributors.htm',true);
+			getDistr = tools.promise('getModeOfDistributors.htm',false);
 			data = {
 				modeName:$scope.curModeName
 			};
 		}
+		$scope.getDis = [];
+		$scope.pulling = true;
 		getDistr({
 			data:data
 		}).then(function(resp){
@@ -70,6 +73,7 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 						item.gradeName=v[item.gradeId==null?0:item.gradeId].name;
 					});
 					$scope.getDis = $scope.Dis.slice(0,tools.config.table.count);
+					$scope.pulling = false;
 				});
 				_.each(value,function(item){
 					item.select=false;
@@ -241,6 +245,11 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 		}
 		$container.highcharts(options).highcharts();
 	};
+	//返回时 刷新数据
+	$scope.returnFresh = function(){
+		$scope.showSetting=false;
+		getDis();
+	};
 }]);
 
 
@@ -304,9 +313,16 @@ dm.controller('hasParams',['$scope','$rootScope','$element','tools',function($sc
 		var model =  $scope.hasChecked[index];
 		if(model){
 			var type = model.type;
+			if(low!=''&&high!=''){
+				var __str = type==='date'?'结束时间不能晚于开始时间':'最高指标小于最低指标';
+				if(high<low){
+					$scope.$broadcast('erro-alert',__str);
+					return;
+				}
+			}
 			if(type=='int'){
 				var _low = Number(low),_high=Number(high);
-				var str = /^[0-9]*[1-9][0-9]*$/;  //获取正整数
+				var str = /^[0-9]*$/;  //获取正整数
 				if(str.test(_low)&&str.test(_high)){
 					//return true;
 				}else{
@@ -323,42 +339,44 @@ dm.controller('hasParams',['$scope','$rootScope','$element','tools',function($sc
 					$scope.$broadcast('erro-alert','不能超过100%');
 					return;
 				}
-				low = _low.toFixed(1)/100;
-				high = _high.toFixed(1)/100;
+				low = low===''?'': _low.toFixed(1)/100;
+				high = high===''?'' : _high.toFixed(1)/100;
 				$('.low-input',parentTr).val(_low.toFixed(1)==0.0?'':_low.toFixed(1));
 				$('.high-input',parentTr).val(_high.toFixed(1)==0.0?'':_high.toFixed(1));
 			}else if(type=='date'){
-				if(low!=''&&high!=''){
-					if(high<low){
-						$scope.$broadcast('erro-alert','结束时间不能晚于开始时间');
-						return;
-					}
+				low = low===''?'':low+' 00:00:00';
+				high = high ===''?'':high+' 00:00:00';
+			}else if(type=='num'){
+				if(isNaN(Number(low))||isNaN(Number(high))){
+					$scope.$broadcast('erro-alert','请输入数字');
+					return;
 				}
-				low = low==''?'':low+' 00:00:00';
-				high = high ==''?'':high+' 00:00:00';
 			}
 		}
-		if(!id){
-			//添加
-			tools.http({
-				url:'addDimension.htm',
-				data:{
-					modeName:$scope.modelName,
-					dimension:$scope.hasChecked[index].name,
-					high:high,
-					low:low
-				},
-				succ:function(resp){
-					if(resp.success){
-						//parentTr.data('key',resp.value);
-						$scope.hasChecked[index].key=resp.value;
+		//添加
+		tools.http({
+			url:'addDimension.htm',
+			data:{
+				modeName:$scope.modelName,
+				dimension:$scope.hasChecked[index].name,
+				high:high,
+				low:low
+			},
+			succ:function(resp){
+				if(resp.success){
+					//parentTr.data('key',resp.value);
+					$scope.hasChecked[index].key=resp.value;
+					if(!id){
 						alert('添加成功');
 					}else{
-						alert(resp.message);
+						alert('修改成功');
 					}
+				}else{
+					alert(resp.message);
 				}
-			});
-		}else{
+			}
+		});
+		/*else{
 			//修改唯独
 			tools.http({
 				url:'updateDimension.htm',
@@ -376,7 +394,7 @@ dm.controller('hasParams',['$scope','$rootScope','$element','tools',function($sc
 					}
 				}
 			});
-		}
+		}*/
 	};
 	$scope.reMov =function(sort,e){
 		if(!confirm('是否删除该指标')){

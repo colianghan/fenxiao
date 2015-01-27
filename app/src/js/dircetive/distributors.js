@@ -1,7 +1,7 @@
 dm.directive('distributors',['$compile','$routeParams',function($compile,$routeParams){
 	var compile = function(element,attrs,link){
 		return function(scope,element,attrs,link){
-			console.log('distributors');
+			//console.log('distributors');
 		}
 	}
 	var controller = ['$rootScope','$scope','$element','tools','distriAction','initPages',function($rootScope,$scope,$element,tools,distriAction,initPages){
@@ -166,9 +166,11 @@ dm.factory('distriAction',['tools',function(tools){
 		this.parms  = data;
 		this.count = tools.config.table.count;
 		this.nicks='',this.sids='',this.sendContent = '';//选择的昵称和sids,发送信息的消息
+		this.pulling = false; //获取数据 进行转圈操作
 		//获取数据
 		this.getData = function(item,callback){
 			this.dis = [];
+			this.pulling = true;
 			$.extend(this.parms,item);
 			getUrl({
 				data:this.parms
@@ -182,6 +184,7 @@ dm.factory('distriAction',['tools',function(tools){
 					});
 					//debugger;
 					self.dis = value;
+					self.pulling =false;
 					if(callback){
 						callback(resp.value);
 						return;

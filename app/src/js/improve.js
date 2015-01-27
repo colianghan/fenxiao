@@ -11,6 +11,7 @@ dm.controller('goldkeywords',['$rootScope','$routeParams','$scope','$filter','to
 	var type="clickRate";
 	var selectDisWordIntoStores = tools.promise('getDwsAuctionQueryEffectsByType.htm', true);
     $scope.direction=1;
+    $scope.pulling = false;//转圈操作
 	if(tagIndex==1){
 		//$scope.title = '高流量、高转化关键词TOP50'
         $scope.parms = {
@@ -37,10 +38,12 @@ dm.controller('goldkeywords',['$rootScope','$routeParams','$scope','$filter','to
         total: 0,
         counts: [],
         getData: function ($defer, params) {
+            $scope.pulling = true;
             var begin = (params.page() - 1) * params.count(), end = params.page() * params.count();
             if (!$scope.words.length) {
                 selectDisWordIntoStores({type: type, days: 30}).then(function (resp) {
                     var words = $scope.words = resp.value || [];
+                    $scope.pulling = false;
                     /*_.each(words,function(item){
                     	item.clickRate = Number((item.clickRate * 100).toFixed(2));
                     	item.transformationEfficiency=Number((item.transformationEfficiency * 100).toFixed(2));
@@ -50,11 +53,13 @@ dm.controller('goldkeywords',['$rootScope','$routeParams','$scope','$filter','to
                                         words;
                     params.total(words.length);
                     $defer.resolve(words.slice(begin, end));
+                    
                 });
             } else {
                var words = params.sorting ?
                                         $filter('orderBy')($scope.words, params.orderBy()) :
                                         $scope.words;
+                $scope.pulling = false;
                 $defer.resolve(words.slice(begin, end));
             }
         }
@@ -62,6 +67,7 @@ dm.controller('goldkeywords',['$rootScope','$routeParams','$scope','$filter','to
     $scope.getShops = function (word) {
         //$scope.direction=2;
         $scope.activeKeyword = word;
+        $scope.pulling = true;
         var _getAjax = tools.promise('getDwsAuctionQueryEffectsByQuery.htm',true);
         _getAjax({
             data:{
@@ -75,6 +81,7 @@ dm.controller('goldkeywords',['$rootScope','$routeParams','$scope','$filter','to
                     shop.transformationEfficiency = (shop.transformationEfficiency * 100).toFixed(2);
                 });*/
                 //$scope['shopes'].reload();
+                $scope.pulling = false;
                 mkTable('shopes',$scope.shops);
                 $scope.direction=2;
             });
@@ -83,6 +90,7 @@ dm.controller('goldkeywords',['$rootScope','$routeParams','$scope','$filter','to
         $scope.activeShopDisSid = distr.shopId;
         $scope.activeDirNick = distr.disNick;
         $scope.activeShop = shop;
+        $scope.pulling = true;
         var _getAjax = tools.promise('getQueryEffectsByDisSidAndQuery.htm',true);
         _getAjax({
             data: {
@@ -97,6 +105,7 @@ dm.controller('goldkeywords',['$rootScope','$routeParams','$scope','$filter','to
                             prod.clickRate = (prod.clickRate * 100).toFixed(2);
                             prod.transformationEfficiency = (prod.transformationEfficiency * 100).toFixed(2);
                         });*/
+                        $scope.pulling = false;
                          mkTable('prods',$scope.prods);
                         $scope.direction=3;
                     }
@@ -139,7 +148,6 @@ dm.controller('goldkeywords',['$rootScope','$routeParams','$scope','$filter','to
         $scope.direction = index+1;
     };
 }]);
-
 //优质渠道
 dm.controller('good_channel_ctrl',['$scope','$rootScope','$routeParams','initPages','goodChannelModel',function($scope,$rootScope,$routeParams,initPages,goodChannelModel){
    
@@ -280,8 +288,6 @@ dm.controller('good_channel_ctrl',['$scope','$rootScope','$routeParams','initPag
         }
     });
 }]);
-
-
 dm.factory('goodChannelModel',function(tools){
     var api = {
         getSrc:'getPromotionPvSrcEffects.htm',
@@ -292,6 +298,7 @@ dm.factory('goodChannelModel',function(tools){
         var self = this;
         this.count = tools.config.table.count;
         this.srcType = srcType;//收费类型
+        this.pulling = false; //获取数据 
         this.parms = {
              days:30,
              srcType:this.srcType,
@@ -305,6 +312,7 @@ dm.factory('goodChannelModel',function(tools){
         this.direction=1;
         //获取渠道列表
         this.getSrc = function(item,callback){
+            this.srcList = [];
             var _getAjax = tools.promise(api.getSrc,true);
             $.extend(this.parms,item);
             _getAjax({
@@ -312,6 +320,7 @@ dm.factory('goodChannelModel',function(tools){
             }).then(function(resp){
                 if(resp.success){
                     self.srcList = resp.value.list;
+                    self.pulling = false;
                     if(callback){
                         callback(resp.value);
                     }
@@ -320,6 +329,7 @@ dm.factory('goodChannelModel',function(tools){
         };
         //获取分销商列表
         this.getDistr = function(item,callback){
+            this.disList = [];
             var _getAjax = tools.promise(api.getDistr,true);
             $.extend(this.parms,item);
             _getAjax({
@@ -327,6 +337,7 @@ dm.factory('goodChannelModel',function(tools){
             }).then(function(resp){
                 if(resp.success){
                     self.disList = resp.value.list;
+                    self.pulling = false;
                     if(callback){
                         callback(resp.value);
                     }
@@ -335,6 +346,7 @@ dm.factory('goodChannelModel',function(tools){
         };
         //获取产品列表
         this.getProd = function(item,callback){
+            this.prodsList = [];
             var _getAjax = tools.promise(api.getProd,true);
             $.extend(this.parms,item);
             _getAjax({
@@ -342,6 +354,7 @@ dm.factory('goodChannelModel',function(tools){
             }).then(function(resp){
                 if(resp.success){
                     self.prodsList = resp.value;
+                    self.pulling = false;
                     if(callback){
                         callback(resp.value);
                     }
@@ -350,6 +363,7 @@ dm.factory('goodChannelModel',function(tools){
         };
         //获取数据
         this.getData = function(item,callback){
+            this.pulling = true;
             switch(this.direction){
                 case 1:
                     this.getSrc(item,callback);
@@ -366,12 +380,6 @@ dm.factory('goodChannelModel',function(tools){
     }
     return model;
 });
-
-
-
-
-
-
 //最佳搭配
 dm.controller('best_partner_ctrl',['$scope','$rootScope','$routeParams','$filter','tools','ngTableParams',function($scope,$rootScope,$routeParams,$filter,tools,ngTableParams){
     var sortColumn = $scope.sortColumn = 'ASSO_ACCESS_USER_NUM';
@@ -379,7 +387,10 @@ dm.controller('best_partner_ctrl',['$scope','$rootScope','$routeParams','$filter
     var day = $scope.day = 30;
     var _get = tools.promise('getPromotionAssociation.htm',true);
     var $tbody = $('.partnerTbody');//表格的tbody
+    $scope.pulling = false; //首次加载转圈
     function getData(){
+        $scope.data = [];
+        $scope.pulling = true;
         _get({days:day,sortColumn:sortColumn}).then(function(resp){
             if (resp.success) {
                 _.each(resp.value,function(item){
@@ -390,6 +401,7 @@ dm.controller('best_partner_ctrl',['$scope','$rootScope','$routeParams','$filter
                     }
                 });
                 $scope.data=resp.value;
+                $scope.pulling = false;
             }
         });
     }
@@ -446,6 +458,7 @@ dm.controller('best_partner_ctrl',['$scope','$rootScope','$routeParams','$filter
         $ele.addClass('active');
         $('.othersPartner').insertAfter($tr).removeClass('hide');
         $scope.otherPartners=[];
+        $scope.pulling = true;
         tools.http(
             {
                 url: 'getAssociationProductDetail.htm',
@@ -465,6 +478,7 @@ dm.controller('best_partner_ctrl',['$scope','$rootScope','$routeParams','$filter
                            item.transformationEfficiency=(item.transformationEfficiency*100).toFixed(2)+'%';
                            $scope.otherPartners.push(item);
                         });
+                        $scope.pulling = false;
                     }
                 }
             }
@@ -484,6 +498,7 @@ dm.controller('best_partner_ctrl',['$scope','$rootScope','$routeParams','$filter
         $ele.addClass('active');
         $('.othersPartner').insertAfter($tr).removeClass('hide');
         $scope.shopAssocialData=[];
+        $scope.pulling = true;
         tools.http(
             {
                 url: 'getAssociationDataDetail.htm',
@@ -504,6 +519,7 @@ dm.controller('best_partner_ctrl',['$scope','$rootScope','$routeParams','$filter
                            }
                         });
                         $scope.shopAssocialData = resp.value;
+                        $scope.pulling = false;
                     }
                 }
             }

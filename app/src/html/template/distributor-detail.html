@@ -192,7 +192,7 @@
 						<table class="table table-hover table-bordered ng-table">
 							<thead>
 								<tr>
-									<th>编号</th>
+									<th class="index">编号</th>
 									<th ng-repeat="item in thead[curNavIndex]" ng-class="item.sortable!=false?'sortable':''" ng-click="sort($event,item);">
 										<div>
 											{{item.name}}
@@ -203,19 +203,20 @@
 							<tbody>
 								<tr ng-repeat="item in data">
 									<td><span class="badge badge-info">{{$index+1}}</span></td>
-									<td ng-repeat = "i in thead[curNavIndex]">
+									<td ng-repeat = "i in thead[curNavIndex]" ng-class="'title'==i.key||'query'==i.key?'aliseTd':''">
 										<span ng-if="'title'!=i.key&&'query'!=i.key&&'clickRate'!=i.key&&'transformationEfficiency'!=i.key&&'lossRate'!=i.key">{{item[i.key]}}</span>
 										<span ng-if="'clickRate'==i.key||'transformationEfficiency'==i.key||'lossRate'==i.key">{{item[i.key]*100 | number:2}}%</span>
 										<span ng-if="'query'==i.key">
-											<a href="javascript:;" ng-click="getQueryDetail(item);">{{item[i.key]}}</a>
+											<a href="javascript:;" class="alise" title="{{item[i.key]}}" ng-click="getQueryDetail(item);">{{item[i.key]}}</a>
 										</span>
-										<a target="_blank" ng-href="{{'http://item.taobao.com/item.htm?id='+item.auctionId}}" tip="{{item}}" pos="top" ng-if="'title'==i.key" >{{item.title}}</a>
+										<a target="_blank" ng-href="{{'http://item.taobao.com/item.htm?id='+item.auctionId}}" tip="{{item}}" pos="top" class="alise alise-2x"  ng-if="'title'==i.key" >{{item.title}}</a>
 									</td>
 								</tr>
 								<tr ng-if="!data.length">
 									<td colspan="{{thead[curNavIndex].length+1}}">
 										<div class="no-data">
-											暂无数据,正在努力打造中↖(^ω^)↗
+											<span ng-if="!parms.pulling">暂无数据</span>
+											<span ng-if="parms.pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
 										</div>
 									</td>
 								</tr>
@@ -247,7 +248,8 @@
 								<tr ng-if="!parms.distriDataSrc.length">
 									<td colspan="{{thead[curNavIndex].length+2}}">
 										<div class="no-data">
-											暂无数据,正在努力打造中↖(^ω^)↗
+											<span ng-if="!parms.pulling">暂无数据</span>
+											<span ng-if="parms.pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
 										</div>
 									</td>
 								</tr>
@@ -259,11 +261,11 @@
 						<table class="table table-hover table-bordered">
 							<thead>
 								<tr>
-									<th>编号</th>
+									<th class="index">编号</th>
 									<th colspan="2">产品</th>
-									<th>所属分类</th>
+									<th style="width:8em;">所属分类</th>
 									<th>原价</th>
-									<th>折扣</th>
+									<th style="width:200px;">折扣</th>
 									<th>折扣价</th>
 									<th>利润</th>
 									<th>销量</th>
@@ -275,7 +277,7 @@
 									<td class="imgTd">
 										<img ng-src="{{i.picUrl}}_40x40.jpg" alt="{{i.title}}">
 									</td>
-									<td>{{i.title}}</td>
+									<td class="aliseTd"><a href="javascript:;" class="alise alise-2x" title="{{i.title}}">{{i.title}}</a></td>
 									<td>{{parms.productLines[i.productCatId].name}}</td>
 									<td>{{i.standardPrice}}</td>
 									<td ng-init="i.edit=false;">
@@ -296,7 +298,8 @@
 								<tr ng-if="!parms.prods.length">
 									<td colspan="9">
 										<div class="no-data">
-											暂无数据,正在努力打造中↖(^ω^)↗
+											<span ng-if="!parms.pulling">暂无数据</span>
+											<span ng-if="parms.pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
 										</div>
 									</td>
 								</tr>
@@ -399,7 +402,8 @@
 						<tr ng-if="!parms.queDetList.length">
 							<td colspan="10">
 								<div class="no-data">
-									暂无数据,正在努力打造中↖(^ω^)↗
+									<span ng-if="!parms.pulling">暂无数据</span>
+									<span ng-if="parms.pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
 								</div>
 							</td>
 						</tr>
@@ -442,7 +446,8 @@
 	                    <tr ng-if="!parms.srcDetList.length">
 							<td colspan="10">
 								<div class="no-data">
-									暂无数据,正在努力打造中↖(^ω^)↗
+									<span ng-if="!parms.pulling">暂无数据</span>
+									<span ng-if="parms.pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
 								</div>
 							</td>
 						</tr>

@@ -137,7 +137,8 @@
 					<tr ng-if="!model.prods.length">
 						<td colspan="{{3+theads.length}}">
 							<div class="no-data">
-								没有找到搜索条件对应的宝贝
+								<span ng-if="!model.pulling">没有找到搜索条件对应的宝贝</span>
+								<span ng-if="model.pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
 							</div>
 						</td>
 					</tr>

@@ -1,7 +1,7 @@
 dm.directive('distriprods',['$rootScope','distriProdModel',function($rootScope,distriProdModel){
 	var compile = function(element,attrs,link){
 		return function($scope,$element,$attrs){
-			console.log('distriprods');
+			//console.log('distriprods');
 		}
 	};
 	var controller = ['$scope','$element','$attrs','$parse','initPages',function($scope,$element,$attrs,$parse,initPages){
@@ -118,10 +118,14 @@ dm.factory('distriProdModel',['tools',function(tools){
 			status:this.status,
 			count:this.count
 		};
+		this.pulling = false;//初始化时 进行转圈操作
+		//获取数据
 		this.getData = function(parms,callback){
+			this.pulling = true;
+			this.prods = [];
 			$.extend(this.filter,parms);
 			//this.filter = parms;
-			var _ajax = tools.promise(api.getData,true);
+			var _ajax = tools.promise(api.getData,false);
 			_ajax({
 				data:this.filter
 			}).then(function(resp){
@@ -144,12 +148,14 @@ dm.factory('distriProdModel',['tools',function(tools){
 						tmp.push(_dis);
 					});
 					self.prods = tmp;
+					self.pulling = false;
 					if(callback){
 						callback(resp.value);
 					}
 				}
 			});
  		};
+ 		//上下架操作
 		this.updateStatus = function(id,callback){
 			tools.http({
 				url:api.updateStatus,

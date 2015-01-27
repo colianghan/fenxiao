@@ -53,33 +53,33 @@
 										<div class="control-group">
 											<label class="control-label">月分销客单价:</label>
 											<div class="controls">
-												<input type="text" class="input-medium" ng-model="parms.parms.lowDisPerCustomerTransaction">
+												<input type="text" class="input-small" ng-model="parms.parms.lowDisPerCustomerTransaction">
 												<span>~</span>
-												<input type="text" class="input-medium" ng-model="parms.parms.highDisPerCustomerTransaction">
+												<input type="text" class="input-small" ng-model="parms.parms.highDisPerCustomerTransaction">
 											</div>
 										</div>
 										<div class="control-group">
 											<label class="control-label">月全店客单价:</label>
 											<div class="controls">
-												<input type="text" class="input-medium" ng-model="parms.parms.lowInAllPerCustomerTransaction">
+												<input type="text" class="input-small" ng-model="parms.parms.lowInAllPerCustomerTransaction">
 												<span>~</span>
-												<input type="text" class="input-medium" ng-model="parms.parms.highInAllPerCustomerTransaction">
+												<input type="text" class="input-small" ng-model="parms.parms.highInAllPerCustomerTransaction">
 											</div>
 										</div>
 										<div class="control-group">
 											<label class="control-label">月分销UV:</label>
 											<div class="controls">
-												<input type="text" class="input-medium" ng-model="parms.parms.lowDisUv">
+												<input type="text" class="input-small" ng-model="parms.parms.lowDisUv">
 												<span>~</span>
-												<input type="text" class="input-medium" ng-model="parms.parms.highDisUv">
+												<input type="text" class="input-small" ng-model="parms.parms.highDisUv">
 											</div>
 										</div>
 										<div class="control-group">
 											<label class="control-label">月全店UV:</label>
 											<div class="controls">
-												<input type="text" class="input-medium" ng-model="parms.parms.lowInAllDisUv">
+												<input type="text" class="input-small" ng-model="parms.parms.lowInAllDisUv">
 												<span>~</span>
-												<input type="text" class="input-medium" ng-model="parms.parms.highInAllUv">
+												<input type="text" class="input-small" ng-model="parms.parms.highInAllUv">
 											</div>
 										</div>
 									</div>
@@ -270,11 +270,11 @@
 							<td>
 								<label class="checkbox" ng-click="model.selectItem(item);">
 									<input type="checkbox" ng-model="item.select" />
-									<i class="badge badge-info">{{$index}}</i>
+									<i class="badge badge-info">{{$index+1}}</i>
 								</label>
 							</td>
-							<td>
-								<a href="javascript:;" ng-click="getDetail(item);">{{item.disNick}}</a>
+							<td class="aliseTd">
+								<a href="javascript:;" class="alise" title="{{item.disNick}}" ng-click="getDetail(item);">{{item.disNick}}</a>
 							</td>
 							<td>{{item.disUv}}</td>
 							<td>{{item.pv}}</td>
@@ -292,7 +292,8 @@
 						<tr ng-if="!parms.dis.length">
 							<td colspan="14">
 								<div class="no-data">
-									暂无数据,正在努力打造中↖(^ω^)↗
+									<span ng-if="!parms.pulling">暂无数据</span>
+									<span ng-if="parms.pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
 								</div>
 							</td>
 						</tr>

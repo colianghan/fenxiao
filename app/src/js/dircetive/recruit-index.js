@@ -6,7 +6,7 @@ dm.directive('recruitIndex',['$parse',function($parse){
 			$close.click(function(e){
 				$table.hide();
 			});
-			console.log('recruitindex');
+			//console.log('recruitindex');
 		}
 	};
 	var controller = ['$scope','$element','$attrs','initPages','recruitIndexModel',function($scope,$element,$attrs,initPages,recruitIndexModel){
@@ -104,7 +104,7 @@ dm.factory('recruitIndexModel',['tools',function(tools){
 			api.
 				getRecruitOfYesterdayRecruitDistributors().then(function(resp){
 					if(resp.success){
-						console.log(resp.value);
+						//console.log(resp.value);
 						//debugger;
 						var _value = resp.value;
 						//添加为分销商
@@ -121,7 +121,7 @@ dm.factory('recruitIndexModel',['tools',function(tools){
 			api.
 				getRecruitOfYesterdayContactDistributors().then(function(resp){
 					if(resp.success){
-						console.log(resp.value);
+						//console.log(resp.value);
 						//debugger;
 						var _value = resp.value;
 						self.intentionSize=_value.intentionSize;//新增意向
@@ -133,7 +133,7 @@ dm.factory('recruitIndexModel',['tools',function(tools){
 			api.
 				getRecruitOfGatherContactDistributors().then(function(resp){
 					if(resp.success){
-						console.log(resp.value);
+						//console.log(resp.value);
 						self.gather = resp.value;
 					}
 				});

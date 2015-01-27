@@ -25,11 +25,15 @@ dm.controller('behavior',['$rootScope','$scope','$routeParams','tools','grades',
     var dropDisNick,dropTradeType;//降低等级时 所选的分销商
     $scope.layerType=1;
     var _data={};
+    $scope.pulling = false; //初次加载 获取数据
+    //获取数据
     var getData = function(data,callback){
+        $scope.pulling = true;
         tools.http({
             url:api.get,
             data:data,
             succ:function(resp){
+                $scope.pulling = false;
                 if(resp.success){
                     callback(resp.value);
                 }

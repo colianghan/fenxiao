@@ -875,6 +875,31 @@ h4 .pull-right{
 .table .imgTd{
 	width: 40px !important;
 }
+.table .index{
+	width: 3em;
+}
+.table .aliseTd{
+	width: 10em;
+}
+.table td{
+	vertical-align: middle;
+}
+.table .alise{
+	width:10em;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow:ellipsis;
+	display: block;
+}
+.table .alise-2x{
+	width: 20em !important;
+}
+.table img {
+	width: 40px;
+	height: 40px;
+}
+
+
 
 /* 页面编写结束 end */
 .pagination.ng-table-pagination li{

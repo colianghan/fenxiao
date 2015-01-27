@@ -254,7 +254,7 @@
 							<th>所在省</th>
 							<th>所在市</th>
 							<th class="sortable" ng-click="getSort($event,'IS_FENXIAO');"><div>是否分销商</div></th>
-							<th>
+							<th ng-if="tagIndex<3">
 								<select ng-model="model.parms.status" ng-change="change();" class="span12">
 									<option value="attention">关注</option>
 									<option value="followUp">跟进</option>
@@ -262,8 +262,8 @@
 									<option value="" ng-selected="model.parms.status==undefined">状态</option>
 								</select>
 							</th>
-							<th>操作时间</th>
-							<th>操作人员</th>
+							<th ng-if="tagIndex<3">操作时间</th>
+							<th ng-if="tagIndex<3">操作人员</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -271,11 +271,11 @@
 							<td>
 								<label class="checkbox" ng-click="model.selectItem(i);">
 									<input type="checkbox" ng-model="i.select"/>
-									<i class="badge badge-info">{{$index}}</i>
+									<i class="badge badge-info">{{$index+1}}</i>
 								</label>
 							</td>
-							<td>
-								<a href="javascript:;" ng-click="getDetail(i);">{{i.nick}}</a>
+							<td class="aliseTd">
+								<a href="javascript:;" title="{{i.nick}}" class="alise" ng-click="getDetail(i);">{{i.nick}}</a>
 							</td>
 							<td>{{i.sellMoney}}</td>
 							<td>{{i.sellAmount}}</td>
@@ -289,14 +289,14 @@
 							<td>{{i.province||'--'}}</td>
 							<td>{{i.city||'--'}}</td>
 							<td>{{i.isFenxiao=='0'?'否':'是'}}</td>
-							<td>{{i.status | recruitStatus}}</td>
-							<td>{{i.operateTime | timer}}</td>
-							<td>{{i.operater}}</td>						
+							<td ng-if="tagIndex<3">{{i.status | recruitStatus}}</td>
+							<td ng-if="tagIndex<3">{{i.operateTime | timer}}</td>
+							<td ng-if="tagIndex<3">{{i.operater}}</td>						
 						</tr>
 						<tr ng-if="!model.list.length">
-							<td colspan="15">
+							<td colspan="{{tagIndex>2?12:15}}">
 								<div class="no-data">
-									<span ng-if="!model.pulling">暂无数据,正在努力打造中↖(^ω^)↗</span>
+									<span ng-if="!model.pulling">暂无数据</span>
 									<span ng-if="model.pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
 								</div>
 							</td>

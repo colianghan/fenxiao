@@ -1,7 +1,7 @@
 dm.directive('distrilist',function(){
 	var compile = function(element,attrs,link){
 		return function(scope,element,attrs){
-			console.log('distriList');
+			//console.log('distriList');
 		}
 	};
 	var controller = ['$scope','$rootScope','$attrs','$parse','distriListModel','initPages',function($scope,$rootScope,$attrs,$parse,distriListModel,initPages){
@@ -10,14 +10,14 @@ dm.directive('distrilist',function(){
 		if(!item){
 			return;
 		};
-		console.log(item);
+		//console.log(item);
 		var model = $scope.model = new distriListModel(item);
 		model.getList(null,function(v){
 			initPages($scope,v.resultSize);
 		});
 		$scope.getPage = function(page){
 			//获取分页
-			debugger;
+			//debugger;
 			if($scope.now == page){
 				return;
 			}
@@ -30,7 +30,6 @@ dm.directive('distrilist',function(){
 		};
 		$scope.showDetail = function(item){
 			//显示详情页
-			console.log($scope);
 			$scope.$parent.$parent.detail = item;
 			$scope.$parent.$parent.show=3;
 		};
@@ -104,14 +103,17 @@ dm.factory('distriListModel',['tools',function(tools){
 		var self = this;
 		this.count = tools.config.table.count;
 		this.pid = item.pid;
+		this.pulling = false; // 获取数据转圈操作
 		this.parms = {
 			pid:item.pid,
 			count:this.count,
 			begin:0
 		};
+		//获取列表
 		this.getList = function(parms,callback){
 			$.extend(this.parms,parms);
 			var getAjax = tools.promise(api.getDistrList,true);
+			this.pulling = true;
 			getAjax({
 				data:this.parms
 			}).then(function(resp){
@@ -120,6 +122,7 @@ dm.factory('distriListModel',['tools',function(tools){
 					_gradesObj[0]={gradeId:0,name:'未分组'};
 					self.list = resp.value.list;
 					self.gradeList = _gradesObj;
+					self.pulling = false;
 					if(callback){
 						callback(resp.value);
 					}
@@ -128,6 +131,7 @@ dm.factory('distriListModel',['tools',function(tools){
 				}
 			});
 		};
+		//修改价格
 		this.updatePrice = function(prod,prices,callback){
 			tools.http({
 				url:api.editPrice,

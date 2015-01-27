@@ -17,106 +17,148 @@
 				<table class="table table-hover table-bordered" ng-table="keywords">
 					<tbody>
 						<tr ng-repeat="item in $data">
-							<td data-title="'序号'">
+							<td data-title="'序号'" class="index">
 								<span class="badge badge-info">{{$index+1}}</span>
 							</td>
-							<td data-title="'关键词'">
-								<a href="javascript:;" ng-click="getShops(item.query)">{{item.query}}</a>
+							<td data-title="'关键词'" class="aliseTd">
+								<a href="javascript:;" title="{{item.query}}" class="alise alise-2x" ng-click="getShops(item.query)">{{item.query}}</a>
 							</td>
 							<td data-title="'点击量'" sortable="'click'">{{item['click']}}</td>
 							<td data-title="'成交量'" sortable="'alipayAuctionNum'">{{item['alipayAuctionNum']}}</td>
 							<td data-title="'转化率(%)'" sortable="'transformationEfficiency'">{{item['transformationEfficiency']*100 | number:2}}%</td>
 						</tr>
-						<tr ng-if="!$data.length"><td colspan="5"><div class="no-data">暂无数据，正在努力统计中O(∩_∩)O~</div></td></tr>
+						<tr ng-if="!$data.length">
+							<td colspan="5">
+								<div class="no-data">
+									<span ng-if="!pulling">暂无数据</span>
+									<span ng-if="pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+								</div>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
 			<div ng-if="direction==2&&tagIndex==1">
 				<table class="table table-hover table-bordered" ng-table="shopes">
 					<tr ng-repeat="item in $data">
-						<td data-title="'序号'">
+						<td data-title="'序号'" class="index">
 							<span class="badge badge-info">{{$index+1}}</span>
 						</td>
-						<td data-title="'关键词'">
-							<a href="javascript:;" ng-click="getProds(item.query,item);">{{item.disNick}}</a>
+						<td data-title="'关键词'" class="index" class="aliseTd">
+							<a href="javascript:;" title="{{item.disNick}}" class="alise" ng-click="getProds(item.query,item);">{{item.disNick}}</a>
 						</td>
 						<td data-title="'点击量'" sortable="'click'">{{item['click']}}</td>
 						<td data-title="'成交量'" sortable="'alipayAuctionNum'">{{item['alipayAuctionNum']}}</td>
 						<td data-title="'转化率(%)'" sortable="'transformationEfficiency'">{{item['transformationEfficiency']*100 | number:2}}%</td>
 					</tr>
-					<tr ng-if="!$data.length"><td colspan="5"><div class="no-data">暂无数据，正在努力统计中O(∩_∩)O~</div></td></tr>
+					<tr ng-if="!$data.length">
+						<td colspan="5">
+							<div class="no-data">
+								<span ng-if="!pulling">暂无数据</span>
+								<span ng-if="pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+							</div>
+						</td>
+					</tr>
 				</table>
 			</div>
 			<div ng-if="direction==3&&tagIndex==1">
 				<table class="table table-hover table-bordered"  ng-table="prods">
 					<tr ng-repeat="item in $data">
-						<td data-title="'序号'">
+						<td data-title="'序号'" class="index">
 							<span class="badge badge-info">{{$index+1}}</span>
 						</td>
-						<td data-title="'宝贝'">
+						<td data-title="'宝贝'" class="imgTd">
 							<img ng-src="{{item.picUrl}}_40x40.jpg" alt="图片" class="img-circle">
 						</td>
-						<td data-title="'标题'">
-							<a href="javascript:;" target="_blank">{{item.title}}</a>
+						<td data-title="'标题'" class="aliseTd">
+							<a href="javascript:;" title="{{item.title}}" class="alise alise-2x" target="_blank">{{item.title}}</a>
 						</td>
 						<td data-title="'点击量'" sortable="'click'">{{item['click']}}</td>
 						<td data-title="'成交量'" sortable="'alipayAuctionNum'">{{item['alipayAuctionNum']}}</td>
 						<td data-title="'转化率(%)'" sortable="'transformationEfficiency'">{{item['transformationEfficiency']*100 | number:2}}%</td>
 					</tr>
-					<tr ng-if="!$data.length"><td colspan="6"><div class="no-data">暂无数据，正在努力统计中O(∩_∩)O~</div></td></tr>
+					<tr ng-if="!$data.length">
+						<td colspan="6">
+							<div class="no-data">
+								<span ng-if="!pulling">暂无数据</span>
+								<span ng-if="pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+							</div>
+						</td>
+					</tr>
 				</table>
 			</div>
 			<div ng-if="direction==1&&tagIndex==2">
 				<table class="table table-hover table-bordered" ng-table="keywords">
 					<tbody>
 						<tr ng-repeat="item in $data">
-							<td data-title="'序号'">
+							<td data-title="'序号'" class="index">
 								<span class="badge badge-info">{{$index+1}}</span>
 							</td>
-							<td data-title="'关键词'">
-								<a href="javascript:;" ng-click="getShops(item.query)">{{item.query}}</a>
+							<td data-title="'关键词'" class="aliseTd">
+								<a href="javascript:;" title="{{item.query}}" class="alise alise-2x" ng-click="getShops(item.query)">{{item.query}}</a>
 							</td>
 							<td data-title="'展现量'"     sortable="'impression'">{{item['impression']}}</td>
 							<td data-title="'点击率(%)'"  sortable="'clickRate'">{{item['clickRate']*100 | number:2}}%</td>
 							<td data-title="'成交金额'"   sortable="'alipayTradeAmt'">{{item['alipayTradeAmt']}}</td>
 						</tr>
-						<tr ng-if="!$data.length"><td colspan="5"><div class="no-data">暂无数据，正在努力统计中O(∩_∩)O~</div></td></tr>
+						<tr ng-if="!$data.length">
+							<td colspan="5">
+								<div class="no-data">
+									<span ng-if="!pulling">暂无数据</span>
+									<span ng-if="pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+								</div>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
 			<div ng-if="direction==2&&tagIndex==2">
 				<table class="table table-hover table-bordered" ng-table="shopes">
 					<tr ng-repeat="item in $data">
-						<td data-title="'序号'">
+						<td data-title="'序号'" class="index">
 							<span class="badge badge-info">{{$index+1}}</span>
 						</td>
-						<td data-title="'关键词'">
-							<a href="javascript:;" ng-click="getProds(item.query,item);">{{item.disNick}}</a>
+						<td data-title="'关键词'" class="aliseTd">
+							<a href="javascript:;" title="{{item.disNick}}" class="alise" ng-click="getProds(item.query,item);">{{item.disNick}}</a>
 						</td>
 						<td data-title="'展现量'"     sortable="'impression'">{{item['impression']}}</td>
 						<td data-title="'点击率(%)'"  sortable="'clickRate'">{{item['clickRate']*100 | number:2}}%</td>
 						<td data-title="'成交金额'"   sortable="'alipayTradeAmt'">{{item['alipayTradeAmt']}}</td>
 					</tr>
-					<tr ng-if="!$data.length"><td colspan="5"><div class="no-data">暂无数据，正在努力统计中O(∩_∩)O~</div></td></tr>
+					<tr ng-if="!$data.length">
+						<td colspan="5">
+							<div class="no-data">
+								<span ng-if="!pulling">暂无数据</span>
+								<span ng-if="pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+							</div>
+						</td>
+					</tr>
 				</table>
 			</div>
 			<div ng-if="direction==3&&tagIndex==2">
 				<table class="table table-hover table-bordered"  ng-table="prods">
 					<tr ng-repeat="item in $data">
-						<td data-title="'序号'">
+						<td data-title="'序号'" class="index">
 							<span class="badge badge-info">{{$index+1}}</span>
 						</td>
-						<td data-title="'宝贝'">
+						<td data-title="'宝贝'" class="imgTd">
 							<img ng-src="{{item.picUrl}}_40x40.jpg" alt="图片" class="img-circle">
 						</td>
-						<td data-title="'标题'">
-							<a href="javascript:;" target="_blank">{{item.title}}</a>
+						<td data-title="'标题'" class="aliseTd">
+							<a href="javascript:;" title="{{item.title}}" class="alise alise-2x" target="_blank">{{item.title}}</a>
 						</td>
 						<td data-title="'展现量'"     sortable="'impression'">{{item['impression']}}</td>
 						<td data-title="'点击率(%)'"  sortable="'clickRate'">{{item['clickRate']*100 | number:2}}%</td>
 						<td data-title="'成交金额'"   sortable="'alipayTradeAmt'">{{item['alipayTradeAmt']}}</td>
 					</tr>
-					<tr ng-if="!$data.length"><td colspan="6"><div class="no-data">暂无数据，正在努力统计中O(∩_∩)O~</div></td></tr>
+					<tr ng-if="!$data.length">
+						<td colspan="6">
+							<div class="no-data">
+								<span ng-if="!pulling">暂无数据</span>
+								<span ng-if="pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+							</div>
+						</td>
+					</tr>
 				</table>
 			</div>
 		</div>
@@ -187,7 +229,7 @@
 					</thead>
 					<tbody>
 						<tr ng-repeat="item in model.srcList">
-							<td>
+							<td class="index">
 								<span class="badge badge-info">{{$index+1}}</span>
 							</td>
 							<td>
@@ -198,7 +240,14 @@
 							<td>{{item.alipayAuctionNum}}</td>
 							<td>{{item.transformationEfficiency * 100 | number:2}}%</td>
 						</tr>
-						<tr ng-if="!model.srcList.length"><td colspan="6"><div class="no-data">暂无数据，正在努力统计中O(∩_∩)O~</div></td></tr>
+						<tr ng-if="!model.srcList.length">
+							<td colspan="6">
+								<div class="no-data">
+									<span ng-if="!model.pulling">暂无数据</span>
+									<span ng-if="model.pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+								</div>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 				<page ng-if="pages.length"></page>
@@ -217,7 +266,7 @@
 					</thead>
 					<tbody>
 						<tr ng-repeat="item in model.disList">
-							<td>
+							<td class="index">
 								<span class="badge badge-info">{{$index+1}}</span>
 							</td>
 							<td>
@@ -228,7 +277,14 @@
 							<td>{{item.alipayAuctionNum}}</td>
 							<td>{{item.transformationEfficiency * 100 | number:2}}%</td>
 						</tr>
-						<tr ng-if="!model.disList.length"><td colspan="6"><div class="no-data">暂无数据，正在努力统计中O(∩_∩)O~</div></td></tr>
+						<tr ng-if="!model.disList.length">
+							<td colspan="6">
+								<div class="no-data">
+									<span ng-if="!model.pulling">暂无数据</span>
+									<span ng-if="model.pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+								</div>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 				<page ng-if="pages.length"></page>
@@ -238,7 +294,7 @@
 					<thead>
 						<tr>
 							<th>序号</th>
-							<th>宝贝图片</th>
+							<th>图片</th>
 							<th>宝贝标题</th>
 							<th class="sortable sort-desc" ng-click="getSort($event,'IUV');"><div>独立访客数</div></th>
 							<th class="sortable" ng-click="getSort($event,'ALIPAY_TRADE_AMT');"><div>成交金额</div></th>
@@ -248,21 +304,28 @@
 					</thead>
 					<tbody>
 						<tr ng-repeat="item in model.prodsList">
-							<td>
+							<td class="index">
 								<span class="badge badge-info">{{$index+1}}</span>
 							</td>
-							<td>
+							<td class="imgTd">
 								<img ng-src="{{item.picUrl}}_40x40.jpg" alt="图片" class="img-circle">
 							</td>
-							<td>
-								<a href="javascript:;">{{item.title}}</a>
+							<td class="aliseTd">
+								<a href="javascript:;" class="alise alise-2x" title="{{item.title}}">{{item.title}}</a>
 							</td>
 							<td>{{item.iuv}}</td>
 							<td>{{item.alipayTradeAmt}}</td>
 							<td>{{item.alipayAuctionNum}}</td>
 							<td>{{item.transformationEfficiency * 100 | number:2}}%</td>
 						</tr>
-						<tr ng-if="!model.prodsList.length"><td colspan="7"><div class="no-data">暂无数据，正在努力统计中O(∩_∩)O~</div></td></tr>
+						<tr ng-if="!model.prodsList.length">
+							<td colspan="7">
+								<div class="no-data">
+									<span ng-if="!model.pulling">暂无数据</span>
+									<span ng-if="model.pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+								</div>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -318,26 +381,33 @@
 				</thead>
 				<tbody class="partnerTbody">
 					<tr ng-repeat="i in data">
-						<td>
+						<td class="index">
 							<span class="badge badge-info">{{$index+1}}</span>
 						</td>
-						<td>
+						<td class="imgTd">
 							 <img ng-src = "{{i.picUrl1}}" class="img-circle" />
 						</td>
 						<td>
-							<a href="javascript:;" ng-click="getOthers($event,i.pid1,i.pid2);">{{i.title1}}</a>
+							<a href="javascript:;" title="{{i.title1}}" ng-click="getOthers($event,i.pid1,i.pid2);">{{i.title1}}</a>
 						</td>
-						<td>
+						<td class="imgTd">
 							<img ng-src = "{{i.picUrl2}}" class="img-circle" />
 						</td>
 						<td>
-							<a href="javascript:;">{{i.title2}}</a>
+							<a href="javascript:;" title="{{i.title2}}">{{i.title2}}</a>
 						</td>
 						<td>
 							<a href="javascript:;" ng-click="getOthersData($event,i.pid1,i.pid2);">{{i.sortValue}}</a>
 						</td>
 					</tr>
-					<tr ng-if="!data.length"><td colspan="6"><div class="no-data">暂无数据，正在努力统计中O(∩_∩)O~</div></td></tr>
+					<tr ng-if="!data.length">
+						<td colspan="6">
+							<div class="no-data">
+								<span ng-if="!pulling">暂无数据</span>
+								<span ng-if="pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+							</div>
+						</td>
+					</tr>
 					<tr class="othersPartner hide">
 						<td colspan="6">
 							<div ng-if="showOther==1">
@@ -351,10 +421,10 @@
 											<td>{{dataTitle}}</td>
 										</tr>
 										<tr ng-repeat="item in otherPartners">
-											<td>
+											<td class="index">
 												<span class="badge badge-info">{{$index+1}}</span>
 											</td>
-											<td>
+											<td class="imgTd">
 												<img  ng-src = "{{item.picUrl2}}"/>
 											</td>
 											<td>
@@ -362,6 +432,14 @@
 											</td>
 											<td>{{item.disNick}}</td>
 											<td>{{item.sortValue}}</td>
+										</tr>
+										<tr ng-if="!otherPartners.length">
+											<td colspan="5">
+												<div class="no-data">
+													<span ng-if="!pulling">暂无数据</span>
+													<span ng-if="pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+												</div>
+											</td>
 										</tr>
 									</tbody>
 								</table>
@@ -376,7 +454,7 @@
 											<td>成交量</td>
 										</tr>
 										<tr ng-repeat="item in shopAssocialData">
-											<td>
+											<td class="index">
 												<span class="badge badge-info">{{$index+1}}</span>
 											</td>
 											<td>
@@ -386,6 +464,14 @@
 												{{item.sortValue}}
 											</td>
 											<td>{{item.assoAlipayAuctionNum}}</td>
+										</tr>
+										<tr ng-if="!shopAssocialData.length">
+											<td colspan="4">
+												<div class="no-data">
+													<span ng-if="!pulling">暂无数据</span>
+													<span ng-if="pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+												</div>
+											</td>
 										</tr>
 									</tbody>
 								</table>

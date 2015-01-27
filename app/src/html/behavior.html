@@ -29,7 +29,7 @@
             </thead>
             <tbody>
                 <tr ng-repeat="i in shops">
-                    <td><label class="checkbox"><input type="checkbox" ng-model="i.selected"/><span class="badge badge-info">{{$index}}</span></label></td>
+                    <td><label class="checkbox"><input type="checkbox" ng-model="i.selected"/><span class="badge badge-info">{{$index+1}}</span></label></td>
                     <td>{{i.disNick}}</td>
                     <td>{{i.tradeType | tradeType_filter}}</td>
                     <td>
@@ -48,7 +48,14 @@
                         <a href="javascript:;" class="mr10" ng-click="stopTerminal($event,$index);">终止合作</a>
                     </td>
                 </tr>
-                <tr ng-if="!shops.length"><td colspan="10"><div class="no-data">暂无数据，正在努力统计中O(∩_∩)O~</div></td></tr>
+                <tr ng-if="!shops.length">
+                  <td colspan="10">
+                      <div class="no-data">
+                          <span ng-if="!pulling">暂无数据</span>
+                          <span ng-if="pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+                      </div>
+                  </td>
+                </tr>
                 <tr class="hide othersPartner">
                   <td colspan="10">
                     <table class="table table-bordered table-hover table-condensed" ng-if="tagIndex==1&&!showLayers">
@@ -63,16 +70,24 @@
                         </thead>
                         <tbody>
                            <tr ng-repeat = "i in prods">
-                                   <td>
-                                      <span class = "badge badge-info">{{$index}}</span>
-                                   </td>
-                                   <td>
-                                      <img ng-src = "{{i.picPath+'_40x40.jpg'}}" class = "br100"/>
-                                   </td>
-                                   <td>{{i.name}} </td>
-                                   <td>{{i.reason}}</td>
-                                   <td>{{i.purchaseNum}}</td>
-                                   <td>{{i.tradeNum}}</td>
+                               <td class="index">
+                                  <span class = "badge badge-info">{{$index+1}}</span>
+                               </td>
+                               <td class="imgTd"> 
+                                  <img ng-src = "{{i.picPath+'_40x40.jpg'}}" class = "br100"/>
+                               </td>
+                               <td>{{i.name}} </td>
+                               <td>{{i.reason}}</td>
+                               <td>{{i.purchaseNum}}</td>
+                               <td>{{i.tradeNum}}</td>
+                          </tr>
+                          <tr ng-if="!prods.length">
+                              <td colspan="6">
+                                  <div class="no-data">
+                                      <span ng-if="!pulling">暂无数据</span>
+                                      <span ng-if="pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+                                  </div>
+                              </td>
                           </tr>
                         </tbody>
                     </table>
@@ -91,10 +106,10 @@
                         </thead>
                         <tbody>
                          <tr ng-repeat = "i in prods">
-                             <td>
+                             <td class="index">
                                  <span class = "badge badge-info">{{$index+1}}</span>
                              </td>
-                             <td>
+                             <td class="imgTd">
                                  <img ng-src = "{{i.picPath}}" class = "br100"/>
                              </td>
                              <td>{{i.title}}</td>
@@ -105,6 +120,14 @@
                              <td>{{i.sellPrice}}</td>
                              <td>{{i.time}}</td>
                          </tr>
+                         <tr ng-if="!prods.length">
+                              <td colspan="9">
+                                  <div class="no-data">
+                                      <span ng-if="!pulling">暂无数据</span>
+                                      <span ng-if="pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+                                  </div>
+                              </td>
+                          </tr>
                         </tbody>
                     </table>
                     <div class="text-center" ng-show="showLayers">
@@ -161,7 +184,10 @@
                             </tr>
                             <tr ng-if="!shops.neutralBadRate.length">
                                <td colspan="4">
-                                   <div class="no-data">暂无数据,正在努力打造中↖(^ω^)↗</div>
+                                   <div class="no-data">
+                                     <span ng-if="!pulling">暂无数据</span>
+                                     <span ng-if="pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+                                   </div>
                                </td>
                            </tr>
                         </tbody>
@@ -194,7 +220,10 @@
                            </tr>
                            <tr ng-if="!shops.badRate.length">
                                <td colspan="4">
-                                   <div class="no-data">暂无数据,正在努力打造中↖(^ω^)↗</div>
+                                   <div class="no-data">
+                                     <span ng-if="!pulling">暂无数据</span>
+                                     <span ng-if="pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
+                                   </div>
                                </td>
                            </tr>
                        </tbody>

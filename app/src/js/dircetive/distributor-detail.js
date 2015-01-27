@@ -132,6 +132,7 @@ dm.directive('distrdetail',['$rootScope','$compile',function($rootScope,$compile
 				//debugger;
 				$scope.parms.lowThedate = $('.lowThedate').val();
 				$scope.parms.highThedate = $('.highThedate').val();
+				$scope.data = [];
 				$scope.parms.getOperateBasicData(function(v){
 					$scope.data = $scope.parms.operateBasicData;
 					if(v.resultSize){
@@ -149,6 +150,7 @@ dm.directive('distrdetail',['$rootScope','$compile',function($rootScope,$compile
 				$scope.parms.lowThedate = $('.lowThedate').val();
 				$scope.parms.highThedate = $('.highThedate').val();
 				$scope.parms.getKeyWordInfo();
+				$scope.data = [];
 				$scope.parms.getKeyWordList(function(v){
 					$scope.data = $scope.parms.keyword.list;
 					if(v.resultSize){
@@ -223,7 +225,9 @@ dm.directive('distrdetail',['$rootScope','$compile',function($rootScope,$compile
 				alert('启示时间大于结束时间');
 				return;
 			}
+			$scope.parms.begin = 0;//初始化0
 			_obj[$scope.curNavIndex]();
+			$scope.now=1;
 		};
 		$scope.editCount = function(i){
 			var value = $('#pricCount_'+i).val();
@@ -324,6 +328,7 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 		this.keyword ={};//进店词  (shop:{},list:[])
 		this.highThedate = '';
 		this.lowThedate = '';
+		this.pulling = false; //获取数据 进行的转圈操作
 		/*this.parms = {
 			disSid:this.disId,
 			tradeType : this.tradeType,
@@ -334,6 +339,7 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 		};*/
 		/*运营基础数据*/
 		this.getOperateBasicData = function(callback){
+			this.pulling = true;
 			var getAjax =  tools.promise(api.getOperateBasicData,true);
 			getAjax({
 				data:{
@@ -351,6 +357,7 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 					//alert('成功');
 					self.operateBasicData = resp.value.auctionData;
 					self.shopData = resp.value.shopData;
+					self.pulling = false;
 					//console.log(resp.value);
 					if(callback){
 						callback(resp.value);
@@ -404,6 +411,8 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 			});
 		};
 		this.getKeyWordList = function(callback){
+			//this.keyword.list = [];
+			this.pulling = true;
 			var getAjax = tools.promise(api.getDistributorDetailQueryEffectsByQuery,true);
 			getAjax({
 				data:{
@@ -419,6 +428,7 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 			}).then(function(resp){
 				if(resp.success){
 					self.keyword.list=resp.value.list;
+					self.pulling = false;
 					if(callback){
 						callback(resp.value);
 					}
@@ -428,6 +438,8 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 			});
 		};
 		this.getKeyWordDetail = function(query,callback){
+			this.keyword.detail = [];
+			this.pulling = true;
 			var getAjax = tools.promise(api.getDistributorDetailQueryEffectsByQuery,true);
 			getAjax({
 				data:{
@@ -440,6 +452,7 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 			}).then(function(resp){
 				if(resp.success){
 					self.keyword.detail=resp.value;
+					self.pulling = false;
 					if(callback){
 						callback(resp.value);
 					}
@@ -450,6 +463,8 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 		};
 		//获取单个 关键词详情列表
 		this.getQueryDetail =function(item,callback){
+			this.queDetList = [];
+			this.pulling = true;
 			var _getAjax =  tools.promise(api.getDistributorQueryEffectsDetailByQuery,true);
 			_getAjax({
 				data:{
@@ -463,6 +478,7 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 				if(resp.success){
 					// query detail list
 					self.queDetList = resp.value;
+					self.pulling = false;
 					if(callback){
 						callback(resp.value);
 					}
@@ -471,6 +487,8 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 		}
 		/*流量渠道*/
 		this.getDistriDataSrc = function(callback){
+			this.distriDataSrc = [];
+			this.pulling = true;
 			var getAjax = tools.promise(api.getDistributorDetailPvSrcEffectsByShop,true);
 			getAjax({
 				data:{
@@ -504,6 +522,7 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 						_src = _src.concat(item.chanels);
 					});
 					self.distriDataSrc = _src;
+					self.pulling = false;
 					if(callback){
 						callback(resp.value);
 					}
@@ -512,6 +531,8 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 		}
 		this.getProds = function(callback){
 			//获取授权产品及折扣
+			this.prods = [];
+			this.pulling = true;
 			var getAjax = tools.promise(api.getPrudsList,true);
 			getAjax({
 				data:{
@@ -524,6 +545,7 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 					//debugger;
 					self.productLines =  _.indexBy(resp.value.productLines,'productLineId');
 					self.prods = resp.value.list;
+					self.pulling = false;
 					if(callback){
 						callback(resp.value);
 					}
@@ -565,7 +587,8 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 		};
 		//获取流量渠道详情
 		this.getSrcDtail = function(item,callback){
-			//debugger;
+			this.srcDetList = [];
+			this.pulling = true;
 			var _getAjax = tools.promise(api.getSrcDtail,true);
 			_getAjax({
 				data:{
@@ -579,6 +602,7 @@ dm.factory('distrDetail',['$rootScope','tools',function($rootScope,tools){
 				if(resp.success){
 					//成功
 					self.srcDetList = resp.value;
+					self.pulling = false;
 					if(callback){
 						callback(resp.value);
 					}

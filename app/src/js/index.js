@@ -53,8 +53,8 @@ dm.controller('index',['$scope','$rootScope','$routeParams','tools',function($sc
 	$scope.end=dYesterDay.getFullYear()+'-'+(dYesterDay.getMonth()+1)+'-'+dYesterDay.getDate();
 	$scope.ths=['成交金额','转化率','店铺UV','客单价','订单数'];
 	var frsh = $scope.refresh=function(){
-		var begin = $('.date')[0].value||$scope.begin;
-		var end = $('.date')[1].value||$scope.end;
+		var begin = $('.beginDate')[0].value||$scope.begin;
+		var end = $('.endDate')[0].value||$scope.end;
 		var obeginDate = new Date(begin.replace('-','/')).getTime();
 		var oendDate = new Date(end.replace('-','/')).getTime();
 		if((obeginDate<imothAgo||obeginDate>iYesterDay)||(oendDate<imothAgo||oendDate>iYesterDay)){

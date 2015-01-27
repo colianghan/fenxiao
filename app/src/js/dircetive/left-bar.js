@@ -29,11 +29,18 @@ dm.directive('leftBar',function(){
 				setShortCurts.get(function(v){
 					$scope.quickLinks = v;
 				});
-			};
-			if (controller==='compete') {
-				/*ajax 请求 获取 竞争对手列表*/
-			};
-
+			}
+			if (controller==='settings') {
+				/*ajax 请求 获取 设置列表*/
+				var _nick = $scope.nick;
+				if(_nick!=='商家测试帐号17'){
+					_.each($scope.child['系统设置'],function(item,index){
+						if(item.name==='新闻管理'){
+							$scope.child['系统设置'].splice(index,1);
+						}
+					});
+				}
+			}
 			/*分销管理 处理自定义分层*/
 			if(controller==='manage'){
 				layers = new grades();
@@ -88,6 +95,11 @@ dm.directive('leftBar',function(){
 			$scope.quickLinks = v;
 		});
 
+		$scope.$on('userInfo',function(e,v){
+			if(v!=undefined){
+				$scope.nick = v.nick;
+			}
+		});
 	}];
 	return {
 		restrict:'E',

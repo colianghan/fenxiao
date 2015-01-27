@@ -88,7 +88,8 @@
 			<tr ng-if="!model.list.length">
 				<td colspan="8">
 					<div class="no-data">
-						暂无数据,正在努力打造中↖(^ω^)↗
+						<span ng-if="!model.pulling">暂无数据</span>
+						<span ng-if="model.pulling"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></span>
 					</div>
 				</td>
 			</tr>
