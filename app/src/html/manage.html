@@ -101,13 +101,17 @@
 							<td>指标</td>
 							<td>范围</td>
 							<td class="text-center">
-								<div class="input-append">
-										<input type="text" class="input-small low-input" ng-class="i.type=='date'?'date':''"  value="{{i.low}}">
-										<span class="add-on" ng-bind-html="i.unit"></span>
+								<div class="input-append" ng-switch="i.type">
+									<input type="text" ng-switch-when="date" class="input-small low-input date" value="{{i.low}}">
+									<input type="text" ng-switch-when="dor" class="input-small low-input" ng-value="{{i.low==undefined?'':i.low*100}}">
+									<input type="text" ng-switch-default class="input-small low-input" value="{{i.low}}">
+									<span class="add-on" ng-bind-html="i.unit"></span>
 								</div>	
 								<span class="ml10 mr10">—</span>
-								<div class="input-append">
-									<input type="text" class="input-small high-input"  ng-class="i.type=='date'?'date':''"  value="{{i.high}}">
+								<div class="input-append" ng-switch="i.type">
+									<input type="text" ng-switch-when="date" class="input-small high-input date" value="{{i.high}}">
+									<input type="text" ng-switch-when="dor" class="input-small high-input" ng-value="{{i.high==undefined?'':i.high*100}}">
+									<input type="text" ng-switch-default class="input-small high-input" value="{{i.high}}">
 									<span class="add-on" ng-bind-html="i.unit"></span>
 								</div>	
 							</td>

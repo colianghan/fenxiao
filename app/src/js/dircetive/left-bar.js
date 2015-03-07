@@ -23,11 +23,15 @@ dm.directive('leftBar',function(){
 			/*首页*/
 			if (controller==='index') {
 				//$scope.quickLinks =['商品录入','创建活动','订单管理'];
+				$scope.no_data = false;
 				if(_.keys($scope.quickLinks).length){
 					return;
 				}
 				setShortCurts.get(function(v){
 					$scope.quickLinks = v;
+					if(!_.keys($scope.quickLinks).length){
+						$scope.no_data = true;
+					}
 				});
 			}
 			if (controller==='settings') {

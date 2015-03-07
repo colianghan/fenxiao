@@ -99,6 +99,8 @@ dm.directive('distributors',['$compile','$routeParams',function($compile,$routeP
 				var _tmp = $('.'+item,$element).val();
 				if(_tmp!=''){
 					_obj[item] = _tmp/100;
+				}else{
+					delete $scope.parms.parms[item];
 				}
 			});
 			$scope.parms.getData(_obj,function(v){
@@ -148,7 +150,6 @@ dm.directive('distributors',['$compile','$routeParams',function($compile,$routeP
 		controller:controller 
 	}
 }]);
-
 dm.factory('distriAction',['tools',function(tools){
 	var api = {
 		sendMessage:'sendDistributorOfShortMessage.htm'//发送消息
@@ -358,8 +359,6 @@ dm.directive('page',function(){
 		repalce:true
 	}
 });
-
-
 dm.filter('shopType',function(){
 	return function(v){
 		if(v=='商城'){

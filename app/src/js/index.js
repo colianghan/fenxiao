@@ -87,7 +87,8 @@ dm.controller('index',['$scope','$rootScope','$routeParams','tools',function($sc
 Highcharts.setOptions({
 	lang:{
 		months:['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
-		shortMonths:[1,2,3,4,5,6,7,8,9,10,11,12]
+		shortMonths:[1,2,3,4,5,6,7,8,9,10,11,12],
+		noData:'暂无数据'
 	}
 });
 
@@ -102,10 +103,16 @@ dm.controller('data-preview',['$scope','tools','translate',function($scope,tools
 				url:'getHomePageTrendOfTradeAmt.htm',
 				succ:function(resp){
 					if (resp.success) {
-						var d = translate(resp.value.disAmtTrend);
+						var d = translate(resp.value.disAmtTrend),_d = translate(resp.value.supAmtTrend);
 						var dateList = d.keys, // 日期列表
 						    disAmtTrend = d.values,//分销商数据
-						    supAmtTrend = translate(resp.value.supAmtTrend).values;//供应商数据
+						    supAmtTrend = _d.values;//供应商数据
+						if(!dateList.length){
+							dateList = _d.keys;
+							if(!dateList.length){
+								dateList=['2014-1-10 00:00:00'];
+							}
+						}
 						var dates = dateList[0].split(' ')[0].split('-');
 						var options={
 							chart:{
@@ -187,7 +194,10 @@ dm.controller('data-preview',['$scope','tools','translate',function($scope,tools
 		 		succ:function(resp){
 		 			if(resp.success){
 		 				var _tmp = fieldName=='rise'?'alipayTradeAmt':fieldName;
-		 				var baseNum = resp.value[0][_tmp];
+		 				var baseNum = 0;
+		 				if(resp.value.length){
+		 					baseNum = resp.value[0][_tmp];
+		 				}
 		 				_.each(resp.value,function(item){
 		 					if(baseNum==0){
 		 						item.width=0;

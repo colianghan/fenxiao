@@ -34,6 +34,11 @@
 							</div>
 							<div class="span2"></div>
 						</div>
+						<div ng-if="!dataList.length">
+							<div class="no-data span9" style="height: 300px;line-height: 215px;">
+								暂无数据
+							</div>
+						</div>
 					</div>
 					<div class="scroll-index">
 						<label class="radio">
@@ -130,7 +135,7 @@
 							<span ng-if="'转化率'!=item">{{ActionData.supData[$index]}}</span>
 						</td>
 						<td trend="{{ActionData.supTrend[$index]}}">
-							<i class="fa" ng-class="ActionData.supTrend[$index]>=0?'fa-arrow-up':'fa-arrow-down'"></i>
+							<i class="fa" ng-if="ActionData.supTrend[$index]!=0" ng-class="ActionData.supTrend[$index]>0?'fa-arrow-up':'fa-arrow-down'"></i>
 							<span class="ml10">{{ActionData.supTrend[$index] | abs}}</span>
 						</td>
 						<td>
@@ -138,7 +143,7 @@
 							<span ng-if="'转化率'!=item">{{ActionData.disData[$index]}}</span>
 						</td>
 						<td trend="{{ActionData.disTrend[$index]}}">
-							<i class="fa" ng-class="ActionData.disTrend[$index]>=0?'fa-arrow-up':'fa-arrow-down'"></i>
+							<i class="fa" ng-if="ActionData.disTrend[$index]!=0" ng-class="ActionData.disTrend[$index]>=0?'fa-arrow-up':'fa-arrow-down'"></i>
 							<span class="ml10">{{ActionData.disTrend[$index] | abs}}</span>
 						</td>
 					</tr>

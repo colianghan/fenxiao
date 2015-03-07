@@ -250,6 +250,13 @@ dm.controller('manage',['$rootScope','$scope','$routeParams','$animate','$filter
 		$scope.showSetting=false;
 		getDis();
 	};
+
+	//更新维度
+	$scope.$on('update-dimension',function(e,v){
+		if(v!=undefined){
+			$scope.dimensions=v;//更新（增加，修改，删除）
+		}
+	});
 }]);
 
 
@@ -313,10 +320,10 @@ dm.controller('hasParams',['$scope','$rootScope','$element','tools',function($sc
 		var model =  $scope.hasChecked[index];
 		if(model){
 			var type = model.type;
-			if(low!=''&&high!=''){
-				var __str = type==='date'?'结束时间不能晚于开始时间':'最高指标小于最低指标';
-				if(high<low){
-					$scope.$broadcast('erro-alert',__str);
+			if(type!='date'&&low!=''&&high!=''){
+				//var __str = type==='date'?'结束时间不能晚于开始时间':'最高指标小于最低指标';
+				if(Number(high)<Number(low)){
+					$scope.$broadcast('erro-alert','最高指标小于最低指标');
 					return;
 				}
 			}
@@ -344,6 +351,12 @@ dm.controller('hasParams',['$scope','$rootScope','$element','tools',function($sc
 				$('.low-input',parentTr).val(_low.toFixed(1)==0.0?'':_low.toFixed(1));
 				$('.high-input',parentTr).val(_high.toFixed(1)==0.0?'':_high.toFixed(1));
 			}else if(type=='date'){
+				if(high!=''&&low!=''){
+					if(high<low){
+						$scope.$broadcast('erro-alert','结束时间不能晚于开始时间');
+						return;
+					}
+				}
 				low = low===''?'':low+' 00:00:00';
 				high = high ===''?'':high+' 00:00:00';
 			}else if(type=='num'){
@@ -366,6 +379,7 @@ dm.controller('hasParams',['$scope','$rootScope','$element','tools',function($sc
 				if(resp.success){
 					//parentTr.data('key',resp.value);
 					$scope.hasChecked[index].key=resp.value;
+					$rootScope.$broadcast('update-dimension',$scope.hasChecked);
 					if(!id){
 						alert('添加成功');
 					}else{
@@ -401,7 +415,7 @@ dm.controller('hasParams',['$scope','$rootScope','$element','tools',function($sc
 			return;
 		}
 		var  parentTr = $(e.currentTarget).parents('tr'),
-			 id = parentTr.data('key'),
+			 id = parentTr.attr('data-key'),
 			 index =  $scope.hasChecked[sort].index;
 		if(!id){
 			//debugger;
@@ -418,6 +432,7 @@ dm.controller('hasParams',['$scope','$rootScope','$element','tools',function($sc
 				if(resp.success){
 					$scope.hasChecked.splice(sort,1);
 					$rootScope.$broadcast('remove-checked',index);
+					$rootScope.$broadcast('update-dimension',$scope.hasChecked);
 				}
 			}
 		});

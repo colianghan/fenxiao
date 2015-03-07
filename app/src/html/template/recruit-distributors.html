@@ -55,23 +55,7 @@
 											</div>
 										</div>
 									</div>
-									<div class="control-group">
-										<label class="control-label">是否分销商:</label>
-										<div class="controls">
-											<form class="form-inline mb0">
-												<label class="radio mr5">
-													<input type="radio" name="s" ng-model="model.parms.isFenxiao" value="1">是
-												</label>
-												<label class="radio mr5 ">
-													<input type="radio" name="s" ng-model="model.parms.isFenxiao" value="0">否
-												</label>
-												<label class="radio mr5">
-													<input type="radio" name="s" ng-model="model.parms.isFenxiao" value="">全部
-												</label>
-											</form>
-										</div>
-									</div>
-									<div class="control-group">
+									<div class="control-group" ng-if="tagIndex<3">
 										<label class="control-label">操作员:</label>
 										<div class="controls">
 											<select ng-model="model.parms.operater" class="input-large">
@@ -253,7 +237,6 @@
 							<th class="sortable" ng-click="getSort($event,'SHOP_CREATE_TIME');"><div>开店时间</div></th>
 							<th>所在省</th>
 							<th>所在市</th>
-							<th class="sortable" ng-click="getSort($event,'IS_FENXIAO');"><div>是否分销商</div></th>
 							<th ng-if="tagIndex<3">
 								<select ng-model="model.parms.status" ng-change="change();" class="span12">
 									<option value="attention">关注</option>
@@ -288,7 +271,6 @@
 							<td>{{i.shopCreateTime | timer}}</td>
 							<td>{{i.province||'--'}}</td>
 							<td>{{i.city||'--'}}</td>
-							<td>{{i.isFenxiao=='0'?'否':'是'}}</td>
 							<td ng-if="tagIndex<3">{{i.status | recruitStatus}}</td>
 							<td ng-if="tagIndex<3">{{i.operateTime | timer}}</td>
 							<td ng-if="tagIndex<3">{{i.operater}}</td>						

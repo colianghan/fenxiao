@@ -25,7 +25,8 @@ dm.controller('settings',['$scope','$rootScope','$routeParams','setShortCurts',f
 				_bool=true;
 			}
 		});
-		if(_bool){
+		//取消所有快捷设置 以及有值
+		if(_bool||!_sele.length){
 			setShortCurts.set(JSON.stringify(_sele),function(v){
 				$rootScope.$broadcast('update-sortCut',v);
 			});

@@ -64,7 +64,7 @@ var configureGrunt = function(grunt){
             },
             css:{
                 files:['<%= paths.srcDir %>/css/*.css'],
-                tasks:['cssmin:dev','concat:css','uglify:css'],
+                tasks:['cssmin:dev','concat:css'],
                 options:{
                     livereload:9000
                 }
@@ -222,6 +222,7 @@ var configureGrunt = function(grunt){
         console.log("test")
     });
     grunt.registerTask('init',[
+            'cssmin:dev',
             'concat:css',
             'concat:init',
             'uglify:prod',
